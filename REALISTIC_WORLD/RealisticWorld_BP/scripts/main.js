@@ -134,6 +134,16 @@ world.afterEvents.worldLoad.subscribe(() => {
     if (player) cc.open(player);
   });
 
+  // Follow /weather commands and other weather changes not made by the engine.
+  world.afterEvents.weatherChange.subscribe((event) => {
+    if (!event.dimension.endsWith("overworld")) return;
+    try {
+      rt.weather.onVanillaChange(event.newWeather, rt.scheduler.ticks);
+    } catch (e) {
+      rt.logger.error("weather", "weather change handling failed", e);
+    }
+  });
+
   // Save when a player leaves (single player: before the world closes).
   world.afterEvents.playerLeave.subscribe(() => {
     try {

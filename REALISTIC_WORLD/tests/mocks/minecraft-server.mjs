@@ -7,6 +7,7 @@
 export const CommandPermissionLevel = Object.freeze({ Any: 0, GameDirectors: 1, Admin: 2, Host: 3, Owner: 4 });
 export const CustomCommandStatus = Object.freeze({ Success: 0, Failure: 1 });
 export const PlayerPermissionLevel = Object.freeze({ Visitor: 0, Member: 1, Operator: 2 });
+export const WeatherType = Object.freeze({ Clear: "Clear", Rain: "Rain", Thunder: "Thunder" });
 
 class Signal {
   constructor() {
@@ -45,6 +46,26 @@ class DynamicProps {
   }
 }
 
+/** Records the player's fog stack the way FogSettings push/remove work with tags. */
+class FogSettings {
+  constructor() {
+    this.stack = []; // { id, tag }
+  }
+  push(fogId, tag) {
+    if (!__mc.knownFogs.has(fogId)) throw new Error(`FogSettingsError: unknown fog ${fogId}`);
+    this.stack.push({ id: fogId, tag });
+    return this.stack.length;
+  }
+  remove(tag) {
+    const before = this.stack.length;
+    this.stack = this.stack.filter((f) => f.tag !== tag);
+    return this.stack.length !== before;
+  }
+  getStack() {
+    return this.stack.map((f) => f.id);
+  }
+}
+
 class ScreenDisplay {
   constructor() {
     this.actionBar = [];
@@ -64,6 +85,7 @@ export class Player {
     this.dimension = world.getDimension(dim);
     this.playerPermissionLevel = operator ? PlayerPermissionLevel.Operator : PlayerPermissionLevel.Member;
     this.onScreenDisplay = new ScreenDisplay();
+    this.fogSettings = new FogSettings();
     this.messages = [];
     this.props = new DynamicProps();
   }
@@ -76,14 +98,36 @@ export class Player {
   setDynamicProperty(id, v) {
     this.props.set(id, v);
   }
+  getHeadLocation() {
+    return { x: this.location.x, y: this.location.y + 1.62, z: this.location.z };
+  }
 }
 
 class Dimension {
   constructor(id) {
     this.id = id;
+    this.weatherCalls = [];
   }
   isChunkLoaded(loc) {
     return __mc.isLoaded(this.id, loc.x, loc.z);
+  }
+  setWeather(type, duration) {
+    if (!(type in WeatherType)) throw new Error(`invalid weather ${type}`);
+    this.weatherCalls.push({ type, duration, tick: currentTick });
+    const previous = __mc.weather;
+    __mc.weather = type;
+    if (previous !== type) world.afterEvents.weatherChange.fire({ dimension: this.id, newWeather: type, previousWeather: previous });
+  }
+  getBiome(loc) {
+    if (!__mc.isLoaded(this.id, loc.x, loc.z)) throw new Error("LocationInUnloadedChunkError");
+    return { id: __mc.biomeFn(this.id, loc.x, loc.z) };
+  }
+  getTopmostBlock(xz) {
+    if (!__mc.isLoaded(this.id, xz.x, xz.z)) throw new Error("LocationInUnloadedChunkError");
+    return { location: { x: xz.x, y: __mc.surfaceFn(xz.x, xz.z), z: xz.z } };
+  }
+  getSkyLightLevel(loc) {
+    return __mc.skyLightFn(loc);
   }
 }
 
@@ -96,7 +140,10 @@ export const world = {
     worldLoad: new Signal(),
     itemUse: new Signal(),
     playerLeave: new Signal(),
+    weatherChange: new Signal(),
   },
+  seed: "123456789",
+  getTimeOfDay: () => __mc.timeOfDay,
   getDynamicProperty: (id) => worldProps.get(id),
   setDynamicProperty: (id, v) => worldProps.set(id, v),
   getDynamicPropertyIds: () => [...worldProps.map.keys()],
@@ -151,6 +198,19 @@ export const __mc = {
   players,
   commands: new Map(),
   loadedFn: () => true,
+  weather: "Clear",
+  timeOfDay: 6000,
+  biomeFn: () => "minecraft:plains",
+  surfaceFn: () => 70,
+  skyLightFn: () => 15,
+  knownFogs: new Set(),
+  /** A player typing /weather <type>: the game changes weather on its own. */
+  typeWeatherCommand(type) {
+    world.getDimension("minecraft:overworld");
+    const previous = this.weather;
+    this.weather = type;
+    world.afterEvents.weatherChange.fire({ dimension: "minecraft:overworld", newWeather: type, previousWeather: previous });
+  },
   isLoaded(dim, x, z) {
     return this.loadedFn(dim, x, z);
   },

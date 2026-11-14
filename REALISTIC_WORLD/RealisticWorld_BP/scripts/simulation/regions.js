@@ -27,16 +27,19 @@ import { toChunk } from "../utils/math.js";
 export const LOD = Object.freeze({ NEAR: "NEAR", MEDIUM: "MEDIUM", FAR: "FAR" });
 const TIER_RANK = { NEAR: 0, MEDIUM: 1, FAR: 2 };
 export const SECTOR_SIZE = 8;
-const RECORD_VERSION = 1;
+/** v1 rows: [cx, cz, created, lastActive, visits]; v2 adds a 6th entry: system data or 0. */
+const RECORD_VERSION = 2;
 /** Full recompute at least this often (in tracker updates, 1 update = 1 s). */
 export const FULL_REFRESH_UPDATES = 10;
 /** Dirty sectors force-saved per evict() call when memory is over the limit. */
 const MAX_FORCED_SAVES = 8;
 
 /**
- * @typedef {{ dim: string, cx: number, cz: number, created: number, lastActive: number, visits: number }} RegionRecord
+ * Per-region data owned by other systems lives in `data` under a short key
+ * (e.g. data.c = climate). Systems call RegionStore.markDirty after changing it.
+ * @typedef {{ dim: string, cx: number, cz: number, created: number, lastActive: number, visits: number, data?: Record<string, any> }} RegionRecord
  * @typedef {{ key: string, dim: string, sx: number, sz: number, regions: Map<string, RegionRecord>, dirty: boolean, lastUsed: number }} Sector
- * @typedef {{ dim: string, cx: number, cz: number, tier: string }} ActiveRegion
+ * @typedef {{ dim: string, cx: number, cz: number, tier: string, record: RegionRecord, lastSim?: number }} ActiveRegion
  */
 
 export function regionKey(dim, cx, cz) {
@@ -88,13 +91,19 @@ export class RegionStore {
       };
       const res = this.storage.load(key);
       this.stats.sectorLoads++;
-      if (res.ok && res.value && res.value.v === RECORD_VERSION && Array.isArray(res.value.r)) {
+      if (res.ok && res.value && (res.value.v === 1 || res.value.v === RECORD_VERSION) && Array.isArray(res.value.r)) {
         for (const row of res.value.r) {
-          if (!Array.isArray(row) || row.length !== 5 || !row.every((n) => Number.isInteger(n))) continue;
+          if (!Array.isArray(row) || row.length < 5 || !row.slice(0, 5).every((n) => Number.isInteger(n))) continue;
           const [rcx, rcz, created, lastActive, visits] = row;
-          sector.regions.set(regionKey(dim, rcx, rcz), { dim, cx: rcx, cz: rcz, created, lastActive, visits });
+          /** @type {RegionRecord} */
+          const rec = { dim, cx: rcx, cz: rcz, created, lastActive, visits };
+          if (row[5] && typeof row[5] === "object" && !Array.isArray(row[5])) rec.data = row[5];
+          sector.regions.set(regionKey(dim, rcx, rcz), rec);
         }
-      } else if (!res.ok && !res.missing) {
+      } else if (res.ok) {
+        this.stats.corruptSectors++;
+        this.logger.warn("regions", `sector ${key} has an unknown format; starting it fresh`);
+      } else if (!res.missing) {
         this.stats.corruptSectors++;
         this.logger.warn("regions", `sector ${key} unreadable (${res.error}); starting it fresh`);
       }
@@ -140,9 +149,15 @@ export class RegionStore {
     }
   }
 
+  /** Mark a region's sector as changed after editing record.data. */
+  markDirty(dim, cx, cz) {
+    const sector = this.sectors.get(sectorKeyOf(dim, cx, cz));
+    if (sector) sector.dirty = true;
+  }
+
   /** @param {Sector} sector */
   _save(sector) {
-    const rows = [...sector.regions.values()].map((r) => [r.cx, r.cz, r.created, r.lastActive, r.visits]);
+    const rows = [...sector.regions.values()].map((r) => [r.cx, r.cz, r.created, r.lastActive, r.visits, r.data ?? 0]);
     const res = this.storage.save(sector.key, { v: RECORD_VERSION, r: rows });
     if (!res.ok) {
       this.logger.error("regions", `could not save sector ${sector.key}: ${res.error}`);
@@ -228,6 +243,8 @@ export class RegionTracker {
     this.active = new Map();
     /** @type {((r: ActiveRegion, awayTicks: number) => void)[]} */
     this.resumeListeners = [];
+    /** @type {((r: ActiveRegion) => void)[]} */
+    this.enterListeners = [];
     this.counts = { NEAR: 0, MEDIUM: 0, FAR: 0 };
     this.resumedTotal = 0;
     this.lastResumeAway = 0;
@@ -238,9 +255,19 @@ export class RegionTracker {
     this._lastTick = 0;
   }
 
-  /** Called when a known region becomes active again. */
+  /** Called when a known region becomes active again, with the ticks it was away. */
   onResume(fn) {
     this.resumeListeners.push(fn);
+  }
+
+  /** Called for every region entering the active set (new or known). */
+  onEnter(fn) {
+    this.enterListeners.push(fn);
+  }
+
+  /** @returns {ActiveRegion | undefined} */
+  regionAt(dim, blockX, blockZ) {
+    return this.active.get(regionKey(dim, toChunk(blockX), toChunk(blockZ)));
   }
 
   /** Tier of a region right now, or undefined if it is not simulated. */
@@ -309,7 +336,15 @@ export class RegionTracker {
               continue;
             }
           }
-          next.set(key, { dim: p.dim, cx, cz, tier });
+          // Keep the same object for regions that stay active: other systems hold
+          // references to it (e.g. their last simulation tick).
+          const prev = this.active.get(key);
+          if (prev) {
+            prev.tier = tier;
+            next.set(key, prev);
+          } else {
+            next.set(key, { dim: p.dim, cx, cz, tier, record: /** @type {any} */ (null) });
+          }
         }
       }
     }
@@ -317,7 +352,9 @@ export class RegionTracker {
     for (const [key, r] of next) {
       if (this.active.has(key)) continue;
       ops++;
-      const { awayTicks } = this.store.activate(r.dim, r.cx, r.cz, ctx.tick);
+      const { record, awayTicks } = this.store.activate(r.dim, r.cx, r.cz, ctx.tick);
+      r.record = record;
+      for (const fn of this.enterListeners) fn(r);
       if (awayTicks > 0) {
         this.resumedTotal++;
         this.lastResumeAway = awayTicks;

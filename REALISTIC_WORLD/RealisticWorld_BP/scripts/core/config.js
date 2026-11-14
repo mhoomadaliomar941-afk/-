@@ -69,11 +69,19 @@ export class Config {
     return `system.${id}`;
   }
 
+  /**
+   * Declare a setting owned by a system. Must be called before load().
+   * @param {string} key @param {SettingDef} def
+   */
+  define(key, def) {
+    if (key in BASE_SCHEMA) throw new Error(`setting "${key}" is built in`);
+    this.schema[key] = def;
+    if (!(key in this.values)) this.values[key] = def.default;
+  }
+
   /** Declare a system switch. Must be called before load(). */
   defineSystem(id, label, defaultEnabled = true) {
-    const key = Config.systemKey(id);
-    this.schema[key] = { type: "bool", default: defaultEnabled, label };
-    if (!(key in this.values)) this.values[key] = defaultEnabled;
+    this.define(Config.systemKey(id), { type: "bool", default: defaultEnabled, label });
   }
 
   /** Override the default of a setting (e.g. profile picked from device memory). */

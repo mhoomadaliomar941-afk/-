@@ -2,7 +2,7 @@
 
 Add-on لماين كرافت Bedrock يحوّل العالم لبيئة طبيعية تتفاعل أنظمتها مع بعض: الطقس، المياه، النباتات، الحيوانات، الحرائق، الكوارث، والبقاء. يستهدف الهواتف، والأداء أولوية.
 
-**النسخة الحالية: 0.1.0 (PHASE 1 – الأساس).** راجع `PROJECT_STATUS.md` لمعرفة ما انبنى وما تبقى.
+**النسخة الحالية: 0.2.0 (PHASE 1 الأساس + PHASE 2 الطقس والمناخ).** راجع `PROJECT_STATUS.md` لمعرفة ما انبنى وما تبقى.
 
 | | |
 |---|---|
@@ -26,7 +26,7 @@ Add-on لماين كرافت Bedrock يحوّل العالم لبيئة طبيع
 |---|---|
 | المحرك، الإعدادات، التخزين المحمي، مدير الأداء، مناطق LOD | ✅ PHASE 1 |
 | مركز التحكم، HUD، الفحص الذاتي | ✅ PHASE 1 |
-| الطقس والمناخ | ⏳ PHASE 2 |
+| الطقس والمناخ: نموذج طقس، توقعات، مناخ 89 بايوم، رطوبة التربة، ضباب | ✅ PHASE 2 |
 | فيزياء المياه | ⏳ PHASE 3 |
 | النباتات، التربة، الفصول | ⏳ PHASE 4 |
 | الحيوانات والنظام البيئي | ⏳ PHASE 5 |
@@ -53,11 +53,12 @@ REALISTIC_WORLD/
 │       │   ├── logger.js
 │       │   └── selfTest.js
 │       ├── simulation/regions.js      مناطق المحاكاة و LOD
+│       ├── weather/                   نموذج الطقس، المناخ، الضباب، جدول البايومات
 │       ├── ui/                        مركز التحكم، النماذج، HUD
 │       └── utils/math.js
-├── RealisticWorld_RP/                 manifest، أيقونة، texture، نصوص
-├── tests/                             61 اختبار + محاكي للعبة (tests/mocks)
-├── scripts/                           validate، build، benchmark، make_textures
+├── RealisticWorld_RP/                 manifest، أيقونة، texture، نصوص، fogs/
+├── tests/                             100 اختبار + محاكي للعبة (tests/mocks)
+├── scripts/                           validate، build، benchmark، make_textures، gen_biome_climate
 ├── types/                             تعريف console لمحرك Bedrock
 └── docs/
 ```
@@ -65,6 +66,6 @@ REALISTIC_WORLD/
 ## للمطوّر
 ```bash
 npm install
-npm run check     # validate + typecheck على تعريفات Mojang الرسمية + 61 اختبار
+npm run check     # validate + typecheck على تعريفات Mojang الرسمية + 100 اختبار
 npm run build     # dist/*.mcaddon و *.mcpack
 ```

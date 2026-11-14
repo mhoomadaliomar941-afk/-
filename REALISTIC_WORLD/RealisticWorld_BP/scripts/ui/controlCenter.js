@@ -3,9 +3,10 @@
 // something; systems that are not built yet are listed as text, not buttons.
 // Settings can be changed by operators; other players get read-only pages.
 
-import { ActionFormData, FormCancelationReason, MessageFormData } from "@minecraft/server-ui";
-import { system } from "@minecraft/server";
+import { ActionFormData, MessageFormData } from "@minecraft/server-ui";
 import { PROFILES } from "../core/performance.js";
+import { showForm } from "./forms.js";
+import { weatherPage } from "./weatherPage.js";
 import { Logger } from "../core/logger.js";
 import { ModalBuilder } from "./modal.js";
 
@@ -14,7 +15,6 @@ const PROFILE_NAMES = /** @type {("LOW"|"MEDIUM"|"ULTRA")[]} */ (Object.keys(PRO
 const LOG_LEVELS = ["debug", "info", "warn", "error"];
 /** Sections of later phases, shown as plain text until they really exist. */
 const PLANNED = [
-  "Weather (phase 2)",
   "Water Physics (phase 3)",
   "Vegetation & Seasons (phase 4)",
   "Ecosystem & Wildlife (phase 5)",
@@ -28,25 +28,12 @@ const PLANNED = [
  *   isOperator: (p: import("@minecraft/server").Player) => boolean,
  *   getHud: (p: import("@minecraft/server").Player) => boolean,
  *   setHud: (p: import("@minecraft/server").Player, on: boolean) => void,
+ *   getWeatherHud: (p: import("@minecraft/server").Player) => boolean,
+ *   setWeatherHud: (p: import("@minecraft/server").Player, on: boolean) => void,
+ *   position: (p: import("@minecraft/server").Player) => { dim: string, x: number, y: number, z: number },
  * }} PlayerPrefs
  */
 
-/**
- * Show a form, retrying while the player is busy (e.g. chat screen still open
- * after typing a command). Returns undefined if it could not be shown.
- * @template {{ canceled: boolean, cancelationReason?: string }} R
- * @param {import("@minecraft/server").Player} player
- * @param {{ show: (p: import("@minecraft/server").Player) => Promise<R> }} form
- * @returns {Promise<R | undefined>}
- */
-export async function showForm(player, form, attempts = 30) {
-  for (let i = 0; i < attempts; i++) {
-    const res = await form.show(player);
-    if (!res.canceled || res.cancelationReason !== FormCancelationReason.UserBusy) return res;
-    await system.waitTicks(10);
-  }
-  return undefined;
-}
 
 function yesNo(v) {
   return v ? "§aON§r" : "§cOFF§r";
@@ -87,6 +74,7 @@ export class ControlCenter {
       actions.push(fn);
     };
     add("Dashboard", () => this.dashboard(player));
+    add("Weather", () => weatherPage(this, player));
     add("Systems", () => this.systems(player));
     add("Performance", () => this.performance(player));
     add("General Settings", () => this.general(player));
@@ -120,6 +108,10 @@ export class ControlCenter {
       `NEAR ${r.near}   MEDIUM ${r.medium}   FAR ${r.far}`,
       `Sectors in memory: ${r.cachedSectors} (unsaved ${r.dirtySectors})`,
       `Regions resumed: ${r.resumed} (last away ${r.lastResumeAwayTicks} ticks)`,
+      ``,
+      `§lWeather§r`,
+      `${d.weather.condition.replace(/_/g, " ").toLowerCase()}${d.weather.forced ? " (forced)" : ""}   wind ${d.weather.wind} m/s ${d.weather.windFrom}   humidity ${d.weather.humidity}%`,
+      `Regions with climate data: ${d.climate.regionsWithClimate}   average soil moisture ${d.climate.avgSoilPct}%`,
       ``,
       `§lSaved data§r`,
       `Add-on properties: ${d.storage.ownProperties}   World total: ${d.storage.totalBytes} bytes`,

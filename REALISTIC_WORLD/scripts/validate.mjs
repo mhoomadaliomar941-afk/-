@@ -69,7 +69,12 @@ else {
   if (new Set(uuids).size !== uuids.length) problems.push("manifest UUIDs are not unique");
   for (const u of uuids) if (!uuidRe.test(u)) problems.push(`not a valid v4 UUID: ${u}`);
   for (const m of [bpm, rpm]) if (m.format_version !== 2) problems.push(`${m.header.name}: format_version must be 2`);
-  if (!bpm.dependencies.some((d) => d.uuid === rpm.header.uuid)) problems.push("BP does not depend on the RP UUID");
+  const rpDep = bpm.dependencies.find((d) => d.uuid === rpm.header.uuid);
+  if (!rpDep) problems.push("BP does not depend on the RP UUID");
+  else if (rpDep.version.join(".") !== rpm.header.version.join(".")) {
+    problems.push(`BP depends on RP ${rpDep.version.join(".")} but the RP is ${rpm.header.version.join(".")}`);
+  }
+  if (bpm.header.version.join(".") !== rpm.header.version.join(".")) problems.push("BP and RP versions differ");
   const script = bpm.modules.find((m) => m.type === "script");
   if (!script) problems.push("BP has no script module");
   else if (!existsSync(join(BP, script.entry))) problems.push(`script entry ${script.entry} not found`);
@@ -117,6 +122,19 @@ for (const [path, data] of Object.entries(json)) {
   const nameKey = item.components["minecraft:display_name"]?.value ?? `item.${id}.name`;
   if (!lang.split("\n").some((l) => l.startsWith(`${nameKey}=`))) problems.push(`${id}: no "${nameKey}" in en_US.lang`);
 }
+// ---- fogs used by scripts exist in the resource pack ----
+const fogIds = new Set(
+  Object.entries(json)
+    .filter(([p]) => p.startsWith("RealisticWorld_RP/fogs/"))
+    .map(([, d]) => d["minecraft:fog_settings"]?.description?.identifier),
+);
+for (const file of scripts) {
+  for (const m of readFileSync(file, "utf8").matchAll(/"(rw:fog_[a-z_]+)"/g)) {
+    if (!fogIds.has(m[1])) problems.push(`${relative(ROOT, file)}: fog "${m[1]}" is not defined in RealisticWorld_RP/fogs`);
+  }
+}
+ok.push(`${fogIds.size} fog definitions, all fog ids used by scripts exist`);
+
 for (const p of ["RealisticWorld_BP/pack_icon.png", "RealisticWorld_RP/pack_icon.png"]) {
   if (!existsSync(join(ROOT, p))) problems.push(`${p} missing`);
 }

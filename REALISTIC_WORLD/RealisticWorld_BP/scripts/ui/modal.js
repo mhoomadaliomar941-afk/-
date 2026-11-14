@@ -37,6 +37,13 @@ export class ModalBuilder {
     return this;
   }
 
+  /** @param {string} name @param {string} text @param {number} min @param {number} max @param {number} value @param {number} [stepSize] */
+  slider(name, text, min, max, value, stepSize = 1) {
+    this.form.slider(text, min, max, { defaultValue: value, valueStep: stepSize });
+    this.elements.push({ name });
+    return this;
+  }
+
   /** @param {string} text */
   submit(text) {
     this.form.submitButton(text);

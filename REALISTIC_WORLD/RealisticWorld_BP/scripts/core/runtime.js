@@ -11,6 +11,10 @@ import { Scheduler } from "./scheduler.js";
 import { runSelfTest } from "./selfTest.js";
 import { RegionStore, RegionTracker } from "../simulation/regions.js";
 import { StatusHud } from "../ui/hud.js";
+import { WeatherSystem } from "../weather/weatherSystem.js";
+import { ClimateSystem } from "../weather/climateSystem.js";
+import { FogSystem } from "../weather/fogSystem.js";
+import { RAIN_FREQUENCY } from "../weather/model.js";
 
 /**
  * Everything the runtime needs from the game.
@@ -20,6 +24,12 @@ import { StatusHud } from "../ui/hud.js";
  *   getPlayerPositions: () => { dim: string, x: number, z: number }[],
  *   isChunkLoaded: (dim: string, x: number, z: number) => boolean,
  *   getHudPlayers: () => import("../ui/hud.js").HudPlayer[],
+ *   worldSeed: string | number,
+ *   setVanillaWeather: (type: "Clear" | "Rain" | "Thunder", durationTicks: number) => void,
+ *   getBiomeId: (dim: string, x: number, y: number, z: number) => string,
+ *   getSurfaceY: (dim: string, x: number, z: number) => number | undefined,
+ *   getTimeOfDay: () => number,
+ *   getFogPlayers: () => import("../weather/fogSystem.js").FogPlayer[],
  *   clock?: () => number,
  *   log?: { info: Function, warn: Function, error: Function },
  * }} Host
@@ -47,6 +57,13 @@ export function createRuntime(host) {
   // Per-system switches must exist before settings are loaded.
   config.defineSystem("regions", "Region tracker (LOD)", true);
   config.defineSystem("hud", "Status HUD (action bar)", true);
+  config.defineSystem("weather", "Weather engine", true);
+  config.defineSystem("climate", "Regional climate (temperature, soil moisture)", true);
+  config.defineSystem("fog", "Weather fog", true);
+  config.define("weather.rainFrequency", {
+    type: "enum", values: Object.keys(RAIN_FREQUENCY), default: "NORMAL", label: "Rain frequency",
+  });
+  config.define("weather.syncVanilla", { type: "bool", default: true, label: "Show the engine's weather in the game (rain, thunder)" });
   config.setDefault("profile", suggestProfile(host.memoryTier));
   const loadInfo = config.load();
   logger.setLevel(config.get("logLevel"));
@@ -68,8 +85,30 @@ export function createRuntime(host) {
   });
   tracker.onResume((r, away) => logger.debug("regions", `${r.dim} ${r.cx},${r.cz} resumed after ${away} ticks`));
 
+  const weather = new WeatherSystem({
+    storage,
+    config,
+    logger,
+    setVanillaWeather: host.setVanillaWeather,
+    worldSeed: host.worldSeed,
+  });
+  const climate = new ClimateSystem({
+    tracker,
+    store: regionStore,
+    weather,
+    getBiomeId: host.getBiomeId,
+    getSurfaceY: host.getSurfaceY,
+    getTimeOfDay: host.getTimeOfDay,
+    logger,
+  });
+  const fog = new FogSystem({ getPlayers: host.getFogPlayers, climate, logger });
+
   const hud = new StatusHud({
     getPlayers: host.getHudPlayers,
+    weatherLine: (pos) => {
+      const c = climate.sample(pos.dim, pos.x, pos.y, pos.z);
+      return c ? StatusHud.formatWeather(weather.summary(), c) : null;
+    },
     status: () => ({
       avgTickMs: perf.avgTickMs,
       budgetMs: perf.profile.tickBudgetMs,
@@ -94,6 +133,7 @@ export function createRuntime(host) {
     let writes = 0;
     if (storage.save(KEYS.clock, { tick: scheduler.ticks }).ok) writes++;
     if (config.flush()) writes++;
+    if (weather.save()) writes++;
     writes += regionStore.flush(maxSectors);
     if (errorsDirty) {
       if (storage.save(KEYS.errorLog, logger.errors).ok) writes++;
@@ -119,6 +159,9 @@ export function createRuntime(host) {
 
   scheduler.register(persistence, true);
   scheduler.register(tracker, config.isSystemEnabled("regions"));
+  scheduler.register(weather, config.isSystemEnabled("weather"));
+  scheduler.register(climate, config.isSystemEnabled("climate"));
+  scheduler.register(fog, config.isSystemEnabled("fog"));
   scheduler.register(hud, config.isSystemEnabled("hud"));
   if (!config.get("enabled")) scheduler.pause();
 
@@ -130,6 +173,8 @@ export function createRuntime(host) {
     else if (key === "logLevel") logger.setLevel(value);
     else if (key === "enabled") value ? scheduler.resume() : scheduler.pause();
     else if (key.startsWith("system.")) scheduler.setEnabled(key.slice(7), value);
+    else if (key === "weather.syncVanilla" && value) weather.syncVanilla(scheduler.ticks, true);
+    else if (key === "weather.rainFrequency") weather.forecastCache = null;
   });
 
   let tickAtLastSelfTest;
@@ -141,6 +186,9 @@ export function createRuntime(host) {
     scheduler,
     regionStore,
     tracker,
+    weather,
+    climate,
+    fog,
     loadInfo,
     version: { addon: ADDON_VERSION, game: TARGET_GAME_VERSION, server: SERVER_MODULE_VERSION, serverUi: SERVER_UI_MODULE_VERSION },
     tick: () => scheduler.tick(),
@@ -175,13 +223,15 @@ export function createRuntime(host) {
         },
         errors: logger.errors.length,
         settingsSource: loadInfo.source,
+        weather: weather.summary(),
+        climate: climate.describe(),
       };
     },
   };
 
   logger.info(
     "core",
-    `Realistic World ${ADDON_VERSION} started (settings: ${loadInfo.source}, profile ${perf.profileName}, sim tick ${startTick})`,
+    `Realistic World ${ADDON_VERSION} started (settings: ${loadInfo.source}, profile ${perf.profileName}, sim tick ${startTick}, weather ${weather.restored ? "restored" : "new"})`,
   );
   return runtime;
 }

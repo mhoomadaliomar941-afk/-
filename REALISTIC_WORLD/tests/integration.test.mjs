@@ -4,6 +4,13 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { __mc, world, system } from "@minecraft/server";
 import { __ui, pick, submit, close, button1 } from "@minecraft/server-ui";
+import { readdirSync, readFileSync } from "node:fs";
+
+// The game knows only the fogs defined in the resource pack.
+const FOG_DIR = new URL("../RealisticWorld_RP/fogs/", import.meta.url);
+for (const f of readdirSync(FOG_DIR)) {
+  __mc.knownFogs.add(JSON.parse(readFileSync(new URL(f, FOG_DIR), "utf8"))["minecraft:fog_settings"].description.identifier);
+}
 
 const MAIN = new URL("../RealisticWorld_BP/scripts/main.js", import.meta.url).href;
 let loadCount = 0;
@@ -61,7 +68,7 @@ test("full session: commands, item, control center, saving, reload", async (t) =
     assert.equal(form.title, "REALISTIC WORLD CONTROL CENTER");
     assert.deepEqual(
       form.elements.filter((e) => e.type === "button").map((e) => e.text),
-      ["Dashboard", "Systems", "Performance", "General Settings", "Error Log (0)", "Run Self-Test"],
+      ["Dashboard", "Weather", "Systems", "Performance", "General Settings", "Error Log (0)", "Run Self-Test"],
     );
     assert.ok(form.elements.some((e) => e.type === "label" && e.text.includes("Water Physics (phase 3)")), "planned sections are text, not buttons");
   });
@@ -166,12 +173,82 @@ test("full session: commands, item, control center, saving, reload", async (t) =
     __mc.runCommand("rw:selftest", steve);
     await settle(2);
     const report = steve.messages.at(-1);
-    assert.match(report, /self-test: 4\/4 passed/, report);
+    assert.match(report, /self-test: 5\/5 passed/, report);
     __ui.answer(pick("Run Self-Test"));
     __ui.answer(close());
     __mc.runCommand("rw:menu", steve);
     await settle(3);
-    assert.match(__ui.last().body, /4\/4 checks passed/);
+    assert.match(__ui.last().body, /5\/5 checks passed/);
+  });
+
+  const overworld = world.getDimension("minecraft:overworld");
+  const openWeather = async (...answers) => {
+    __ui.answer(pick("Weather"));
+    for (const a of answers) __ui.answer(a);
+    __ui.answer(close());
+    __mc.runCommand("rw:menu", steve);
+    await settle(5);
+  };
+
+  await t.test("weather: engine sets the game's weather; climate data builds up", async () => {
+    await __mc.tick(200);
+    assert.ok(overworld.weatherCalls.length > 0, "engine sent the vanilla weather");
+    assert.ok(overworld.weatherCalls.every((c) => c.duration >= 6000));
+    __ui.answer(pick("Dashboard"));
+    __ui.answer(close());
+    __mc.runCommand("rw:menu", steve);
+    await settle(3);
+    const n = Number(/Regions with climate data: (\d+)/.exec(__ui.last().body)[1]);
+    assert.ok(n > 50, `regions with climate data: ${n}`);
+  });
+
+  await t.test("weather: operator forces a thunderstorm from the Weather page", async () => {
+    await openWeather(pick("Force weather"), submit({ Condition: 4, Duration: 5 }));
+    assert.equal(overworld.weatherCalls.at(-1).type, "Thunder");
+    assert.equal(__mc.weather, "Thunder");
+    assert.ok(steve.messages.at(-1).includes("thunderstorm for 5 min"));
+    await openWeather();
+    const page = __ui.last();
+    assert.equal(page.title, "Weather");
+    assert.match(page.body, /Overall§r: thunderstorm/);
+    assert.match(page.body, /Forced: thunderstorm/);
+    assert.match(page.body, /Temperature: §f-?\d+\.\d°C/);
+    assert.match(page.body, /Soil moisture: \d+%/);
+  });
+
+  await t.test("weather: a /weather command typed by a player is followed, not fought", async () => {
+    const calls = overworld.weatherCalls.length;
+    __mc.typeWeatherCommand("Clear");
+    await __mc.tick(300);
+    assert.ok(overworld.weatherCalls.slice(calls).every((c) => c.type === "Clear"), "engine never switched it back to rain");
+    await openWeather();
+    assert.match(__ui.last().body, /Forced: clear/);
+  });
+
+  await t.test("weather: forecast page lists 12 periods", async () => {
+    await openWeather(pick("Forecast"));
+    const fc = __ui.last();
+    assert.equal(fc.title, "Forecast");
+    assert.equal((fc.body.match(/^Day \d/gm) ?? []).length, 12);
+  });
+
+  await t.test("weather: personal weather HUD line", async () => {
+    await openWeather(pick("Weather on my HUD: OFF"));
+    await __mc.tick(20);
+    assert.match(steve.onScreenDisplay.actionBar.at(-1), /°C.*hum \d+%.*wind/);
+    assert.ok(!alex.onScreenDisplay.actionBar.at(-1)?.includes("°C"), "other players unaffected");
+  });
+
+  await t.test("weather: fog is applied outdoors and removed underground", async () => {
+    await openWeather(pick("Force weather"), submit({ Condition: 5, Duration: 10 }));
+    await __mc.tick(200);
+    assert.deepEqual(steve.fogSettings.getStack(), ["rw:fog_dense"]);
+    __mc.skyLightFn = () => 0; // in a cave
+    await __mc.tick(100);
+    assert.deepEqual(steve.fogSettings.getStack(), []);
+    __mc.skyLightFn = () => 15;
+    await __mc.tick(100);
+    assert.deepEqual(steve.fogSettings.getStack(), ["rw:fog_dense"], "back outside");
   });
 
   await t.test("settings disable pauses the engine", async () => {
@@ -194,6 +271,11 @@ test("full session: commands, item, control center, saving, reload", async (t) =
     const tickAfter = Number(/tick (\d+)/.exec(msg)[1]);
     assert.equal(tickAfter, tickBeforeClose, "simulation clock continues where it stopped");
     assert.equal(steve.getDynamicProperty("rw:hud"), true, "per-player HUD preference kept");
+    __ui.answer(pick("Weather"));
+    __ui.answer(close());
+    __mc.runCommand("rw:menu", steve);
+    await settle(3);
+    assert.match(__ui.last().body, /Forced: fog/, "weather state (forced fog) restored after reload");
   });
 
   await t.test("after reload, regions resume with their away time", async () => {

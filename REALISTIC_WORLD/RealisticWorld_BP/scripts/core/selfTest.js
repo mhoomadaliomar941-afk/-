@@ -5,6 +5,8 @@
 import { KEYS } from "./constants.js";
 import { MemoryBackend, Storage } from "./storage.js";
 import { validateValue, BASE_SCHEMA } from "./config.js";
+import { classify, createState, forceWeather, step, vanillaWeather } from "../weather/model.js";
+import { biomeInfo, temperatureAt } from "../weather/climate.js";
 
 /**
  * @typedef {{ name: string, ok: boolean, detail: string }} TestResult
@@ -64,6 +66,20 @@ export function runSelfTest(rt) {
     assert(validateValue(BASE_SCHEMA.profile, "LOW").ok, "rejected a valid profile");
     assert(!validateValue(BASE_SCHEMA.enabled, "yes").ok, "accepted a non-boolean");
     return "invalid values rejected, valid values kept";
+  });
+
+  check("Weather model and climate math", () => {
+    const st = createState({ s: 12345 });
+    step(st, 24000);
+    assert([st.P, st.H, st.I, st.A, st.wind].every(Number.isFinite), "model produced an invalid number");
+    forceWeather(st, "THUNDERSTORM", 2000);
+    step(st, 500);
+    assert(classify(st) === "THUNDERSTORM" && vanillaWeather(st) === "Thunder", "forced storm not applied");
+    const calm = { A: 0, I: 0, H: 0.5, raining: false };
+    const desert = temperatureAt(biomeInfo("minecraft:desert"), 64, 8000, calm);
+    const ice = temperatureAt(biomeInfo("minecraft:ice_plains"), 64, 8000, calm);
+    assert(desert > 30 && ice < 0, `unexpected temperatures: desert ${desert}, ice plains ${ice}`);
+    return `desert ${desert.toFixed(1)}°C, ice plains ${ice.toFixed(1)}°C at mid-afternoon`;
   });
 
   check("Engine loop is ticking", () => {
