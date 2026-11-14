@@ -7,6 +7,9 @@ plugins {
 
 repositories {
     mavenCentral()
+    // fallbacks (Maven Central can rate-limit busy IPs)
+    maven { url = 'https://repo.maven.apache.org/maven2' }
+    gradlePluginPortal()
 }
 
 dependencies {

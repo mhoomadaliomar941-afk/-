@@ -119,14 +119,6 @@
 
 ![لعب جماعي: بعد ثوانٍ](screenshots/mp_02_leak_later.png)
 
-**sp_01_bucket_on_ground.png** — `sp_01_bucket_on_ground.png`
-
-![sp_01_bucket_on_ground.png](screenshots/sp_01_bucket_on_ground.png)
-
-**خزانات زجاجية ممتلئة + بركة الدلو على الأرض** — `sp_02_tank_full.png`
-
-![خزانات زجاجية ممتلئة + بركة الدلو على الأرض](screenshots/sp_02_tank_full.png)
-
 **خزانات زجاجية ممتلئة + بركة الدلو على الأرض** — `sp_02_tanks_full.png`
 
 ![خزانات زجاجية ممتلئة + بركة الدلو على الأرض](screenshots/sp_02_tanks_full.png)
