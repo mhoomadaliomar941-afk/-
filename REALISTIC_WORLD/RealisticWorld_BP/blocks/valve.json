@@ -1,0 +1,47 @@
+{
+  "format_version": "1.21.80",
+  "minecraft:block": {
+    "description": {
+      "identifier": "rw:valve",
+      "menu_category": {
+        "category": "construction"
+      },
+      "states": {
+        "rw:open": [
+          false,
+          true
+        ]
+      }
+    },
+    "components": {
+      "minecraft:geometry": "minecraft:geometry.full_block",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "rw_valve_closed",
+          "render_method": "opaque"
+        }
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1.5
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 6
+      },
+      "minecraft:map_color": "#8a5a2b",
+      "minecraft:display_name": "tile.rw:valve.name"
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('rw:open')",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "rw_valve_open",
+              "render_method": "opaque"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

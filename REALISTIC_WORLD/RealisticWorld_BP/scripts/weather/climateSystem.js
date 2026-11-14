@@ -106,7 +106,11 @@ export class ClimateSystem {
     const w = this.deps.weather.state;
     const now = w.tick;
     if (this.cursor >= this.queue.length) {
-      this.queue = [...this.deps.tracker.active.values()].filter((r) => r.dim === OVERWORLD);
+      // Regions around players first: they matter most and get set up soonest.
+      const rank = { [LOD.NEAR]: 0, [LOD.MEDIUM]: 1, [LOD.FAR]: 2 };
+      this.queue = [...this.deps.tracker.active.values()]
+        .filter((r) => r.dim === OVERWORLD)
+        .sort((a, b) => rank[a.tier] - rank[b.tier]);
       this.cursor = 0;
       this.stats.passes++;
     }

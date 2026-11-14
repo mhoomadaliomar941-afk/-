@@ -17,6 +17,7 @@ import { ema, round } from "../utils/math.js";
  *   farRadius: number,        // chunks kept as stored state with cheap updates
  *   maxCachedRegions: number, // region records kept in memory
  *   sectorWritesPerSave: number, // region sectors written per 10 s save cycle
+ *   waterBlocksPerUpdate: number, // water/ice/puddle blocks changed per water update (0.5 s)
  * }} Profile
  */
 
@@ -25,14 +26,17 @@ export const PROFILES = Object.freeze({
   LOW: Object.freeze({
     tickBudgetMs: 2, intervalScale: 2, maxQueuedTasks: 64,
     nearRadius: 1, mediumRadius: 2, farRadius: 4, maxCachedRegions: 256, sectorWritesPerSave: 6,
+    waterBlocksPerUpdate: 64,
   }),
   MEDIUM: Object.freeze({
     tickBudgetMs: 4, intervalScale: 1, maxQueuedTasks: 128,
     nearRadius: 2, mediumRadius: 4, farRadius: 6, maxCachedRegions: 512, sectorWritesPerSave: 12,
+    waterBlocksPerUpdate: 160,
   }),
   ULTRA: Object.freeze({
     tickBudgetMs: 6, intervalScale: 1, maxQueuedTasks: 256,
     nearRadius: 3, mediumRadius: 5, farRadius: 8, maxCachedRegions: 1024, sectorWritesPerSave: 20,
+    waterBlocksPerUpdate: 320,
   }),
 });
 

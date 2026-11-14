@@ -122,6 +122,59 @@ for (const [path, data] of Object.entries(json)) {
   const nameKey = item.components["minecraft:display_name"]?.value ?? `item.${id}.name`;
   if (!lang.split("\n").some((l) => l.startsWith(`${nameKey}=`))) problems.push(`${id}: no "${nameKey}" in en_US.lang`);
 }
+// ---- custom blocks: textures, names, geometry, loot ----
+const terrain = json["RealisticWorld_RP/textures/terrain_texture.json"]?.texture_data ?? {};
+const geometries = new Set(
+  Object.entries(json)
+    .filter(([p]) => p.startsWith("RealisticWorld_RP/models/"))
+    .flatMap(([, d]) => (d["minecraft:geometry"] ?? []).map((g) => g.description?.identifier)),
+);
+const definedIds = new Set();
+const checkTexture = (owner, tex) => {
+  if (!terrain[tex]) problems.push(`${owner}: texture "${tex}" not in terrain_texture.json`);
+  else if (!existsSync(join(RP, `${terrain[tex].textures}.png`))) problems.push(`${owner}: texture PNG for "${tex}" missing`);
+};
+for (const [path, data] of Object.entries(json)) {
+  if (!path.startsWith("RealisticWorld_BP/blocks/")) continue;
+  const block = data["minecraft:block"];
+  const id = block.description.identifier;
+  definedIds.add(id);
+  const all = [block.components, ...(block.permutations ?? []).map((p) => p.components)];
+  for (const comps of all) {
+    for (const inst of Object.values(comps["minecraft:material_instances"] ?? {})) checkTexture(id, inst.texture);
+    const geo = comps["minecraft:geometry"];
+    const geoId = typeof geo === "string" ? geo : geo?.identifier;
+    if (geoId && !geoId.startsWith("minecraft:geometry.") && !geometries.has(geoId)) problems.push(`${id}: geometry "${geoId}" not found in RP models`);
+    const loot = comps["minecraft:loot"];
+    if (loot && !existsSync(join(BP, loot))) problems.push(`${id}: loot table ${loot} missing`);
+  }
+  const nameKey = block.components["minecraft:display_name"] ?? `tile.${id}.name`;
+  if (!lang.split("\n").some((l) => l.startsWith(`${nameKey}=`))) problems.push(`${id}: no "${nameKey}" in en_US.lang`);
+  for (const [state, values] of Object.entries(block.description.states ?? {})) {
+    if (!Array.isArray(values) || values.length < 2) problems.push(`${id}: state ${state} needs at least two values`);
+  }
+}
+for (const [path, data] of Object.entries(json)) {
+  if (path.startsWith("RealisticWorld_BP/items/")) definedIds.add(data["minecraft:item"].description.identifier);
+}
+ok.push(`${[...definedIds].length} custom blocks/items: textures, names, geometry and loot checked`);
+
+// recipes produce defined things; scripts only use defined rw: ids
+for (const [path, data] of Object.entries(json)) {
+  if (!path.startsWith("RealisticWorld_BP/recipes/")) continue;
+  const r = data["minecraft:recipe_shaped"] ?? data["minecraft:recipe_shapeless"];
+  const result = r?.result?.item;
+  if (result?.startsWith("rw:") && !definedIds.has(result)) problems.push(`${path}: result ${result} is not defined`);
+}
+for (const file of scripts) {
+  for (const m of readFileSync(file, "utf8").matchAll(/"(rw:[a-z_]+)"/g)) {
+    const id = m[1];
+    if (id.startsWith("rw:fog_") || ["rw:menu", "rw:status", "rw:selftest", "rw:open", "rw:hud", "rw:hudw"].includes(id)) continue;
+    if (!definedIds.has(id)) problems.push(`${relative(ROOT, file)}: uses "${id}", which no block or item defines`);
+  }
+}
+ok.push("recipe results and rw: ids used by scripts are defined");
+
 // ---- fogs used by scripts exist in the resource pack ----
 const fogIds = new Set(
   Object.entries(json)

@@ -15,6 +15,7 @@ import { WeatherSystem } from "../weather/weatherSystem.js";
 import { ClimateSystem } from "../weather/climateSystem.js";
 import { FogSystem } from "../weather/fogSystem.js";
 import { RAIN_FREQUENCY } from "../weather/model.js";
+import { WaterSystem } from "../water/waterSystem.js";
 
 /**
  * Everything the runtime needs from the game.
@@ -30,6 +31,7 @@ import { RAIN_FREQUENCY } from "../weather/model.js";
  *   getSurfaceY: (dim: string, x: number, z: number) => number | undefined,
  *   getTimeOfDay: () => number,
  *   getFogPlayers: () => import("../weather/fogSystem.js").FogPlayer[],
+ *   water: import("../water/waterSystem.js").WaterHost,
  *   clock?: () => number,
  *   log?: { info: Function, warn: Function, error: Function },
  * }} Host
@@ -64,6 +66,9 @@ export function createRuntime(host) {
     type: "enum", values: Object.keys(RAIN_FREQUENCY), default: "NORMAL", label: "Rain frequency",
   });
   config.define("weather.syncVanilla", { type: "bool", default: true, label: "Show the engine's weather in the game (rain, thunder)" });
+  config.defineSystem("water", "Water physics", true);
+  config.define("water.autoDetect", { type: "bool", default: true, label: "Detect tanks when a block next to water is broken" });
+  config.define("water.rainPuddles", { type: "bool", default: true, label: "Rain on wet ground forms puddles and floods" });
   config.setDefault("profile", suggestProfile(host.memoryTier));
   const loadInfo = config.load();
   logger.setLevel(config.get("logLevel"));
@@ -102,6 +107,12 @@ export function createRuntime(host) {
     logger,
   });
   const fog = new FogSystem({ getPlayers: host.getFogPlayers, climate, logger });
+  const water = new WaterSystem({
+    storage, config, logger, tracker, store: regionStore, climate, weather, perf,
+    enqueue: (key, owner, fn) => scheduler.enqueue(key, owner, fn),
+    host: host.water,
+    now: () => scheduler.ticks,
+  });
 
   const hud = new StatusHud({
     getPlayers: host.getHudPlayers,
@@ -134,6 +145,7 @@ export function createRuntime(host) {
     if (storage.save(KEYS.clock, { tick: scheduler.ticks }).ok) writes++;
     if (config.flush()) writes++;
     if (weather.save()) writes++;
+    writes += water.save(full ? Infinity : 8);
     writes += regionStore.flush(maxSectors);
     if (errorsDirty) {
       if (storage.save(KEYS.errorLog, logger.errors).ok) writes++;
@@ -162,6 +174,7 @@ export function createRuntime(host) {
   scheduler.register(weather, config.isSystemEnabled("weather"));
   scheduler.register(climate, config.isSystemEnabled("climate"));
   scheduler.register(fog, config.isSystemEnabled("fog"));
+  scheduler.register(water, config.isSystemEnabled("water"));
   scheduler.register(hud, config.isSystemEnabled("hud"));
   if (!config.get("enabled")) scheduler.pause();
 
@@ -189,6 +202,7 @@ export function createRuntime(host) {
     weather,
     climate,
     fog,
+    water,
     loadInfo,
     version: { addon: ADDON_VERSION, game: TARGET_GAME_VERSION, server: SERVER_MODULE_VERSION, serverUi: SERVER_UI_MODULE_VERSION },
     tick: () => scheduler.tick(),
@@ -225,6 +239,7 @@ export function createRuntime(host) {
         settingsSource: loadInfo.source,
         weather: weather.summary(),
         climate: climate.describe(),
+        water: water.describe(),
       };
     },
   };

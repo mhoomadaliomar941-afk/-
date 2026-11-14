@@ -1,7 +1,7 @@
 // Identity and version constants shared across the add-on.
 
 export const ADDON_NAME = "Realistic World";
-export const ADDON_VERSION = "0.2.0";
+export const ADDON_VERSION = "0.3.0";
 
 /** Script API versions this build was written and type-checked against. */
 export const TARGET_GAME_VERSION = "1.26.52";

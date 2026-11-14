@@ -2,7 +2,7 @@
 
 Add-on لماين كرافت Bedrock يحوّل العالم لبيئة طبيعية تتفاعل أنظمتها مع بعض: الطقس، المياه، النباتات، الحيوانات، الحرائق، الكوارث، والبقاء. يستهدف الهواتف، والأداء أولوية.
 
-**النسخة الحالية: 0.2.0 (PHASE 1 الأساس + PHASE 2 الطقس والمناخ).** راجع `PROJECT_STATUS.md` لمعرفة ما انبنى وما تبقى.
+**النسخة الحالية: 0.3.0 (PHASE 1 الأساس + PHASE 2 الطقس والمناخ + PHASE 3 فيزياء المياه).** راجع `PROJECT_STATUS.md` لمعرفة ما انبنى وما تبقى.
 
 | | |
 |---|---|
@@ -27,7 +27,7 @@ Add-on لماين كرافت Bedrock يحوّل العالم لبيئة طبيع
 | المحرك، الإعدادات، التخزين المحمي، مدير الأداء، مناطق LOD | ✅ PHASE 1 |
 | مركز التحكم، HUD، الفحص الذاتي | ✅ PHASE 1 |
 | الطقس والمناخ: نموذج طقس، توقعات، مناخ 89 بايوم، رطوبة التربة، ضباب | ✅ PHASE 2 |
-| فيزياء المياه | ⏳ PHASE 3 |
+| فيزياء المياه: خزانات، تسرب (تورشيلي)، ضغط، صمامات، أنابيب، مصارف، برك، فيضانات، امتصاص، تبخر، تجمد | ✅ PHASE 3 |
 | النباتات، التربة، الفصول | ⏳ PHASE 4 |
 | الحيوانات والنظام البيئي | ⏳ PHASE 5 |
 | الحرائق، الكوارث، الجيولوجيا | ⏳ PHASE 6 |
@@ -38,8 +38,10 @@ Add-on لماين كرافت Bedrock يحوّل العالم لبيئة طبيع
 REALISTIC_WORLD/
 ├── RealisticWorld_BP/
 │   ├── manifest.json
-│   ├── items/control_center.json      أداة فتح مركز التحكم
-│   ├── recipes/control_center.json
+│   ├── blocks/                        Valve, Pipe, Drain, Puddle
+│   ├── items/                         Control Center, Water Gauge
+│   ├── recipes/
+│   ├── loot_tables/
 │   └── scripts/
 │       ├── main.js                    نقطة البداية: الأوامر، الأحداث، حلقة المحرك
 │       ├── core/
@@ -54,10 +56,11 @@ REALISTIC_WORLD/
 │       │   └── selfTest.js
 │       ├── simulation/regions.js      مناطق المحاكاة و LOD
 │       ├── weather/                   نموذج الطقس، المناخ، الضباب، جدول البايومات
+│       ├── water/                     فيزياء المياه، مسح الخزانات، الملء والفيضان، الرسم
 │       ├── ui/                        مركز التحكم، النماذج، HUD
 │       └── utils/math.js
-├── RealisticWorld_RP/                 manifest، أيقونة، texture، نصوص، fogs/
-├── tests/                             100 اختبار + محاكي للعبة (tests/mocks)
+├── RealisticWorld_RP/                 manifest، أيقونة، textures، models، نصوص، fogs/
+├── tests/                             135 اختبار + محاكي للعبة (tests/mocks)
 ├── scripts/                           validate، build، benchmark، make_textures، gen_biome_climate
 ├── types/                             تعريف console لمحرك Bedrock
 └── docs/
@@ -66,6 +69,6 @@ REALISTIC_WORLD/
 ## للمطوّر
 ```bash
 npm install
-npm run check     # validate + typecheck على تعريفات Mojang الرسمية + 100 اختبار
+npm run check     # validate + typecheck على تعريفات Mojang الرسمية + 135 اختبار
 npm run build     # dist/*.mcaddon و *.mcpack
 ```

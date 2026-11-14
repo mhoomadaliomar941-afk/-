@@ -68,9 +68,9 @@ test("full session: commands, item, control center, saving, reload", async (t) =
     assert.equal(form.title, "REALISTIC WORLD CONTROL CENTER");
     assert.deepEqual(
       form.elements.filter((e) => e.type === "button").map((e) => e.text),
-      ["Dashboard", "Weather", "Systems", "Performance", "General Settings", "Error Log (0)", "Run Self-Test"],
+      ["Dashboard", "Weather", "Water Physics", "Systems", "Performance", "General Settings", "Error Log (0)", "Run Self-Test"],
     );
-    assert.ok(form.elements.some((e) => e.type === "label" && e.text.includes("Water Physics (phase 3)")), "planned sections are text, not buttons");
+    assert.ok(form.elements.some((e) => e.type === "label" && e.text.includes("Vegetation & Seasons (phase 4)")), "planned sections are text, not buttons");
   });
 
   await t.test("dashboard shows live engine data", async () => {
@@ -173,12 +173,12 @@ test("full session: commands, item, control center, saving, reload", async (t) =
     __mc.runCommand("rw:selftest", steve);
     await settle(2);
     const report = steve.messages.at(-1);
-    assert.match(report, /self-test: 5\/5 passed/, report);
+    assert.match(report, /self-test: 6\/6 passed/, report);
     __ui.answer(pick("Run Self-Test"));
     __ui.answer(close());
     __mc.runCommand("rw:menu", steve);
     await settle(3);
-    assert.match(__ui.last().body, /5\/5 checks passed/);
+    assert.match(__ui.last().body, /6\/6 checks passed/);
   });
 
   const overworld = world.getDimension("minecraft:overworld");

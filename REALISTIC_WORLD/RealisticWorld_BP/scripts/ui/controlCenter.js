@@ -7,6 +7,7 @@ import { ActionFormData, MessageFormData } from "@minecraft/server-ui";
 import { PROFILES } from "../core/performance.js";
 import { showForm } from "./forms.js";
 import { weatherPage } from "./weatherPage.js";
+import { waterPage } from "./waterPage.js";
 import { Logger } from "../core/logger.js";
 import { ModalBuilder } from "./modal.js";
 
@@ -15,7 +16,6 @@ const PROFILE_NAMES = /** @type {("LOW"|"MEDIUM"|"ULTRA")[]} */ (Object.keys(PRO
 const LOG_LEVELS = ["debug", "info", "warn", "error"];
 /** Sections of later phases, shown as plain text until they really exist. */
 const PLANNED = [
-  "Water Physics (phase 3)",
   "Vegetation & Seasons (phase 4)",
   "Ecosystem & Wildlife (phase 5)",
   "Fire, Disasters & Geology (phase 6)",
@@ -75,6 +75,7 @@ export class ControlCenter {
     };
     add("Dashboard", () => this.dashboard(player));
     add("Weather", () => weatherPage(this, player));
+    add("Water Physics", () => waterPage(this, player));
     add("Systems", () => this.systems(player));
     add("Performance", () => this.performance(player));
     add("General Settings", () => this.general(player));
@@ -112,6 +113,9 @@ export class ControlCenter {
       `§lWeather§r`,
       `${d.weather.condition.replace(/_/g, " ").toLowerCase()}${d.weather.forced ? " (forced)" : ""}   wind ${d.weather.wind} m/s ${d.weather.windFrom}   humidity ${d.weather.humidity}%`,
       `Regions with climate data: ${d.climate.regionsWithClimate}   average soil moisture ${d.climate.avgSoilPct}%`,
+      ``,
+      `§lWater§r`,
+      `Tanks ${d.water.tanks}   pools ${d.water.pools}   ${d.water.liters} L   scans running ${d.water.scans}   blocks changed ${d.water.blockOps}`,
       ``,
       `§lSaved data§r`,
       `Add-on properties: ${d.storage.ownProperties}   World total: ${d.storage.totalBytes} bytes`,

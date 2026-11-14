@@ -19,6 +19,7 @@ import { CONTROL_ITEM_ID } from "./core/constants.js";
 import { createBedrockHost, playerPrefs } from "./core/host.js";
 import { createRuntime } from "./core/runtime.js";
 import { ControlCenter } from "./ui/controlCenter.js";
+import { subscribeWaterEvents } from "./water/gameEvents.js";
 
 /** @type {ReturnType<typeof createRuntime> | undefined} */
 let runtime;
@@ -143,6 +144,9 @@ world.afterEvents.worldLoad.subscribe(() => {
       rt.logger.error("weather", "weather change handling failed", e);
     }
   });
+
+  // Tanks, valves, the water gauge.
+  subscribeWaterEvents(rt);
 
   // Save when a player leaves (single player: before the world closes).
   world.afterEvents.playerLeave.subscribe(() => {

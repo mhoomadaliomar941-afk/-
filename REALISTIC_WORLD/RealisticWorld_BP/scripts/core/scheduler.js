@@ -41,7 +41,7 @@ export class Scheduler {
     this.clock = clock ?? (() => Date.now());
     /** @type {Map<string, ReturnType<Scheduler["_entry"]>>} */
     this.systems = new Map();
-    /** @type {{ key: string, owner: string, fn: () => boolean }[]} */
+    /** @type {{ key: string, owner: string, fn: (timeLeftMs: () => number) => boolean }[]} */
     this.queue = [];
     this.queueKeys = new Set();
     this.runCounter = 0;
@@ -118,8 +118,9 @@ export class Scheduler {
   }
 
   /**
-   * Queue deferred work. fn returns true when finished, false to be called again
-   * later (lets long jobs be split across ticks). Duplicate keys are ignored.
+   * Queue deferred work. fn gets the time left in this tick and returns true
+   * when finished, false to be called again later (lets long jobs be split
+   * across ticks). Duplicate keys are ignored.
    * @returns {boolean} false if rejected (queue full or duplicate)
    */
   enqueue(key, owner, fn) {
@@ -171,7 +172,7 @@ export class Scheduler {
       const task = /** @type {(typeof this.queue)[number]} */ (this.queue.shift());
       let done = true;
       try {
-        done = task.fn() !== false;
+        done = task.fn(timeLeftMs) !== false;
       } catch (err) {
         this.logger.error(`queue.${task.owner}`, `task ${task.key} failed`, err);
       }

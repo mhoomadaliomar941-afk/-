@@ -2,16 +2,16 @@
   "format_version": 2,
   "header": {
     "name": "Realistic World - Ultimate Earth Simulation (RP)",
-    "description": "Textures, fogs and texts for Realistic World.",
+    "description": "Textures, block models, fogs and texts for Realistic World.",
     "uuid": "2380db62-f0d6-4362-85ce-2b0201b89108",
-    "version": [0, 2, 0],
+    "version": [0, 3, 0],
     "min_engine_version": [1, 26, 50]
   },
   "modules": [
     {
       "type": "resources",
       "uuid": "b022c87b-8b70-41e2-9087-1db9783f9f3e",
-      "version": [0, 2, 0]
+      "version": [0, 3, 0]
     }
   ]
 }

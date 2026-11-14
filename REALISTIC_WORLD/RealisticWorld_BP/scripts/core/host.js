@@ -1,13 +1,26 @@
 // Bedrock adapter: the only core file that touches the game. It turns world,
 // players and dimensions into the plain functions the runtime expects.
 
-import { PlayerPermissionLevel, WeatherType, system, world } from "@minecraft/server";
+import {
+  ListBlockVolume,
+  LocationInUnloadedChunkError,
+  PlayerPermissionLevel,
+  WeatherType,
+  system,
+  world,
+} from "@minecraft/server";
 
 const HUD_PROPERTY = "rw:hud";
 const WEATHER_HUD_PROPERTY = "rw:hudw";
 const FOG_TAG = "rw_weather";
 /** Sky light at or above this counts as outdoors (for fog). */
 const OUTDOOR_SKY_LIGHT = 8;
+
+/** Blocks water can stand in or pass through (treated like air by the water system). */
+const PASSABLE = new Set([
+  "minecraft:short_grass", "minecraft:tall_grass", "minecraft:fern", "minecraft:large_fern",
+  "minecraft:deadbush", "minecraft:snow_layer", "rw:puddle",
+]);
 
 /** @type {Map<string, import("@minecraft/server").Dimension>} */
 const dimensionCache = new Map();
@@ -20,6 +33,49 @@ function dimension(id) {
     dimensionCache.set(id, d);
   }
   return d;
+}
+
+/**
+ * Block at a position, or "unloaded" / "outside" when it cannot be read.
+ * getBlock returns undefined for unloaded chunks and may also throw.
+ */
+function blockAt(dim, x, y, z) {
+  try {
+    return dimension(dim).getBlock({ x, y, z }) ?? "unloaded";
+  } catch (e) {
+    return e instanceof LocationInUnloadedChunkError ? "unloaded" : "outside";
+  }
+}
+
+/** @returns {import("../water/tankScan.js").CellKind} */
+function cellAt(dim, x, y, z) {
+  const b = blockAt(dim, x, y, z);
+  if (b === "unloaded") return "unloaded";
+  if (b === "outside") return "solid";
+  const t = b.typeId;
+  if (t === "minecraft:water") return b.permutation.getAllStates()["liquid_depth"] === 0 ? "source" : "flow";
+  if (t === "minecraft:flowing_water") return "flow";
+  if (t === "minecraft:air" || PASSABLE.has(t)) return "air";
+  if (t === "rw:valve") return b.permutation.getAllStates()["rw:open"] === true ? "valve_open" : "valve_closed";
+  if (t === "rw:pipe") return "pipe";
+  if (t === "rw:drain") return "drain";
+  return "solid";
+}
+
+/** @returns {import("../water/basin.js").Column | null} */
+function columnAt(dim, x, z) {
+  let top;
+  try {
+    top = dimension(dim).getTopmostBlock({ x, z });
+  } catch {
+    return null;
+  }
+  for (let i = 0; i < 4 && top && PASSABLE.has(top.typeId); i++) top = top.below();
+  if (!top) return null;
+  if (top.typeId === "minecraft:water" || top.typeId === "minecraft:flowing_water") {
+    return { base: top.y + 1, kind: "water", ground: top.typeId };
+  }
+  return { base: top.y + 1, kind: "ground", ground: top.typeId };
 }
 
 function validPlayers() {
@@ -84,6 +140,23 @@ export function createBedrockHost() {
           if (fogId) p.fogSettings.push(fogId, FOG_TAG);
         },
       })),
+    water: {
+      cellAt,
+      columnAt,
+      fill: (dim, cells, type, from) => {
+        dimension(dim).fillBlocks(new ListBlockVolume(cells), type, {
+          blockFilter: { includeTypes: [...from] },
+          ignoreChunkBoundErrors: true,
+        });
+      },
+      isLoaded: (dim, x, z) => {
+        try {
+          return dimension(dim).isChunkLoaded({ x, y: 0, z });
+        } catch {
+          return false;
+        }
+      },
+    },
     clock: () => Date.now(),
     log: console,
   };

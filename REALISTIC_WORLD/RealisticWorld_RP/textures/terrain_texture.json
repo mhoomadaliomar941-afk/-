@@ -1,0 +1,23 @@
+{
+  "resource_pack_name": "realistic_world",
+  "texture_name": "atlas.terrain",
+  "padding": 8,
+  "num_mip_levels": 4,
+  "texture_data": {
+    "rw_valve_closed": {
+      "textures": "textures/blocks/valve_closed"
+    },
+    "rw_valve_open": {
+      "textures": "textures/blocks/valve_open"
+    },
+    "rw_pipe": {
+      "textures": "textures/blocks/pipe"
+    },
+    "rw_drain": {
+      "textures": "textures/blocks/drain"
+    },
+    "rw_puddle": {
+      "textures": "textures/blocks/puddle"
+    }
+  }
+}

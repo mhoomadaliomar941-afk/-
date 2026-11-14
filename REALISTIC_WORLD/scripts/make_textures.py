@@ -2,9 +2,9 @@
 """Generate the add-on's PNG textures with the Python standard library only.
 
 Outputs:
-  RealisticWorld_BP/pack_icon.png                     128x128 globe icon
-  RealisticWorld_RP/pack_icon.png                     same icon
-  RealisticWorld_RP/textures/items/control_center.png 16x16 item texture
+  RealisticWorld_BP/pack_icon.png, RealisticWorld_RP/pack_icon.png   128x128 globe icon
+  RealisticWorld_RP/textures/items/*.png    16x16 item icons (control center, water gauge)
+  RealisticWorld_RP/textures/blocks/*.png   16x16 block textures (valve, pipe, drain, puddle)
 
 Run from the project root:  python3 scripts/make_textures.py
 """
@@ -107,11 +107,107 @@ def control_center_item():
     return [[palette[ch] for ch in line] for line in art]
 
 
+def art_to_pixels(art, palette):
+    return [[palette[ch] for ch in line] for line in art]
+
+
+def valve(open_):
+    """Iron block with a red (closed) or green (open) wheel."""
+    M = (120, 124, 130, 255)
+    D = (82, 86, 92, 255)
+    W = (60, 170, 70, 255) if open_ else (190, 45, 40, 255)
+    H = (40, 40, 44, 255)
+    art = [
+        "DDDDDDDDDDDDDDDD",
+        "DMMMMMMMMMMMMMMD",
+        "DMMMMMWWWWMMMMMD",
+        "DMMMMWMMMMWMMMMD",
+        "DMMMWMMMMMMWMMMD",
+        "DMMWMMMHHMMMWMMD",
+        "DMMWMMHHHHMMWMMD",
+        "DMWWWWHHHHWWWWMD",
+        "DMWWWWHHHHWWWWMD",
+        "DMMWMMHHHHMMWMMD",
+        "DMMWMMMHHMMMWMMD",
+        "DMMMWMMMMMMWMMMD",
+        "DMMMMWMMMMWMMMMD",
+        "DMMMMMWWWWMMMMMD",
+        "DMMMMMMMMMMMMMMD",
+        "DDDDDDDDDDDDDDDD",
+    ]
+    return art_to_pixels(art, {"D": D, "M": M, "W": W, "H": H})
+
+
+def pipe():
+    """Grey metal with an opening in the middle."""
+    M = (154, 160, 166, 255)
+    L = (190, 196, 202, 255)
+    D = (96, 100, 106, 255)
+    H = (30, 32, 36, 255)
+    rows = []
+    for y in range(16):
+        row = []
+        for x in range(16):
+            r = ((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5
+            row.append(H if r < 4 else D if r < 5 else L if x + y < 12 else M)
+        rows.append(row)
+    return rows
+
+
+def drain():
+    """Dark iron grate."""
+    D = (58, 63, 68, 255)
+    H = (18, 20, 24, 255)
+    return [[D if x % 4 in (0, 1) or y in (0, 15) else H for x in range(16)] for y in range(16)]
+
+
+def puddle():
+    """Semi-transparent water surface."""
+    import random
+    rnd = random.Random(7)
+    return [[(63 + rnd.randint(-6, 6), 118 + rnd.randint(-6, 6), 228, 150) for _ in range(16)] for _ in range(16)]
+
+
+def water_gauge_item():
+    """Round gauge with a blue water level."""
+    T = (0, 0, 0, 0)
+    F = (70, 74, 80, 255)
+    G = (205, 225, 235, 255)
+    B = (45, 110, 210, 255)
+    R = (200, 40, 40, 255)
+    art = [
+        "................",
+        ".....FFFFFF.....",
+        "...FFGGGGGGFF...",
+        "..FGGGGGGGGGGF..",
+        "..FGGGGGGRGGGF..",
+        ".FGGGGGGRGGGGGF.",
+        ".FGGGGGRGGGGGGF.",
+        ".FGGGGRGGGGGGGF.",
+        ".FBBBBBBBBBBBBF.",
+        ".FBBBBBBBBBBBBF.",
+        "..FBBBBBBBBBBF..",
+        "..FBBBBBBBBBBF..",
+        "...FFBBBBBBFF...",
+        ".....FFFFFF.....",
+        "......FFFF......",
+        "................",
+    ]
+    return art_to_pixels(art, {".": T, "F": F, "G": G, "B": B, "R": R})
+
+
 def main():
     icon = globe(128)
     write_png(ROOT / "RealisticWorld_BP" / "pack_icon.png", 128, 128, icon)
     write_png(ROOT / "RealisticWorld_RP" / "pack_icon.png", 128, 128, icon)
     write_png(ROOT / "RealisticWorld_RP" / "textures" / "items" / "control_center.png", 16, 16, control_center_item())
+    write_png(ROOT / "RealisticWorld_RP" / "textures" / "items" / "water_gauge.png", 16, 16, water_gauge_item())
+    blocks = ROOT / "RealisticWorld_RP" / "textures" / "blocks"
+    write_png(blocks / "valve_closed.png", 16, 16, valve(False))
+    write_png(blocks / "valve_open.png", 16, 16, valve(True))
+    write_png(blocks / "pipe.png", 16, 16, pipe())
+    write_png(blocks / "drain.png", 16, 16, drain())
+    write_png(blocks / "puddle.png", 16, 16, puddle())
     print("textures written")
 
 

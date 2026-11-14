@@ -103,13 +103,113 @@ export class Player {
   }
 }
 
+export class LocationInUnloadedChunkError extends Error {}
+export class LocationOutOfWorldBoundariesError extends Error {}
+
+/** Arbitrary set of block positions (as in the real API). */
+export class ListBlockVolume {
+  constructor(locations) {
+    this.locations = locations.map((l) => ({ x: l.x, y: l.y, z: l.z }));
+  }
+}
+
+const DEFAULT_STATES = { "minecraft:water": { liquid_depth: 0 }, "rw:valve": { "rw:open": false } };
+
+class MockPermutation {
+  constructor(typeId, states) {
+    this.type = { id: typeId };
+    this.states = { ...(DEFAULT_STATES[typeId] ?? {}), ...(states ?? {}) };
+  }
+  getAllStates() {
+    return { ...this.states };
+  }
+  withState(name, value) {
+    if (!(name in this.states)) throw new Error(`block ${this.type.id} has no state ${name}`);
+    return new MockPermutation(this.type.id, { ...this.states, [name]: value });
+  }
+}
+
+class MockBlock {
+  constructor(dim, x, y, z) {
+    this.dimension = dim;
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.location = { x, y, z };
+    this.isValid = true;
+  }
+  get _cell() {
+    return this.dimension._get(this.x, this.y, this.z);
+  }
+  get typeId() {
+    return this._cell.typeId;
+  }
+  get permutation() {
+    return new MockPermutation(this._cell.typeId, this._cell.states);
+  }
+  get isAir() {
+    return this.typeId === "minecraft:air";
+  }
+  get isLiquid() {
+    return this.typeId === "minecraft:water" || this.typeId === "minecraft:flowing_water";
+  }
+  setPermutation(perm) {
+    this.dimension._set(this.x, this.y, this.z, perm.type.id, perm.states);
+  }
+  setType(typeId) {
+    this.dimension._set(this.x, this.y, this.z, typeId);
+  }
+  below(n = 1) {
+    return this.dimension.getBlock({ x: this.x, y: this.y - n, z: this.z });
+  }
+}
+
+/** Dimension with a voxel world: grass/dirt up to __mc.surfaceFn(x, z), air above, plus edits. */
 class Dimension {
   constructor(id) {
     this.id = id;
     this.weatherCalls = [];
+    this.cells = new Map();
+  }
+  _get(x, y, z) {
+    const c = this.cells.get(`${x},${y},${z}`);
+    if (c) return c;
+    const s = __mc.surfaceFn(x, z);
+    return { typeId: y > s ? "minecraft:air" : y === s ? "minecraft:grass_block" : "minecraft:dirt", states: {} };
+  }
+  _set(x, y, z, typeId, states) {
+    const from = this._get(x, y, z).typeId;
+    this.cells.set(`${x},${y},${z}`, { typeId, states: new MockPermutation(typeId, states).states });
+    __mc.blockChanges.push({ dim: this.id, x, y, z, from, to: typeId });
   }
   isChunkLoaded(loc) {
     return __mc.isLoaded(this.id, loc.x, loc.z);
+  }
+  getBlock(loc) {
+    const x = Math.floor(loc.x);
+    const y = Math.floor(loc.y);
+    const z = Math.floor(loc.z);
+    if (y < -64 || y > 319) throw new LocationOutOfWorldBoundariesError("outside the world");
+    if (!__mc.isLoaded(this.id, x, z)) return undefined;
+    return new MockBlock(this, x, y, z);
+  }
+  setBlockType(loc, typeId) {
+    this._set(loc.x, loc.y, loc.z, typeId);
+  }
+  fillBlocks(volume, block, options = {}) {
+    const include = options.blockFilter?.includeTypes;
+    const changed = [];
+    for (const l of volume.locations) {
+      if (!__mc.isLoaded(this.id, l.x, l.z)) {
+        if (options.ignoreChunkBoundErrors) continue;
+        throw new LocationInUnloadedChunkError("unloaded");
+      }
+      if (include && !include.includes(this._get(l.x, l.y, l.z).typeId)) continue;
+      this._set(l.x, l.y, l.z, typeof block === "string" ? block : block.type.id);
+      changed.push(l);
+    }
+    __mc.fillCalls.push({ type: block, from: include ? [...include] : null, count: changed.length, cells: changed, tick: currentTick });
+    return new ListBlockVolume(changed);
   }
   setWeather(type, duration) {
     if (!(type in WeatherType)) throw new Error(`invalid weather ${type}`);
@@ -119,12 +219,15 @@ class Dimension {
     if (previous !== type) world.afterEvents.weatherChange.fire({ dimension: this.id, newWeather: type, previousWeather: previous });
   }
   getBiome(loc) {
-    if (!__mc.isLoaded(this.id, loc.x, loc.z)) throw new Error("LocationInUnloadedChunkError");
+    if (!__mc.isLoaded(this.id, loc.x, loc.z)) throw new LocationInUnloadedChunkError("unloaded");
     return { id: __mc.biomeFn(this.id, loc.x, loc.z) };
   }
   getTopmostBlock(xz) {
-    if (!__mc.isLoaded(this.id, xz.x, xz.z)) throw new Error("LocationInUnloadedChunkError");
-    return { location: { x: xz.x, y: __mc.surfaceFn(xz.x, xz.z), z: xz.z } };
+    if (!__mc.isLoaded(this.id, xz.x, xz.z)) throw new LocationInUnloadedChunkError("unloaded");
+    for (let y = 160; y >= -64; y--) {
+      if (this._get(xz.x, y, xz.z).typeId !== "minecraft:air") return new MockBlock(this, xz.x, y, xz.z);
+    }
+    return undefined;
   }
   getSkyLightLevel(loc) {
     return __mc.skyLightFn(loc);
@@ -141,6 +244,10 @@ export const world = {
     itemUse: new Signal(),
     playerLeave: new Signal(),
     weatherChange: new Signal(),
+    playerBreakBlock: new Signal(),
+    blockExplode: new Signal(),
+    playerPlaceBlock: new Signal(),
+    playerInteractWithBlock: new Signal(),
   },
   seed: "123456789",
   getTimeOfDay: () => __mc.timeOfDay,
@@ -204,6 +311,36 @@ export const __mc = {
   surfaceFn: () => 70,
   skyLightFn: () => 15,
   knownFogs: new Set(),
+  blockChanges: [],
+  fillCalls: [],
+  overworld() {
+    return world.getDimension("minecraft:overworld");
+  },
+  setBlock(x, y, z, typeId, states) {
+    this.overworld()._set(x, y, z, typeId, states);
+  },
+  typeAt(x, y, z) {
+    return this.overworld()._get(x, y, z).typeId;
+  },
+  /** A player breaks a block: it becomes air, then the after-event fires. */
+  breakBlock(player, x, y, z) {
+    const dim = this.overworld();
+    const before = new MockPermutation(dim._get(x, y, z).typeId, dim._get(x, y, z).states);
+    dim._set(x, y, z, "minecraft:air");
+    world.afterEvents.playerBreakBlock.fire({ player, dimension: dim, block: new MockBlock(dim, x, y, z), brokenBlockPermutation: before });
+  },
+  placeBlock(player, x, y, z, typeId) {
+    const dim = this.overworld();
+    dim._set(x, y, z, typeId);
+    world.afterEvents.playerPlaceBlock.fire({ player, dimension: dim, block: new MockBlock(dim, x, y, z) });
+  },
+  interact(player, x, y, z, itemTypeId) {
+    const dim = this.overworld();
+    world.afterEvents.playerInteractWithBlock.fire({
+      player, block: new MockBlock(dim, x, y, z), itemStack: itemTypeId ? { typeId: itemTypeId } : undefined,
+      isFirstEvent: true, blockFace: "Up", faceLocation: { x: 0.5, y: 1, z: 0.5 },
+    });
+  },
   /** A player typing /weather <type>: the game changes weather on its own. */
   typeWeatherCommand(type) {
     world.getDimension("minecraft:overworld");
