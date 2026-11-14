@@ -118,3 +118,54 @@ test("dry ground soaks up rain instead (no runoff below saturation)", async () =
   await run(rt, 20 * 30);
   assert.equal(rt.water.stats.runoff, 0);
 });
+
+// Found on a real Forge server with the Java port (same logic as here): water
+// is drawn in whole layers, and a rescan counted a half-empty top layer as
+// full, read blocks while a layer was being removed, forgot a hole above the
+// water, and reset the simulation clock. Rescans must not change anything.
+test("rescans of a leaking tank never create water or change the outcome", async () => {
+  const worlds = [makeWorld(), makeWorld()];
+  const rts = worlds.map((w) => {
+    tank(w, 0, 69); // 3x3, water y 65..69 (45 m³), walls to y 70
+    w.set(-1, 67, 1, "minecraft:air"); // hole in the west wall, 3rd layer
+    const rt = createRuntime(w.host);
+    rt.weather.force("CLEAR", 1e6, 0);
+    rt.water.requestScan(OW, 1, 66, 1, "gauge");
+    return rt;
+  });
+  for (const rt of rts) await run(rt, 20);
+  const [a, b] = rts;
+  const id = b.water.tankAt(OW, 1, 65, 1).id;
+  let last = b.water.bodies.get(id).volume;
+  for (let i = 0; i < 60; i++) {
+    b.water._rescan(b.water.bodies.get(id), "change");
+    await run(a, 20);
+    await run(b, 20);
+    const v = b.water.bodies.get(id).volume;
+    assert.ok(v <= last + 1e-6, `rescan ${i} raised the volume from ${last} to ${v}`);
+    last = v;
+  }
+  const [ta, tb] = [a.water.bodies.get(id), b.water.bodies.get(id)];
+  assert.ok(Math.abs(ta.volume - tb.volume) < 1e-3, `with rescans ${tb.volume}, without ${ta.volume}`);
+  assert.ok(tb.volume > 17.5 && tb.volume < 22, `drains to the hole (18 m³ below it, minus evaporation): ${tb.volume}`);
+  assert.equal(tb.openings.length, 1, "the hole above the surface is still known");
+  assert.deepEqual([tb.openings[0].x, tb.openings[0].y], [-1, 67]);
+});
+
+// Found on the Forge server: TNT removed several wall blocks at once, each
+// started a scan of the same water, and three tanks were made for one body.
+test("several blocks broken at once (explosion) make one tank", async () => {
+  const w = makeWorld();
+  tank(w, 0, 68);
+  const rt = createRuntime(w.host);
+  rt.weather.force("CLEAR", 1e6, 0);
+  await run(rt, 20);
+  const blast = [[-1, 66, 0], [-1, 66, 1], [-1, 67, 1], [1, 67, -1], [3, 66, 2]];
+  for (const [x, y, z] of blast) w.set(x, y, z, "minecraft:air");
+  for (const [x, y, z] of blast) rt.water.onBlockRemoved(OW, x, y, z);
+  await run(rt, 20);
+  const tanks = [...rt.water.bodies.values()].filter((b) => b.type === "tank");
+  assert.equal(tanks.length, 1, "one tank for one body of water");
+  assert.ok(Math.abs(tanks[0].volume - 36) < 0.5, `volume ${tanks[0].volume}`);
+  assert.equal(tanks[0].openings.length, 5);
+});

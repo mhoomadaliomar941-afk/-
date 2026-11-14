@@ -2,6 +2,8 @@ package com.realisticworld.forge;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.EnumPushReaction;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
@@ -25,8 +27,21 @@ import java.util.Random;
 public class BlockPuddle extends Block {
     private static final AxisAlignedBB SHAPE = new AxisAlignedBB(0, 0, 0, 1, 1 / 16.0, 1);
 
+    /**
+     * Not Material.WATER: vanilla liquid code reads the "level" property of any
+     * block made of water, and the puddle has none (that crashed the server
+     * when flowing water reached a puddle). Flowing water washes puddles away.
+     */
+    static final Material PUDDLE = new Material(MapColor.WATER) {
+        @Override public boolean isSolid() { return false; }
+        @Override public boolean blocksLight() { return false; }
+        @Override public boolean blocksMovement() { return false; }
+        @Override public boolean isReplaceable() { return true; }
+        @Override public EnumPushReaction getMobilityFlag() { return EnumPushReaction.DESTROY; }
+    };
+
     public BlockPuddle() {
-        super(Material.WATER);
+        super(PUDDLE);
         setHardness(0F);
         setLightOpacity(0);
         setSoundType(SoundType.SLIME);

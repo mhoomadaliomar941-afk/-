@@ -287,6 +287,11 @@ export class WaterSystem {
       notify(scan.status);
       return;
     }
+    if (!tankId) {
+      // Several broken blocks (an explosion) start several scans of the same
+      // water; the first to finish made the tank, the others update it.
+      tankId = this.tankAt(dim, seed.x, seed.y, seed.z)?.id;
+    }
     const shape = scan.result();
     const old = tankId ? /** @type {RTank | undefined} */ (this.bodies.get(tankId)) : undefined;
     const interesting = shape.openings.length > 0 || shape.pipes.length > 0 || shape.valves.length > 0 || reason === "gauge" || old;
@@ -309,12 +314,23 @@ export class WaterSystem {
     let layers = shape.layers;
     let baseY = shape.baseY;
     if (old && old.baseY === baseY && old.layers.length > layers.length) layers = [...layers, ...old.layers.slice(layers.length)];
+    let volume = shape.cells;
+    if (old && shape.waterTop === (old.r.iced ? old.r.top - 1 : old.r.top)) {
+      // The surface is where we last drew it, so nobody added or took water.
+      // Water is drawn in whole layers: counting blocks would round the real
+      // volume (a half-empty top layer counts as full) and every rescan would
+      // create water. The simulated volume stays the truth.
+      volume = Math.min(old.volume, capacity(layers));
+    }
+    const openings = shape.openings.map((o) => ({ ...o, open: true }));
+    const valves = [...shape.valves];
+    if (old) this._keepOpeningsAbove(old, dim, shape.waterTop, openings, valves);
     /** @type {RTank} */
     const tank = {
       id, type: "tank", dim,
       baseY, layers, columns: mergeColumns(old?.columns, shape.columns), openTop: shape.openTop,
-      openings: shape.openings.map((o) => ({ ...o, open: true })), valves: shape.valves, pipes,
-      volume: shape.cells, frozen: old?.frozen ?? false, lastSim: this.d.now(),
+      openings, valves, pipes,
+      volume, frozen: old?.frozen ?? false, lastSim: old?.lastSim ?? this.d.now(), // time not yet simulated is not lost
       stats: old?.stats ?? { out: 0, rained: 0, evaporated: 0, outflow: 0 },
       r: { top: shape.waterTop, iced: false },
     };
@@ -325,6 +341,27 @@ export class WaterSystem {
       if (p.out?.kind === "water" && !this.tankAt(dim, p.out.x, p.out.y, p.out.z)) this.requestScan(dim, p.out.x, p.out.y, p.out.z, "pipe");
     }
     notify("tank", id);
+  }
+
+  /**
+   * The scan only sees openings touching the water. A known hole or valve above
+   * the current surface still matters (rain or a refill reaches it), so it is
+   * kept while the block there is still open.
+   */
+  _keepOpeningsAbove(old, dim, waterTop, openings, valves) {
+    const seen = new Set([...openings, ...valves].map((o) => k3(o.x, o.y, o.z)));
+    for (const o of old.openings) {
+      if (o.y <= waterTop || seen.has(k3(o.x, o.y, o.z))) continue;
+      seen.add(k3(o.x, o.y, o.z));
+      const c = this.d.host.cellAt(dim, o.x, o.y, o.z);
+      if (c === "air" || c === "flow" || c === "drain" || c === "valve_open") openings.push({ ...o });
+    }
+    for (const v of old.valves) {
+      if (v.y <= waterTop || seen.has(k3(v.x, v.y, v.z))) continue;
+      seen.add(k3(v.x, v.y, v.z));
+      const c = this.d.host.cellAt(dim, v.x, v.y, v.z);
+      if (c === "valve_open" || c === "valve_closed") valves.push(v);
+    }
   }
 
   // ---------------------------------------------------------------- events
@@ -608,6 +645,7 @@ export class WaterSystem {
       const region = this.d.tracker.regionAt(b.dim, ref.x, ref.z);
       if (!region || region.tier === LOD.FAR) continue;
       if (!this.d.host.isLoaded(b.dim, ref.x, ref.z)) continue;
+      if (b.type === "tank" && this.scans.has(`tank:${b.id}`)) continue; // a scan is reading these blocks: keep them still
       const used = b.type === "tank" ? this._renderTank(b, budget) : this._renderPool(b, budget);
       budget -= used;
       if (used) ops++;

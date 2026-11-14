@@ -53,6 +53,66 @@ public class WaterWorldTest {
         return w;
     }
 
+    /**
+     * Found on a real Forge server: TNT removed several wall blocks at once, each
+     * started its own scan of the same water, and three tanks were made for one
+     * body (draining it three times as fast).
+     */
+    @Test
+    public void severalBrokenBlocksMakeOneTank() {
+        FakeWorld w = build();
+        Engine e = new Engine(w, new DataStore());
+        e.weather.force("CLEAR", 1_000_000, 0);
+        run(e, 60);
+        int[][] blast = {{-1, 72, 1}, {-1, 72, 2}, {-1, 73, 2}, {2, 73, -1}, {5, 72, 3}};
+        for (int[] b : blast) w.set(b[0], b[1], b[2], AIR);
+        for (int[] b : blast) e.water.onBlockRemoved(0, b[0], b[1], b[2]);
+        run(e, 20);
+        int tanks = 0;
+        for (Bodies.Body b : e.water.bodies().values()) if (b.isTank()) tanks++;
+        assertEquals("one tank for one body of water", 1, tanks);
+        Bodies.Tank t = e.water.tankAt(0, 2, 72, 2);
+        assertEquals(100.0, t.volume, 1.0);
+        assertEquals(5, t.openings.size());
+    }
+
+    /**
+     * Found on a real Forge server: the world shows water in whole layers, and a
+     * rescan (water gauge, valve, broken block) counted a half-empty top layer
+     * as full, so repeated rescans kept creating water in a leaking tank.
+     */
+    @Test
+    public void rescansNeverCreateWater() {
+        FakeWorld a = build(), b = build();
+        Engine ea = new Engine(a, new DataStore()), eb = new Engine(b, new DataStore());
+        for (Engine e : new Engine[] {ea, eb}) {
+            e.weather.force("CLEAR", 1_000_000, 0);
+            run(e, 60);
+        }
+        a.set(-1, 72, 2, AIR);
+        b.set(-1, 72, 2, AIR);
+        ea.water.onBlockRemoved(0, -1, 72, 2);
+        eb.water.onBlockRemoved(0, -1, 72, 2);
+        run(ea, 10);
+        run(eb, 10);
+        String id = eb.water.tankAt(0, 0, 72, 0).id;
+        double last = eb.water.bodies().get(id).volume;
+        for (int i = 0; i < 60; i++) {
+            eb.water.rescanTank((Bodies.Tank) eb.water.bodies().get(id), "gauge");
+            run(ea, 20);
+            run(eb, 20);
+            double v = eb.water.bodies().get(id).volume;
+            assertTrue("rescan " + i + " raised the volume from " + last + " to " + v, v <= last + 1e-6);
+            last = v;
+        }
+        Bodies.Tank ta = (Bodies.Tank) ea.water.bodies().get(id), tb = (Bodies.Tank) eb.water.bodies().get(id);
+        assertEquals("rescans do not change the outcome", ta.volume, tb.volume, 1e-3);
+        assertTrue("still draining toward the hole: " + last, last > 25 && last < 30);
+        assertEquals("the hole above the surface is still known", 1, tb.openings.size());
+        assertEquals(-1, tb.openings.get(0).x);
+        assertEquals(72, tb.openings.get(0).y);
+    }
+
     @Test
     public void mandatoryTankLeakScenario() {
         FakeWorld w = build();

@@ -16,7 +16,7 @@
 3. أنشئ عالماً جديداً أو عدّل عالماً موجوداً:
    - **Behavior Packs** ← فعّل *Realistic World - Ultimate Earth Simulation (BP)*.
    - اللعبة تفعّل حزمة الموارد (RP) تلقائياً لأنها مرتبطة بها. إذا ما تفعّلت، فعّلها من **Resource Packs**.
-4. ادخل العالم. بالسجل (Content Log) تظهر رسالة: `Realistic World 0.3.0 started`.
+4. ادخل العالم. بالسجل (Content Log) تظهر رسالة: `Realistic World 0.3.1 started`.
 
 > ننصح بتجربته أول مرة على **نسخة من عالمك** أو عالم جديد.
 

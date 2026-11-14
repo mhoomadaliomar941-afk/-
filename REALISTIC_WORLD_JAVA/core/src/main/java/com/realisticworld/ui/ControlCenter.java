@@ -294,7 +294,10 @@ public final class ControlCenter {
             out.add("Depth " + i.get("depth") + " m, pressure at the bottom " + i.get("bottomPressureKPa") + " kPa");
             double out2 = ((Number) i.get("outflowLps")).doubleValue();
             int openings = ((Number) i.get("openings")).intValue();
-            if (out2 > 0) out.add(String.format(Locale.ROOT, "§cLeaking %s L/s§r through %d opening(s); %,d L lost so far", i.get("outflowLps"), openings, ((Number) i.get("leakedLiters")).longValue()));
+            int pipes = ((Number) i.get("pipes")).intValue();
+            String through = openings > 0 && pipes > 0 ? openings + " opening(s) and " + pipes + " pipe(s)"
+                : openings > 0 ? openings + " opening(s)" : pipes + " pipe(s)";
+            if (out2 > 0) out.add(String.format(Locale.ROOT, "§cLeaking %s L/s§r through %s; %,d L lost so far", i.get("outflowLps"), through, ((Number) i.get("leakedLiters")).longValue()));
             else if (openings > 0) out.add("Openings: " + openings + " (water is at or below them)");
             else out.add("Sealed: no openings");
             if (((Number) i.get("closedValves")).intValue() > 0) out.add("Closed valves: " + i.get("closedValves"));

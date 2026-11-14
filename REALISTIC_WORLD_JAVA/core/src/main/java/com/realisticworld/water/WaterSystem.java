@@ -329,6 +329,12 @@ public final class WaterSystem implements Scheduler.SimSystem {
             notifyScan(dim, x, y, z, null, scan.status().name().toLowerCase());
             return;
         }
+        if (tankId == null) {
+            // Several broken blocks (an explosion) start several scans of the same
+            // water; the first to finish made the tank, the others update it.
+            Bodies.Tank same = tankAt(dim, x, y, z);
+            if (same != null) tankId = same.id;
+        }
         TankScan.Shape shape = scan.result();
         Bodies.Tank old = tankId == null ? null : (Bodies.Tank) bodies.get(tankId);
         boolean interesting = !shape.openings.isEmpty() || !shape.pipes.isEmpty() || !shape.valves.isEmpty() || "gauge".equals(reason) || old != null;
@@ -359,6 +365,7 @@ public final class WaterSystem implements Scheduler.SimSystem {
         t.openTop = shape.openTop;
         t.openings = shape.openings;
         t.valves = shape.valves;
+        if (old != null) keepOpeningsAbove(old, t, shape.waterTop);
         for (TankScan.PipeStart ps : shape.pipes) {
             TankScan.PipeEnd end = TankScan.tracePipe((px, py, pz) -> world.cellAt(dim, px, py, pz), new int[] {ps.x, ps.y, ps.z}, scan::contains, 64);
             Bodies.Pipe p = new Bodies.Pipe();
@@ -372,8 +379,15 @@ public final class WaterSystem implements Scheduler.SimSystem {
             t.pipes.add(p);
         }
         t.volume = shape.cells;
+        if (old != null && shape.waterTop == (old.iced ? old.shownTop - 1 : old.shownTop)) {
+            // The surface is where we last drew it, so nobody added or took water.
+            // Water is drawn in whole layers: counting blocks would round the real
+            // volume (a half-empty top layer counts as full) and every rescan
+            // would create water. The simulated volume stays the truth.
+            t.volume = Math.min(old.volume, WaterPhysics.capacity(t.layers));
+        }
         t.frozen = old != null && old.frozen;
-        t.lastSim = scheduler.ticks();
+        t.lastSim = old != null ? old.lastSim : scheduler.ticks(); // time not yet simulated is not lost
         if (old != null) {
             t.statOut = old.statOut;
             t.statRained = old.statRained;
@@ -389,6 +403,27 @@ public final class WaterSystem implements Scheduler.SimSystem {
             if ("water".equals(p.outKind) && tankAt(dim, p.out[0], p.out[1], p.out[2]) == null) requestScan(dim, p.out[0], p.out[1], p.out[2], "pipe");
         }
         notifyScan(dim, x, y, z, t.id, "tank");
+    }
+
+    /**
+     * The scan only sees openings touching the water. A known hole or valve above
+     * the current surface still matters (rain or a refill reaches it), so it is
+     * kept while the block there is still open.
+     */
+    private void keepOpeningsAbove(Bodies.Tank old, Bodies.Tank t, int waterTop) {
+        Set<Long> seen = new HashSet<>();
+        for (TankScan.Opening o : t.openings) seen.add(WaterPhysics.pack(o.x, o.y, o.z));
+        for (int[] v : t.valves) seen.add(WaterPhysics.pack(v[0], v[1], v[2]));
+        for (TankScan.Opening o : old.openings) {
+            if (o.y <= waterTop || !seen.add(WaterPhysics.pack(o.x, o.y, o.z))) continue;
+            TankScan.Cell c = world.cellAt(t.dim, o.x, o.y, o.z);
+            if (c == TankScan.Cell.AIR || c == TankScan.Cell.FLOW || c == TankScan.Cell.DRAIN || c == TankScan.Cell.VALVE_OPEN) t.openings.add(o);
+        }
+        for (int[] v : old.valves) {
+            if (v[1] <= waterTop || !seen.add(WaterPhysics.pack(v[0], v[1], v[2]))) continue;
+            TankScan.Cell c = world.cellAt(t.dim, v[0], v[1], v[2]);
+            if (c == TankScan.Cell.VALVE_CLOSED || c == TankScan.Cell.VALVE_OPEN) t.valves.add(v);
+        }
     }
 
     private static List<int[]> mergeColumns(List<int[]> oldCols, List<int[]> newCols) {
@@ -677,6 +712,7 @@ public final class WaterSystem implements Scheduler.SimSystem {
             Regions.Active region = regions.regionAt(b.dim, r[0], r[2]);
             if (region == null || region.tier == Regions.Tier.FAR) continue;
             if (!world.isLoaded(b.dim, r[0], r[2])) continue;
+            if (b.isTank() && scans.contains("tank:" + b.id)) continue; // a scan is reading these blocks: keep them still
             int used = b.isTank() ? renderTank((Bodies.Tank) b, budget) : renderPool((Bodies.Pool) b, budget);
             budget -= used;
             if (used > 0) ops++;

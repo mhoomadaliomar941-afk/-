@@ -17,7 +17,7 @@ import java.util.Map;
  * through Host, so the full engine runs in unit tests and in a benchmark.
  */
 public final class Engine {
-    public static final String VERSION = "0.3.0";
+    public static final String VERSION = "0.3.1";
     public static final int SAVE_INTERVAL_TICKS = 200;
     public static final int CHECKPOINT_EVERY_SAVES = 6;
 

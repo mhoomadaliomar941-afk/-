@@ -228,6 +228,6 @@ public class ControlCenterTest {
 
     @Test
     public void statusLine() {
-        assertTrue(new ControlCenter(engine()).statusLine().matches("(?s)Realistic World 0\\.3\\.0 \\| RUNNING \\| tick 60\n.*NEAR 25 MEDIUM 56 FAR 88.*"));
+        assertTrue(new ControlCenter(engine()).statusLine().matches("(?s)Realistic World " + java.util.regex.Pattern.quote(Engine.VERSION) + " \\| RUNNING \\| tick 60\n.*NEAR 25 MEDIUM 56 FAR 88.*"));
     }
 }
