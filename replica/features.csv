@@ -1,0 +1,27 @@
+feature,area,priority,original,clone,notes
+Sign up / log in (phone number + OTP likely),onboarding,must,yes,no,login method is a guess; confirm from screenshots
+Product feed of premium items (phones consoles watches),catalog,must,yes,no,
+Product detail with total spots / spots filled progress,catalog,must,yes,no,"""each product shows its participation details"""
+Buy one or more spots in a product (from 1 JD),participation,must,yes,no,whether multiple spots per user is allowed is unconfirmed
+In-app wallet with balance,wallet,must,yes,no,
+Top up wallet with multiple payment methods,wallet,must,yes,no,Jordanian gateways; methods not confirmed
+Close a product when all spots fill,participation,must,yes,no,
+Select one owner when spots fill,participation,must,yes,no,selection method not public; regulated - see recon.md
+Credit non-selected members' spend back as shopping balance,wallet,must,yes,no,"""goes back to your in-app shopping balance automatically"""
+My participations list (active / closed / owned),participation,must,yes,no,
+Result notification (you own it / balance credited),notifications,must,yes,no,
+Delivery of the owned product across Amman and governorates,fulfilment,must,yes,no,needs address capture + order tracking
+Delivery address and order status,fulfilment,should,yes,no,
+Owners showcase (verified owners shown in app),trust,should,yes,no,needs owner consent for photo/name
+Partner stores directory,partners,should,yes,no,
+Redeem shopping balance at a partner store from the app,partners,should,yes,no,redemption mechanic (QR/code) is a guess
+Wallet transaction history,wallet,should,yes,no,
+Arabic + English UI with RTL,platform,should,likely,no,reviews are partly Arabic; assumed
+Push notifications for new products and closing soon,notifications,should,likely,no,assumed
+Profile and settings,account,should,yes,no,
+Help / FAQ / terms,support,should,yes,no,support email shown on listing
+Categories / search / filter,catalog,could,unknown,no,
+Referral / invite friends,growth,could,unknown,no,
+Partner-store network and agreements,partners,could,yes,skip,a business network you must build yourself; not software
+Gaming / prize-draw licence in Jordan,legal,must,yes,skip,the owner-selection model is likely a regulated prize draw; get legal advice before running it
+Authorized-distributor supply deals,fulfilment,could,yes,skip,their supplier relationships are not part of the product
