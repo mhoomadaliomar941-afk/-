@@ -1,0 +1,35 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "rw:water_gauge"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      " G ",
+      "GCG",
+      " B "
+    ],
+    "key": {
+      "G": {
+        "item": "minecraft:glass"
+      },
+      "C": {
+        "item": "minecraft:compass"
+      },
+      "B": {
+        "item": "minecraft:bucket"
+      }
+    },
+    "unlock": [
+      {
+        "item": "minecraft:bucket"
+      }
+    ],
+    "result": {
+      "item": "rw:water_gauge"
+    }
+  }
+}

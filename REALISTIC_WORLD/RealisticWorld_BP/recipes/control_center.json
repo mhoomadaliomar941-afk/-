@@ -1,0 +1,15 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shaped": {
+    "description": { "identifier": "rw:control_center" },
+    "tags": ["crafting_table"],
+    "pattern": [" R ", "ICI", " R "],
+    "key": {
+      "R": { "item": "minecraft:redstone" },
+      "I": { "item": "minecraft:iron_ingot" },
+      "C": { "item": "minecraft:compass" }
+    },
+    "unlock": [{ "item": "minecraft:compass" }],
+    "result": { "item": "rw:control_center" }
+  }
+}

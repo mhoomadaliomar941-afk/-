@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=false": {
+      "model": "realisticworld:valve_closed"
+    },
+    "open=true": {
+      "model": "realisticworld:valve_open"
+    }
+  }
+}

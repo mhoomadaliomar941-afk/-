@@ -1,0 +1,4 @@
+rootProject.name = 'realisticworld'
+// core: the simulation, plain Java 8 with no Minecraft classes (fully unit-tested).
+// forge: the Minecraft Forge 1.12.2 mod built on top of core.
+include 'core', 'forge'

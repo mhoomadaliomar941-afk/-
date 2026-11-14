@@ -1,0 +1,12 @@
+{
+  "resource_pack_name": "realistic_world",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "rw_control_center": {
+      "textures": "textures/items/control_center"
+    },
+    "rw_water_gauge": {
+      "textures": "textures/items/water_gauge"
+    }
+  }
+}

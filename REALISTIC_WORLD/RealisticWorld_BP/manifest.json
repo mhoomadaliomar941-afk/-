@@ -1,0 +1,29 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Realistic World - Ultimate Earth Simulation (BP)",
+    "description": "Environmental simulation: engine core, weather and climate, water physics, control center.",
+    "uuid": "01528246-53b3-4dfa-ad6a-c98e44b96040",
+    "version": [0, 3, 1],
+    "min_engine_version": [1, 26, 50]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "03b2e088-bf73-4e77-8c56-04854e7eaf2a",
+      "version": [0, 3, 1]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "7682ba17-744a-498d-a505-cea19508c4e5",
+      "entry": "scripts/main.js",
+      "version": [0, 3, 1]
+    }
+  ],
+  "dependencies": [
+    { "module_name": "@minecraft/server", "version": "2.10.0" },
+    { "module_name": "@minecraft/server-ui", "version": "2.2.0" },
+    { "uuid": "2380db62-f0d6-4362-85ce-2b0201b89108", "version": [0, 3, 1] }
+  ]
+}

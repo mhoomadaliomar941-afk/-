@@ -1,0 +1,15 @@
+[
+  {
+    "modid": "realisticworld",
+    "name": "Realistic World",
+    "description": "Ultimate Earth Simulation: weather and climate engine, regional soil moisture, fog, and real water physics (tanks, leaks, pipes, valves, drains, puddles, floods).",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "authorList": [],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

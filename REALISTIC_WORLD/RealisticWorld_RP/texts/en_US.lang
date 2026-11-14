@@ -1,0 +1,8 @@
+item.rw:control_center.name=Realistic World Control Center
+pack.name=Realistic World
+pack.description=Ultimate Earth Simulation
+tile.rw:valve.name=Water Valve
+tile.rw:pipe.name=Water Pipe
+tile.rw:drain.name=Water Drain
+tile.rw:puddle.name=Puddle
+item.rw:water_gauge.name=Water Gauge
