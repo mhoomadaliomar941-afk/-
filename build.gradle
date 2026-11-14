@@ -1,0 +1,203 @@
+/*
+ * Ultra Realistic Water Physics - build script.
+ *
+ * This build reproduces the ForgeGradle 1.12.2 pipeline with self-contained tooling (see buildSrc):
+ *   1. downloadMcDeps      - Minecraft 1.12.2, Forge 14.23.5.2860 universal, MCP snapshot_20171003 and all
+ *                            libraries, each verified by SHA-1 (official URLs first, mirrors as fallback).
+ *   2. setupDevWorkspace   - Forge binpatches + deobfuscation (notch -> SRG -> MCP) + forge_at.cfg
+ *                            => MCP-named compile jar, SRG-named runtime jar and the MCP->SRG mapping.
+ *   3. compileJava         - Java 8 bytecode (--release 8), so any JDK 8+ can build.
+ *   4. reobfJar            - MCP -> SRG reobfuscation + link verification => build/libs/<mod>.jar
+ *   5. prepareServer/Client, runServer/runClient - a REAL Forge 1.12.2 production layout for testing.
+ */
+import com.waterphysics.buildtools.*
+import groovy.json.JsonSlurper
+
+plugins {
+    id 'java'
+}
+
+version = "${project.mc_version}-${project.mod_version}"
+group = 'com.waterphysics'
+base { archivesName = 'UltraRealisticWaterPhysics' }
+
+def mcdev = new JsonSlurper().parse(file('mcdev.json'))
+def cacheDir = new File(gradle.gradleUserHomeDir, "caches/waterphysics-mcdev/${project.mc_version}-${project.forge_version}")
+def libDir = new File(cacheDir, 'libraries')
+def clientJar = new File(cacheDir, "minecraft-${project.mc_version}-client.jar")
+// NOTE: must not sit next to the universal jar: its manifest Class-Path references minecraft_server.<ver>.jar
+// relative to its own directory, which would leak server classes onto the client classpath.
+def serverJar = new File(cacheDir, "server/minecraft_server.${project.mc_version}.jar")
+def universalJar = new File(cacheDir, "forge-${project.mc_version}-${project.forge_version}-universal.jar")
+def mappingsZip = new File(cacheDir, "mcp_${project.mcp_mappings}.zip")
+def devDir = new File(cacheDir, "dev-${project.mcp_mappings}")
+def devJar = new File(devDir, "forge-${project.mc_version}-${project.forge_version}-mcp.jar")
+def srgJar = new File(devDir, "forge-${project.mc_version}-${project.forge_version}-srg.jar")
+def reobfSrg = new File(devDir, 'mcp-srg.srg')
+
+def libFiles = { String side -> mcdev.libraries.findAll { it.sides.contains(side) }.collect { new File(libDir, it.path) } }
+
+tasks.register('downloadMcDeps') {
+    group = 'mcdev'
+    description = 'Downloads Minecraft, Forge, MCP mappings and libraries (SHA-1 verified).'
+    inputs.file('mcdev.json')
+    outputs.files([clientJar, serverJar, universalJar, mappingsZip] + libFiles('client') + libFiles('server') + libFiles('natives-linux'))
+    doLast {
+        def log = new StringBuilder()
+        Downloader.fetch(clientJar, mcdev.minecraft.client.sha1, mcdev.minecraft.client.urls, log)
+        Downloader.fetch(serverJar, mcdev.minecraft.server.sha1, mcdev.minecraft.server.urls, log)
+        Downloader.fetch(universalJar, mcdev.forge.universal.sha1, mcdev.forge.universal.urls, log)
+        Downloader.fetch(mappingsZip, mcdev.mappings.sha1, mcdev.mappings.urls, log)
+        mcdev.libraries.each { lib -> Downloader.fetch(new File(libDir, lib.path), lib.sha1, lib.urls, log) }
+        if (log.length() > 0) logger.lifecycle(log.toString().trim())
+    }
+}
+
+tasks.register('setupDevWorkspace') {
+    group = 'mcdev'
+    description = 'Builds the deobfuscated (MCP) Forge+Minecraft jar used for compilation.'
+    dependsOn 'downloadMcDeps'
+    inputs.files(clientJar, universalJar, mappingsZip)
+    outputs.files(devJar, srgJar, reobfSrg)
+    doLast {
+        logger.lifecycle(DevWorkspace.build(clientJar, universalJar, mappingsZip, devDir, devJar, srgJar, reobfSrg).trim())
+    }
+}
+
+dependencies {
+    compileOnly files(devJar).builtBy('setupDevWorkspace')
+    compileOnly files({ libFiles('compile') }).builtBy('downloadMcDeps')
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.release = 8
+    }
+    options.compilerArgs += ['-Xlint:-options']
+}
+
+processResources {
+    inputs.property 'version', project.mod_version
+    inputs.property 'mcversion', project.mc_version
+    filesMatching('mcmod.info') {
+        expand 'version': project.mod_version, 'mcversion': project.mc_version
+    }
+}
+
+// The plain jar is MCP-named (development namespace); it is reobfuscated into build/libs.
+jar {
+    destinationDirectory = layout.buildDirectory.dir('devlibs')
+    archiveClassifier = 'dev'
+    manifest {
+        attributes('Implementation-Title': 'Ultra Realistic Water Physics', 'Implementation-Version': project.mod_version)
+    }
+}
+
+def reobfOut = layout.buildDirectory.file("libs/${base.archivesName.get()}-${version}.jar")
+tasks.register('reobfJar') {
+    group = 'build'
+    description = 'Reobfuscates the mod jar to SRG names (runtime namespace) and verifies all references.'
+    dependsOn 'jar', 'setupDevWorkspace'
+    inputs.file(jar.archiveFile)
+    inputs.file(reobfSrg)
+    outputs.file(reobfOut)
+    doLast {
+        def out = reobfOut.get().asFile
+        out.parentFile.mkdirs()
+        logger.lifecycle(Reobfuscator.reobf(jar.archiveFile.get().asFile, devJar, reobfSrg, srgJar, out))
+        logger.lifecycle("Mod jar: ${out}")
+    }
+}
+assemble.dependsOn 'reobfJar'
+
+/* ------------------------------------------------------------------------------------------------
+ * Production-like test environments (real Forge 1.12.2, Java 8 required to run the game).
+ * ---------------------------------------------------------------------------------------------- */
+def java8 = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(8) }
+def runServerDir = file('run/server')
+def runClientDir = file('run/client')
+def forgeServerJarName = "forge-${project.mc_version}-${project.forge_version}.jar"
+
+tasks.register('prepareServer') {
+    group = 'mcdev'
+    description = 'Creates a Forge dedicated server in run/server with the reobfuscated mod installed.'
+    dependsOn 'reobfJar', 'downloadMcDeps'
+    doLast {
+        runServerDir.mkdirs()
+        copy { from universalJar; into runServerDir; rename { forgeServerJarName } }
+        copy { from serverJar; into runServerDir }
+        mcdev.libraries.findAll { it.sides.contains('server') }.each { lib ->
+            copy { from new File(libDir, lib.path); into new File(runServerDir, 'libraries/' + new File(lib.path).parent) }
+        }
+        def mods = new File(runServerDir, 'mods'); mods.mkdirs()
+        mods.listFiles().findAll { it.name.startsWith(base.archivesName.get()) }.each { it.delete() }
+        copy { from reobfOut; into mods }
+        new File(runServerDir, 'eula.txt').text = 'eula=true\n'
+        def props = new File(runServerDir, 'server.properties')
+        if (!props.exists()) {
+            props.text = 'online-mode=false\nspawn-protection=0\nlevel-type=FLAT\ngenerate-structures=false\nspawn-monsters=false\nspawn-animals=false\nview-distance=6\nmotd=Water Physics Test\n'
+        }
+    }
+}
+
+tasks.register('runServer', JavaExec) {
+    group = 'mcdev'
+    description = 'Runs the Forge dedicated server (Java 8) with the mod.'
+    dependsOn 'prepareServer'
+    javaLauncher = java8
+    workingDir = runServerDir
+    classpath = files(new File(runServerDir, forgeServerJarName))
+    mainClass = 'net.minecraftforge.fml.relauncher.ServerLaunchWrapper'
+    jvmArgs '-Xmx2G'
+    args 'nogui'
+    standardInput = System.in
+}
+
+tasks.register('prepareClient') {
+    group = 'mcdev'
+    description = 'Creates a Forge client game directory in run/client with the reobfuscated mod installed.'
+    dependsOn 'reobfJar', 'downloadMcDeps'
+    doLast {
+        runClientDir.mkdirs()
+        def natives = new File(runClientDir, 'natives'); natives.mkdirs()
+        libFiles('natives-linux').each { f -> copy { from zipTree(f); into natives; exclude 'META-INF/**' } }
+        def mods = new File(runClientDir, 'mods'); mods.mkdirs()
+        mods.listFiles().findAll { it.name.startsWith(base.archivesName.get()) }.each { it.delete() }
+        copy { from reobfOut; into mods }
+    }
+}
+
+tasks.register('runClient', JavaExec) {
+    group = 'mcdev'
+    description = 'Runs the Forge client (Java 8) with the mod (offline user "Player").'
+    dependsOn 'prepareClient'
+    javaLauncher = java8
+    workingDir = runClientDir
+    classpath = files({ libFiles('client') + [universalJar, clientJar] })
+    mainClass = 'net.minecraft.launchwrapper.Launch'
+    jvmArgs '-Xmx2G', '-Djavax.accessibility.assistive_technologies= ', "-Djava.library.path=${new File(runClientDir, 'natives').absolutePath}", '-Dfml.ignoreInvalidMinecraftCertificates=true'
+    args '--tweakClass', 'net.minecraftforge.fml.common.launcher.FMLTweaker', '--username', 'Player',
+         '--version', "${project.mc_version}", '--gameDir', runClientDir.absolutePath,
+         '--assetsDir', new File(runClientDir, 'assets').absolutePath, '--assetIndex', '1.12',
+         '--accessToken', '0', '--userType', 'legacy', '--uuid', '00000000000000000000000000000001'
+}
+
+/** Writes the client classpath for the automated test scripts (tests/). */
+tasks.register('writeTestEnv') {
+    group = 'mcdev'
+    dependsOn 'prepareClient', 'prepareServer'
+    doLast {
+        def f = file('run/testenv.properties')
+        f.text = "client.classpath=" + (libFiles('client') + [universalJar, clientJar]).collect { it.absolutePath }.join(File.pathSeparator) + "\n" +
+                 "client.natives=" + new File(runClientDir, 'natives').absolutePath + "\n" +
+                 "java8=" + java8.get().executablePath.asFile.absolutePath + "\n" +
+                 "server.jar=" + new File(runServerDir, forgeServerJarName).absolutePath + "\n" +
+                 "mod.jar=" + reobfOut.get().asFile.absolutePath + "\n"
+    }
+}

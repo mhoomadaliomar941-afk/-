@@ -1,0 +1,26 @@
+// Build tooling that reproduces the ForgeGradle 1.12.2 user-dev pipeline:
+// download (SHA-1 verified) -> binpatch -> deobfuscate (notch->SRG->MCP) -> access transform,
+// and reobfuscation (MCP->SRG) of the compiled mod.
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.ow2.asm:asm:9.7'
+    implementation 'org.ow2.asm:asm-commons:9.7'
+    implementation 'org.ow2.asm:asm-tree:9.7'
+    implementation 'org.tukaani:xz:1.9'
+    implementation 'com.nothome:javaxdelta:2.0.1'
+    implementation 'org.apache.commons:commons-compress:1.26.2'
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }

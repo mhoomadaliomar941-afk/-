@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "waterphysics:pump"
+    },
+    "facing=south": {
+      "model": "waterphysics:pump",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "waterphysics:pump",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "waterphysics:pump",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "waterphysics:pump",
+      "x": 270
+    },
+    "facing=down": {
+      "model": "waterphysics:pump",
+      "x": 90
+    }
+  }
+}

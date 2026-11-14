@@ -1,0 +1,15 @@
+[
+{
+  "modid": "waterphysics",
+  "name": "Ultra Realistic Water Physics",
+  "description": "Replaces Minecraft's block-spreading water with a physically simulated, finite and pressurised fluid: gravity and hydrostatic pressure driven flow, tanks with real levels, leaks whose speed depends on hole size and water height (Torricelli), exact 1000 L buckets, pipes with diameters, pumps, valves, cracking/bursting pipes, and realistic visual effects.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "authorList": ["Ultra Realistic Water Physics contributors"],
+  "credits": "Built with Minecraft Forge",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

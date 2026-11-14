@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "waterphysics:valve"
+    },
+    "axis=x": {
+      "model": "waterphysics:valve",
+      "y": 90
+    },
+    "axis=y": {
+      "model": "waterphysics:valve",
+      "x": 90
+    }
+  }
+}

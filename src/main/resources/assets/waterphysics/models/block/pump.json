@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "waterphysics:blocks/machine_side",
+    "north": "waterphysics:blocks/pump_front",
+    "south": "waterphysics:blocks/pump_back",
+    "east": "waterphysics:blocks/machine_side",
+    "west": "waterphysics:blocks/machine_side",
+    "up": "waterphysics:blocks/machine_side",
+    "down": "waterphysics:blocks/machine_side"
+  }
+}

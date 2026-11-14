@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "waterphysics:spigot"
+    },
+    "facing=south": {
+      "model": "waterphysics:spigot",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "waterphysics:spigot",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "waterphysics:spigot",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "waterphysics:spigot",
+      "x": 270
+    },
+    "facing=down": {
+      "model": "waterphysics:spigot",
+      "x": 90
+    }
+  }
+}

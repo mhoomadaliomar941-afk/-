@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "waterphysics:tank_gauge"
+    },
+    "facing=south": {
+      "model": "waterphysics:tank_gauge",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "waterphysics:tank_gauge",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "waterphysics:tank_gauge",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "textures": {
+    "particle": "waterphysics:blocks/valve_body",
+    "body": "waterphysics:blocks/valve_body",
+    "pipe": "waterphysics:blocks/pipe_copper",
+    "wheel": "waterphysics:blocks/valve_wheel"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        5,
+        0
+      ],
+      "to": [
+        11,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pipe"
+        },
+        "south": {
+          "texture": "#pipe"
+        },
+        "east": {
+          "texture": "#pipe"
+        },
+        "west": {
+          "texture": "#pipe"
+        },
+        "up": {
+          "texture": "#pipe"
+        },
+        "down": {
+          "texture": "#pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        3.5,
+        3.5
+      ],
+      "to": [
+        12.5,
+        12.5,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#body"
+        },
+        "south": {
+          "texture": "#body"
+        },
+        "east": {
+          "texture": "#body"
+        },
+        "west": {
+          "texture": "#body"
+        },
+        "up": {
+          "texture": "#body"
+        },
+        "down": {
+          "texture": "#body"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        12.5,
+        7.5
+      ],
+      "to": [
+        8.5,
+        14,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#body"
+        },
+        "south": {
+          "texture": "#body"
+        },
+        "east": {
+          "texture": "#body"
+        },
+        "west": {
+          "texture": "#body"
+        },
+        "up": {
+          "texture": "#body"
+        },
+        "down": {
+          "texture": "#body"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        14,
+        2
+      ],
+      "to": [
+        14,
+        14.5,
+        14
+      ],
+      "faces": {
+        "up": {
+          "texture": "#wheel"
+        },
+        "down": {
+          "texture": "#wheel"
+        }
+      }
+    }
+  ]
+}

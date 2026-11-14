@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "waterphysics:blocks/tank_wall",
+    "north": "waterphysics:blocks/gauge_front",
+    "south": "waterphysics:blocks/tank_wall",
+    "east": "waterphysics:blocks/tank_wall",
+    "west": "waterphysics:blocks/tank_wall",
+    "up": "waterphysics:blocks/tank_wall",
+    "down": "waterphysics:blocks/tank_wall"
+  }
+}
