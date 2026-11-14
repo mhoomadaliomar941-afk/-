@@ -1,0 +1,10 @@
+{
+  "name": "realisticworld-server-test",
+  "private": true,
+  "description": "A scripted player that tests the mod on a real Forge 1.12.2 server",
+  "scripts": { "test": "node playerTest.js" },
+  "dependencies": {
+    "mineflayer": "4.39.0",
+    "minecraft-protocol-forge": "1.0.0"
+  }
+}

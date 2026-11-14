@@ -1,78 +1,66 @@
 # PROJECT_STATUS – REALISTIC WORLD (Java Edition 1.12.2)
 
-آخر تحديث: 2026-11-14 · النسخة 0.3.0 (مطابقة لنسخة Bedrock 0.3.0)
+آخر تحديث: 2026-11-14 · النسخة **0.3.1** (مطابقة لنسخة Bedrock 0.3.1)
 
 ## الهدف
 نقل المود بالكامل لـ **Minecraft Java Edition 1.12.2** كمود **Forge** (المنصة المعتمدة لهذا الإصدار).
 
-## الحالة
+## الحالة: النقل مكتمل ✅
 
 | المرحلة | الحالة |
 |---|---|
-| **J1 – النواة بـ Java 8** (المحرك، الإعدادات، الأداء، المناطق، الطقس، المناخ، الضباب، المياه، HUD، الفحص الذاتي) | ✅ مكتملة، **52/52 اختبار** |
-| **J2 – طبقة Forge** (البلوكات، الأدوات، الأحداث، الواجهة، الـ HUD والضباب على العميل، الشبكة، الحفظ، الأوامر) | ⛔ **متوقفة:** شبكة البيئة تمنع مستودع Forge وخوادم Mojang |
-| **J3 – تجربة على سيرفر Forge حقيقي** (Java 8 منصّب هنا)، الوثائق، ملف الـ jar | ⏳ بعد J2 |
+| **J1 – النواة بـ Java 8** (المحرك، الإعدادات، الأداء، المناطق، الطقس، المناخ، الضباب، المياه، HUD، الفحص الذاتي، مركز التحكم) | ✅ **63/63 اختبار** |
+| **J2 – طبقة Forge** (البلوكات، الأدوات، الوصفات، الأحداث، الواجهة، الـ HUD والضباب على العميل، الشبكة، الحفظ، الأوامر) | ✅ |
+| **J3 – سيرفر Forge 1.12.2 حقيقي** + لاعب حقيقي متصل | ✅ **21/21**، 7 أخطاء اكتُشفت وتصلحت (5 منها موجودة بـ Bedrock وتصلحت هناك هم) |
 
-## اللي يلزم حتى نكمل J2
-البيئة لازم تسمح بهذني المواقع (مكتبات Forge و Minecraft):
+**الملف الجاهز:** `release/realisticworld-1.12.2-0.3.1.jar`
+**التنصيب والاستخدام:** `docs/INSTALL_AR.md` · **الاختبارات:** `docs/TEST_REPORT.md`
+
+## ما يحتاج تجربتك
+- الشكل على الشاشة (الواجهة، الضباب، الـ HUD، صور البلوكات) واللعب الفردي: السيرفر بدون شاشة، فانفحص محتوى الرسائل بس مو شكلها.
+
+## البناء
+```bash
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+./gradlew --max-workers=1 :core:test :forge:build     # الناتج: forge/build/libs/realisticworld-1.12.2-<version>.jar
 ```
-maven.minecraftforge.net
-files.minecraftforge.net
-libraries.minecraft.net
-launchermeta.mojang.com
-launcher.mojang.com
-piston-meta.mojang.com
-piston-data.mojang.com
-resources.download.minecraft.net
-```
-الطريقة: من claude.ai بالكمبيوتر أو تطبيق Claude محدّث، اكتب «اكمل» ووافق على طلب البيئة. أو من إعدادات البيئة: Network access ← Allowed domains ← أضف المواقع أعلاه (مع إبقاء Allow package managers مفعّل).
+البناء يحتاج الوصول لـ `maven.minecraftforge.net` و `libraries.minecraft.net` وخوادم Mojang (`launchermeta`, `launcher`, `piston-meta`, `piston-data`, `resources.download`).
 
 ## الهيكل
 ```
 REALISTIC_WORLD_JAVA/
-├── settings.gradle, build.gradle     Gradle 4.10.3 (wrapper) — الإصدار المتوافق مع ForgeGradle 2.3
+├── settings.gradle, build.gradle     Gradle 4.10.3 (wrapper)
 ├── core/                             Java 8 خالص، بدون أي كلاس من Minecraft
 │   ├── src/main/java/com/realisticworld/
 │   │   ├── util/      MathUtil, Rng (نفس تسلسل نسخة Bedrock بالضبط)
 │   │   ├── core/      Engine, Config, DataStore, Performance, Scheduler, RwLog, Hud, SelfTest
 │   │   ├── sim/       Regions (LOD + سجلات القطاعات + مدة الغياب)
 │   │   ├── weather/   WeatherModel, Climate, WeatherSystem, ClimateSystem, FogSystem
-│   │   └── water/     WaterPhysics, Basin, TankScan, Bodies, WaterSystem
-│   └── src/test/java/  52 اختبار (JUnit 4)
-└── forge/                            (J2) مود Forge 1.12.2 فوق core
+│   │   ├── water/     WaterPhysics, Basin, TankScan, Bodies, WaterSystem
+│   │   └── ui/        Form, ControlCenter (الصفحات تُبنى بالسيرفر وتنرسم عند اللاعب)
+│   └── src/test/java/  63 اختبار (JUnit 4)
+├── forge/                            مود Forge 1.12.2 فوق core
+│   ├── RealisticWorldMod   الأحداث، الـ tick، الحفظ، النماذج، الـ gauge، الـ anchors
+│   ├── ForgeHost           العالم الحقيقي لـ Engine.Host (لاعبين، بايومات، بلوكات، طقس)
+│   ├── BlockValve, BlockPuddle, RwBlocks, CommandRw, PlayerPrefs, RwSavedData, Nbt
+│   ├── net/RwNetwork       4 رسائل: نموذج، رد، HUD، ضباب
+│   └── client/             GuiForm (أي نموذج من السيرفر)، ClientProxy (HUD، الضباب، النماذج)
+├── release/                          ملف الـ jar الجاهز
+├── docs/                             INSTALL_AR.md, TEST_REPORT.md
+└── tools/server-test/                سيرفر حقيقي + لاعب مبرمج (21 فحص)
 ```
 
-## الاختبارات (J1)
-`JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 ./gradlew :core:test`
-
-| الملف | يغطي |
-|---|---|
-| `EngineTest` (8) | الجدولة وحد الوقت والعدالة، عزل الأعطال، الطابور، الإيقاف، الإبطاء التلقائي، الإعدادات، **تسلسل RNG مطابق لـ JavaScript بالضبط** |
-| `RegionsTest` (9) | حلقات LOD، المناطق غير المحمّلة، عدة لاعبين، مدة الغياب، الحفظ وإعادة الفتح، بيانات الأنظمة، حد الذاكرة، تخطي إعادة الحساب، القطاع التالف |
-| `WeatherTest` (16) | الحتمية والاستمرار بعد الحفظ، خطوة كبيرة = صغيرة، **إحصائيات 300 يوم** (نفس النطاقات)، LOW/NORMAL/HIGH، الجفاف، الفرض، التوقعات، المناخ والتربة والضباب، ربط طقس اللعبة واتباع `/weather`، المناخ القريب/البعيد، التعويض، الضباب بالخارج |
-| `WaterTest` (14) | الضغط وتورشيلي، **الاختبار الإلزامي: يطابق الحل التحليلي ضمن 5%**، المسح والفتحات والمساحة الداخلية، الماء الطبيعي، المصارف والصمامات والمطر والتجمد، الأواني المستطرقة، الأنابيب، الملء والفيضان، الأرض المستوية، البرك، التعويض، الحفظ والاسترجاع |
-| `WaterWorldTest` (5) | **السيناريو الإلزامي كامل عبر الـ Engine بعالم بلوكات:** كسر الجدار → الاكتشاف → المستوى ينزل ويوقف عند الفتحة → الماء بالحفرة (توازن الكتلة) → الصندوق سليم → الصمام → البحيرة الطبيعية ما تنصرف → **ما انبدّل أي بلوك غير الهواء/الماء** → طبقات كاملة → الحفظ وإعادة الفتح → سد الفتحة → **إعادة الملء ما تبدّل بلوك وضعه اللاعب** (اختبار متحقق منه بطفرة متعمدة) + الأنابيب + برك المطر + الفحص الذاتي + الإعدادات |
-
 ## القرارات التقنية (Java)
-1. **Forge 1.12.2** (14.23.5.2860)، ForgeGradle 2.3، Gradle 4.10.3، Java 8. الكود يترجم بـ Java 8 (`sourceCompatibility 1.8`).
+1. **Forge 1.12.2** (14.23.5.2860)، **ForgeGradle 3** (نفس الـ MDK الرسمي؛ ملفات ForgeGradle 2.3 ما عادت موجودة على مستودع Forge)، mappings `snapshot 20171003-1.12`، Gradle 4.10.3، Java 8. الكود يترجم بـ Java 8 (`sourceCompatibility 1.8`).
 2. **فصل كامل:** `core` ما يعرف شي عن Minecraft. طبقة Forge توفر `Engine.Host` فقط (العالم، اللاعبين، البلوكات). نفس أسلوب نسخة Bedrock، وهذا اللي سمح بنقل كل الاختبارات.
 3. **الحفظ:** `DataStore` (شجرة Map/List) تتحول كلها لـ NBT داخل `WorldSavedData`. ماين كرافت يكتبها لملف مؤقت ثم يعيد تسميته، فالانهيار أثناء الحفظ يبقي الملف السابق. ما نحتاج تقسيم Bedrock (حد 32767 بايت).
 4. **البايومات:** الحرارة والأمطار تُقرأ من اللعبة نفسها (`Biome#getDefaultTemperature`, `getRainfall`) والماء من `BiomeDictionary` (OCEAN/RIVER/SWAMP/BEACH). ما نحتاج جدول ثابت.
 5. **المواقع المضغوطة:** `long` بنفس تخطيط `BlockPos.toLong` بدل النصوص (أسرع وأقل ذاكرة).
 6. **العميل والسيرفر:** المحاكاة على السيرفر. الضباب والـ HUD والواجهة على العميل، وتنتقل برسائل شبكة صغيرة (SimpleNetworkWrapper).
 7. **الماء:** نفس قواعد الأمان: تغيير البلوكات فقط عبر فلتر أنواع، والطبقة كلها بنفس الـ tick.
+8. **البركة (puddle) بمادة خاصة**، مو `Material.WATER`: كود الماء الأصلي يقرأ خاصية `level` من أي بلوك مادته ماء (هذا سبب انهيار اكتشفه السيرفر الحقيقي).
+9. **إعادة مسح الخزان ما تغير الحجم** إذا السطح بمكانه، والرسم يتوقف أثناء المسح، والمسح المتأخر لنفس الماء يحدّث الخزان الموجود (`docs/TEST_REPORT.md`).
+10. **`/rw anchor`:** ماين كرافت 1.12 يوقف الكائنات بعد 15 ثانية بدون لاعبين؛ الـ anchor يخلي المحاكاة تشتغل بمنطقة بدون لاعب (مثل ticking area بـ Bedrock).
 
-## خطة J2 (طبقة Forge)
-1. `forge/build.gradle` بـ ForgeGradle 2.3، يعتمد على `core` ويضمّن كلاساته بالـ jar.
-2. `RealisticWorldMod` (@Mod) + Proxy للعميل والسيرفر.
-3. `ForgeHost implements Engine.Host`: اللاعبين، `world.isBlockLoaded`، `WorldInfo` للمطر والرعد، البايوم، `getHeight`، `setBlockState` بفلتر الأنواع.
-4. `RwSavedData extends WorldSavedData`: تحويل DataStore ↔ NBT.
-5. `WorldTickEvent` ← `engine.tick()` (Overworld)، ومراقبة تغيّر الطقس لاتباع `/weather`.
-6. الأحداث: `BlockEvent.BreakEvent`، `ExplosionEvent.Detonate`، `BlockEvent.PlaceEvent`، `PlayerInteractEvent.RightClickBlock` (الصمام، المقياس).
-7. البلوكات: Valve (`PropertyBool OPEN`)، Pipe، Drain، Puddle (AABB رقيق، طبقة شفافة). العناصر: Control Center، Water Gauge. الوصفات JSON، الموديلات، النصوص `en_us.lang`.
-8. الأوامر: `/rw menu|status|selftest`.
-9. الشبكة: فتح الواجهة، بيانات اللوحة، أسطر HUD، نوع الضباب.
-10. العميل: `GuiScreen` لمركز التحكم (Dashboard, Weather, Water, Systems, Performance, General, Error Log, Self-Test)، `RenderGameOverlayEvent.Text` للـ HUD، `EntityViewRenderEvent.FogDensity/FogColors` للضباب.
-
-## خطة J3
-تشغيل سيرفر Forge 1.12.2 حقيقي هنا (بدون واجهة، Java 8 منصّب)، وأوامر من الكونسول تبني خزان وتكسر جدار، ونقرأ النتيجة من السجل والعالم. هذا اختبار داخل اللعبة الحقيقية لكل جزء السيرفر. الواجهة والضباب (العميل) تحتاج تجربتك.
+## بعدين
+المراحل الجاية (PHASE 4 وما بعد) تنبني بالنواة المشتركة بنفس الطريقة، فتطلع للنسختين.
