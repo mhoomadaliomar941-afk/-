@@ -263,10 +263,6 @@ def textures():
     save(gauge_front(), 'blocks/gauge_front.png')
     save(hydrometer(), 'items/hydrometer.png')
     save(wrench(), 'items/pipe_wrench.png')
-    save(foam(), 'particle/foam.png')
-    save(soft_blob(16, (235, 242, 250), 1.2, seed=2), 'particle/mist.png')
-    save(soft_blob(8, (190, 220, 255), 0.8, seed=3), 'particle/drop.png')
-    save(soft_blob(8, (230, 245, 255), rings=True), 'particle/bubble.png')
 
 
 # ------------------------------------------------------------------------------------------------

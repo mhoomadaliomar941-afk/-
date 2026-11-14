@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,5 +61,10 @@ public class WaterPhysics {
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent e) {
         e.registerServerCommand(new CommandWater());
+    }
+
+    @Mod.EventHandler
+    public void serverStopping(FMLServerStoppingEvent e) {
+        for (com.waterphysics.sim.WaterSim s : com.waterphysics.sim.WaterManager.all()) s.recordAllLoaded();
     }
 }

@@ -1,0 +1,38 @@
+[
+ {
+  "test": "multiplayer (dedicated server + client)",
+  "check": "server side: the tank leaks while a client is connected",
+  "pass": true,
+  "detail": "tank volume now 22563 L"
+ },
+ {
+  "test": "multiplayer (dedicated server + client)",
+  "check": "client connects to the dedicated server (mod handshake ok)",
+  "pass": true,
+  "detail": "joined=True"
+ },
+ {
+  "test": "multiplayer (dedicated server + client)",
+  "check": "client receives physics sync packets over the network",
+  "pass": true,
+  "detail": "client stats packets=46 sections=5 activeSections=5 overlayCells=264 particles=8 fps=27 entityParticles=185; client stats packets=59 sections=5 activeSections=5 overlayCells=302 particles=5 fps=28 entityParticles=154; client stats packets=69 sections=6 activeSections=6 overlayCells=327 particles=3 fps=29 entityParticles=157"
+ },
+ {
+  "test": "multiplayer (dedicated server + client)",
+  "check": "client renders effects from synced data (overlay cells > 0)",
+  "pass": true,
+  "detail": "overlay cells: [264, 302, 327]"
+ },
+ {
+  "test": "multiplayer (dedicated server + client)",
+  "check": "screenshots captured",
+  "pass": true,
+  "detail": "mp_01_leak.png, mp_02_leak_later.png"
+ },
+ {
+  "test": "multiplayer (dedicated server + client)",
+  "check": "no exceptions from the mod (client and server)",
+  "pass": true,
+  "detail": "0 lines"
+ }
+]

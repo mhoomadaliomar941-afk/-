@@ -62,6 +62,19 @@ public class BlockTankGauge extends Block implements IWaterBarrier {
         return true;
     }
 
+    /** comparators only re-read their input when notified: refresh them every second */
+    @Override
+    public void onBlockAdded(World w, BlockPos pos, IBlockState state) {
+        if (!w.isRemote) w.scheduleUpdate(pos, this, 20);
+    }
+
+    @Override
+    public void updateTick(World w, BlockPos pos, IBlockState state, java.util.Random rand) {
+        if (w.isRemote) return;
+        w.updateComparatorOutputLevel(pos, this);
+        w.scheduleUpdate(pos, this, 20);
+    }
+
     @Override
     public boolean hasComparatorInputOverride(IBlockState state) {
         return true;

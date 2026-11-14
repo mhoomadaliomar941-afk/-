@@ -565,6 +565,8 @@ public final class PipeManager {
                 }
             }
             n.syncIfChanged(false);
+            // contents change every tick without block updates: make sure the chunk (tile entity) is saved
+            world.markChunkDirty(n.getPos(), n);
         }
         for (TileFluidNode n : broken) burst((TilePipe) n, sim);
     }

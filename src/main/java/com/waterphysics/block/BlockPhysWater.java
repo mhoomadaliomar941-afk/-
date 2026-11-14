@@ -201,7 +201,8 @@ public class BlockPhysWater extends BlockFluidBase {
     @Override
     public IBlockState getExtendedState(IBlockState oldState, IBlockAccess world, BlockPos pos) {
         IExtendedBlockState state = (IExtendedBlockState) oldState;
-        boolean waterAbove = isWaterOrVanilla(world, pos.up());
+        // only a (nearly) full block under more water is a continuous column; a thin falling stream is not
+        boolean waterAbove = isWaterOrVanilla(world, pos.up()) && oldState.getValue(LEVEL) >= 13;
         float here = waterAbove ? 1f : (oldState.getValue(LEVEL) + 1) / 16f * SURFACE_SCALE;
         float[][] h = new float[3][3];
         for (int dx = -1; dx <= 1; dx++) {
@@ -242,7 +243,7 @@ public class BlockPhysWater extends BlockFluidBase {
     private float neighbourHeight(IBlockAccess w, BlockPos p) {
         IBlockState s = w.getBlockState(p);
         if (s.getBlock() == this) {
-            if (isWaterOrVanilla(w, p.up())) return 1f;
+            if (s.getValue(LEVEL) >= 13 && isWaterOrVanilla(w, p.up())) return 1f;
             return (s.getValue(LEVEL) + 1) / 16f * SURFACE_SCALE;
         }
         if (s.getMaterial() == Material.WATER) return 0.89f;

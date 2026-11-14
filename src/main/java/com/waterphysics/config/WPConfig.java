@@ -86,7 +86,7 @@ public final class WPConfig {
         @Config.Comment("Linear (viscous) damping of flow in 1/s. Higher = thicker, slower water.")
         @Config.RangeDouble(min = 0.0, max = 20.0)
         @Config.LangKey("waterphysics.config.viscosity")
-        public double viscosity = 0.35;
+        public double viscosity = 1.0;
 
         @Config.Comment("Discharge coefficient Cd of openings (orifices). Torricelli: Q = Cd * A * sqrt(2 g h). Sharp-edged orifice ~ 0.61.")
         @Config.RangeDouble(min = 0.1, max = 1.0)

@@ -1,0 +1,100 @@
+# Singleplayer scenario (integrated server). All coordinates @(dx,dy,dz) are relative to the start position.
+closegui
+origin
+log scenario start
+cmd /gamerule doDaylightCycle false
+cmd /time set 6000
+cmd /weather clear 100000
+cmd /difficulty peaceful
+cmd /gamerule doMobSpawning false
+look 0 20
+wait 20
+# --- 1: real water bucket from the player's hand ---
+cmd /replaceitem entity @p slot.weapon.mainhand minecraft:water_bucket 1
+wait 10
+look 0 55
+use
+wait 10
+held
+wait 80
+cmd /water region @(-14,-1,-14) @(14,1,14)
+# --- 2: glass tank, filled ---
+cmd /fill @(-3,0,6) @(3,5,10) waterphysics:tank_glass 0 hollow
+cmd /fill @(-2,5,7) @(2,5,9) air
+cmd /water fill @(-2,1,7) @(2,4,9) 1000
+# --- whirlpool tank (drain in the floor above an underground chamber) ---
+cmd /fill @(-13,-3,5) @(-5,-1,12) air
+cmd /fill @(-12,0,6) @(-7,4,11) waterphysics:tank_glass 0 hollow
+cmd /fill @(-11,4,7) @(-8,4,10) air
+cmd /water fill @(-11,1,7) @(-8,3,10) 1000
+# --- pump tank: pump in the east wall, glass pipe column, outlet pouring down ---
+cmd /fill @(6,0,-6) @(10,4,-2) waterphysics:tank_glass 0 hollow
+cmd /fill @(7,4,-5) @(9,4,-3) air
+cmd /water fill @(7,1,-5) @(9,3,-3) 1000
+cmd /setblock @(10,1,-4) waterphysics:pump 5
+cmd /fill @(11,1,-4) @(11,6,-4) waterphysics:pipe_glass
+cmd /fill @(11,6,-3) @(11,6,0) waterphysics:pipe_glass
+wait 100
+cmd /water region @(-2,1,7) @(2,5,9)
+cmd /gamemode spectator
+hidegui true
+view 0 7 -6 0 28
+wait 30
+screenshot sp_02_tanks_full
+# --- 3: hole in the side wall: jet, waterfall, splash, foam ---
+view 11 5 2 50 22
+wait 10
+cmd /setblock @(3,2,8) air
+wait 10
+screenshot sp_03_leak_jet_a
+wait 14
+screenshot sp_04_leak_jet_b
+wait 20
+cmd /water region @(-2,1,7) @(2,5,9)
+stats
+screenshot sp_05_leak_spreading
+wait 20
+cmd /water region @(-2,1,7) @(2,5,9)
+# --- 4: close the hole ---
+cmd /setblock @(3,2,8) waterphysics:tank_glass
+wait 60
+cmd /water region @(-2,1,7) @(2,5,9)
+wait 60
+cmd /water region @(-2,1,7) @(2,5,9)
+# --- 5: drain in the tank floor -> whirlpool ---
+view -5 9 3 45 40
+wait 20
+cmd /setblock @(-9,0,8) air
+wait 8
+screenshot sp_06_vortex_a
+wait 12
+stats
+screenshot sp_07_vortex_b
+# --- 6: pump and glass pipes ---
+view 17 5 -9 45 12
+wait 120
+cmd /water pipe @(10,1,-4)
+cmd /water pipe @(11,3,-4)
+stats
+screenshot sp_08_pump_pipes
+# --- 7: hydrometer HUD ---
+hidegui false
+clearchat
+view 8 6 -4 0 90
+cmd /replaceitem entity @p slot.weapon.mainhand waterphysics:hydrometer 1
+wait 40
+clearchat
+wait 2
+screenshot sp_09_hydrometer_hud
+# --- 8: settings GUI ---
+config
+wait 20
+screenshot sp_10_settings_gui
+closegui
+wait 5
+cmd /water stats
+cmd /water perf
+stats
+wait 20
+log scenario end
+quit

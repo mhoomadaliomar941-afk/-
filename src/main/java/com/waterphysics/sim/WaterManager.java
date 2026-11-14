@@ -81,6 +81,7 @@ public final class WaterManager {
         if (s == null) return;
         NBTTagCompound t = s.writeChunk(e.getChunk().x, e.getChunk().z);
         if (t != null) e.getData().setTag(WaterSim.NBT_KEY, t);
+        s.recordSavedTotal(e.getChunk().x, e.getChunk().z);
     }
 
     @SubscribeEvent

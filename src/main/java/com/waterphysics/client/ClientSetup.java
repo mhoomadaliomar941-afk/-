@@ -14,7 +14,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.ConfigElement;
@@ -37,6 +36,17 @@ public final class ClientSetup {
     public static void preInit() {
         MinecraftForge.EVENT_BUS.register(WaterEffects.class);
         MinecraftForge.EVENT_BUS.register(HydrometerHud.class);
+        if (ClientAutoTest.enabled()) {
+            ClientAutoTest.load();
+            MinecraftForge.EVENT_BUS.register(ClientAutoTest.class);
+        }
+    }
+
+    /** the in-game settings screen (same as Mods > Ultra Realistic Water Physics > Config) */
+    public static void openConfig() {
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.displayGuiScreen(new GuiConfig(mc.currentScreen, ConfigElement.from(com.waterphysics.config.WPConfig.class).getChildElements(),
+                WaterPhysics.MODID, false, false, WaterPhysics.NAME));
     }
 
     public static void init() {
@@ -66,21 +76,8 @@ public final class ClientSetup {
     }
 
     @SubscribeEvent
-    public static void onStitch(TextureStitchEvent.Pre e) {
-        if (e.getMap() != Minecraft.getMinecraft().getTextureMapBlocks()) return;
-        WaterParticles.FOAM = e.getMap().registerSprite(new ResourceLocation(WaterPhysics.MODID, "particle/foam"));
-        WaterParticles.MIST = e.getMap().registerSprite(new ResourceLocation(WaterPhysics.MODID, "particle/mist"));
-        WaterParticles.DROP = e.getMap().registerSprite(new ResourceLocation(WaterPhysics.MODID, "particle/drop"));
-        WaterParticles.BUBBLE = e.getMap().registerSprite(new ResourceLocation(WaterPhysics.MODID, "particle/bubble"));
-    }
-
-    @SubscribeEvent
     public static void onKey(InputEvent.KeyInputEvent e) {
-        if (CONFIG_KEY != null && CONFIG_KEY.isPressed()) {
-            Minecraft mc = Minecraft.getMinecraft();
-            mc.displayGuiScreen(new GuiConfig(mc.currentScreen, ConfigElement.from(com.waterphysics.config.WPConfig.class).getChildElements(),
-                    WaterPhysics.MODID, false, false, WaterPhysics.NAME));
-        }
+        if (CONFIG_KEY != null && CONFIG_KEY.isPressed()) openConfig();
     }
 
     static Block water() {

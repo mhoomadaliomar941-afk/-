@@ -18,6 +18,8 @@ public final class WaterStats extends WorldSavedData {
     public double bucketsOut, reservoirOut, commandOut, displacedOut, evaporated, destroyedOut, otherOut;
     /** float rounding residue (values below 1e-7 m^3 cleared) */
     public double rounding;
+    /** water total of each chunk at its last save (for auditing chunks that are not loaded) */
+    public final java.util.HashMap<Long, Double> savedTotals = new java.util.HashMap<>();
 
     public WaterStats() { super(NAME); }
     public WaterStats(String name) { super(name); }
@@ -41,6 +43,18 @@ public final class WaterStats extends WorldSavedData {
         destroyedOut = t.getDouble("destroyedOut");
         otherOut = t.getDouble("otherOut");
         rounding = t.getDouble("rounding");
+        savedTotals.clear();
+        long[] keys = toLongs(t.getTag("ledgerK"));
+        net.minecraft.nbt.NBTTagList vals = t.getTagList("ledgerV", 6);
+        for (int i = 0; i < Math.min(keys.length, vals.tagCount()); i++) savedTotals.put(keys[i], vals.getDoubleAt(i));
+    }
+
+    private static long[] toLongs(net.minecraft.nbt.NBTBase b) {
+        if (!(b instanceof net.minecraft.nbt.NBTTagList)) return new long[0];
+        net.minecraft.nbt.NBTTagList l = (net.minecraft.nbt.NBTTagList) b;
+        long[] r = new long[l.tagCount()];
+        for (int i = 0; i < r.length; i++) r[i] = ((net.minecraft.nbt.NBTTagLong) l.get(i)).getLong();
+        return r;
     }
 
     @Override
@@ -58,6 +72,14 @@ public final class WaterStats extends WorldSavedData {
         t.setDouble("destroyedOut", destroyedOut);
         t.setDouble("otherOut", otherOut);
         t.setDouble("rounding", rounding);
+        net.minecraft.nbt.NBTTagList k = new net.minecraft.nbt.NBTTagList();
+        net.minecraft.nbt.NBTTagList v = new net.minecraft.nbt.NBTTagList();
+        for (java.util.Map.Entry<Long, Double> e : savedTotals.entrySet()) {
+            k.appendTag(new net.minecraft.nbt.NBTTagLong(e.getKey()));
+            v.appendTag(new net.minecraft.nbt.NBTTagDouble(e.getValue()));
+        }
+        t.setTag("ledgerK", k);
+        t.setTag("ledgerV", v);
         return t;
     }
 }

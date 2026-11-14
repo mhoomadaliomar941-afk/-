@@ -106,10 +106,12 @@ public class CommandWater extends CommandBase {
             }
             case "stats": {
                 WaterStats st = sim.stats;
-                double stored = sim.totalStored();
+                double loaded = sim.totalStored();
+                double unloaded = sim.totalUnloaded();
+                double stored = loaded + unloaded;
                 double pipes = PipeManager.get(w).totalStored();
                 double expected = st.expectedStored();
-                out(sender, "[WP] stats stored_l=" + f(stored * 1000) + " pipes_l=" + f(pipes * 1000) + " total_l=" + f((stored + pipes) * 1000)
+                out(sender, "[WP] stats stored_l=" + f(stored * 1000) + " loaded_l=" + f(loaded * 1000) + " unloaded_l=" + f(unloaded * 1000) + " pipes_l=" + f(pipes * 1000) + " total_l=" + f((stored + pipes) * 1000)
                         + " expected_l=" + f(expected * 1000) + " drift_l=" + f((stored + pipes - expected) * 1000)
                         + " in_buckets=" + f(st.bucketsIn * 1000) + " out_buckets=" + f(st.bucketsOut * 1000)
                         + " in_reservoir=" + f(st.reservoirIn * 1000) + " out_reservoir=" + f(st.reservoirOut * 1000)

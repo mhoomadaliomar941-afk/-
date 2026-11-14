@@ -97,22 +97,29 @@ def test_fill_tank(g):
     r = g.cmd('/water tank %s' % g.P(-29, 1, -39))
     cap = int(g.kv(r)['capacity_l'])
     check(T, 'tank capacity detected', cap == 10000, r.split('[WP] ')[-1])
-    for i in range(10):
+    for i in range(9):
         g.cmd('/water bucket %s empty' % g.P(-29, 1, -39))
-        time.sleep(0.6)
+        time.sleep(0.8)
+    time.sleep(3)
+    v9, _, s9, _ = g.region(*inner)
+    check(T, '9 buckets = exactly 9000 L in the tank (nothing lost)', abs(v9 - 9000) < 1, 'volume=%.3f L, surface y=%.3f' % (v9, s9))
+    g.cmd('/water bucket %s empty' % g.P(-29, 1, -39))
     time.sleep(5)
     vol, cells, surf, _ = g.region(*inner)
-    check(T, '10 buckets = 10000 L inside the tank', abs(vol - 10000) < 5, 'volume=%.2f L, %d blocks, surface y=%.3f' % (vol, cells, surf))
-    check(T, 'water level reached the rim (tank full)', surf > g.Y + 5.85, 'surface=%.3f, rim top=%d' % (surf, g.Y + 6))
+    out, _, _, _ = g.region(g.P(-40, 0, -50), g.P(-20, 7, -30))
+    check(T, '10th bucket fills the 10000 L tank to the brim (>= 99.5 %)', vol > 9950,
+          'inside=%.2f L, splashed over the rim=%.2f L, surface y=%.3f' % (vol, out - vol, surf))
+    check(T, 'all 10000 L accounted for (inside + spilled)', abs(out - 10000) < 1, 'total=%.3f L' % out)
     d = g.kv(g.cmd('/water info %s' % g.P(-29, 1, -39)))
     p = float(d['pressure_kpa'])
     check(T, 'hydrostatic pressure at the bottom ~ rho*g*h (5 m -> ~49 kPa)', 40 < p < 55, 'bottom pressure=%.2f kPa' % p)
     g.cmd('/water bucket %s empty' % g.P(-29, 1, -39))
     time.sleep(4)
     vol2, _, _, _ = g.region(*inner)
-    out, ocells, _, _ = g.region(g.P(-40, 0, -50), g.P(-20, 0, -30))
-    check(T, 'an 11th bucket overflows: the tank keeps its capacity, the rest spills out', abs(vol2 - 10000) < 30 and out > 900,
-          'inside=%.1f L, spilled outside=%.1f L' % (vol2, out))
+    alltot, _, _, _ = g.region(g.P(-40, 0, -50), g.P(-20, 7, -30))
+    out = alltot - vol2
+    check(T, 'an 11th bucket overflows: the tank stays full, the excess spills out', vol2 > 9800 and out > 900 and abs(alltot - 11000) < 1,
+          'inside=%.1f L, outside=%.1f L, total=%.2f L' % (vol2, out, alltot))
 
 
 def drain_series(g, inner, seconds, step=1.0):
@@ -210,6 +217,85 @@ def test_hole_sizes(g):
     check(T, 'spigot flow matches Torricelli Q = Cd*A*sqrt(2gh) (within 25%)', abs(r100 - theo100) / theo100 < 0.25,
           'measured %.2f L/s, theory %.2f L/s' % (r100, theo100))
     return tanks
+
+
+def test_multi_holes(g):
+    T = '6b several holes share the outflow by depth'
+    inner = g.tank(-70, 50, 3, 3, 6)
+    g.cmd('/water fill %s %s 1000' % (g.P(-69, 1, 51), g.P(-67, 6, 53)))
+    time.sleep(4)
+    # two identical 100 cm^2 openings: low one (centre Y+1.5) in the east wall, high one (Y+4.5) in the west wall
+    g.setblock(g.P(-66, 1, 52), 'waterphysics:spigot 5')
+    g.cmd('/water spigot %s 3' % g.P(-66, 1, 52))
+    g.setblock(g.P(-70, 4, 52), 'waterphysics:spigot 4')
+    g.cmd('/water spigot %s 3' % g.P(-70, 4, 52))
+    time.sleep(2)
+    lo = float(g.kv(g.cmd('/water spigot %s' % g.P(-66, 1, 52)))['flow_lps'])
+    hi = float(g.kv(g.cmd('/water spigot %s' % g.P(-70, 4, 52)))['flow_lps'])
+    _, _, surf, _ = g.region(*inner)
+    h_lo, h_hi = surf - (g.Y + 1.5), surf - (g.Y + 4.5)
+    expect = math.sqrt(h_lo / h_hi) if h_hi > 0 else 0
+    ratio = lo / hi if hi > 0 else 0
+    check(T, 'the deeper hole leaks faster (higher pressure)', lo > hi > 0, 'low hole %.2f L/s, high hole %.2f L/s' % (lo, hi))
+    check(T, 'flow ratio matches Torricelli sqrt(h_low/h_high) within 10%', abs(ratio - expect) / max(expect, 1e-6) < 0.10,
+          'ratio=%.3f expected=%.3f (h_low=%.2f m, h_high=%.2f m)' % (ratio, expect, h_lo, h_hi))
+
+
+def test_gauge(g):
+    T = 'tank gauge + comparator'
+    inner = g.tank(-40, 50, 3, 3, 4)
+    g.setblock(g.P(-40, 1, 52), 'waterphysics:tank_gauge 1')      # dial facing west, tank behind (east)
+    g.setblock(g.P(-41, 0, 52), 'stone')                           # comparators need a block below
+    g.setblock(g.P(-41, 1, 52), 'unpowered_comparator 3')          # comparator facing east reads the gauge
+    g.cmd('/water fill %s %s 1000' % (g.P(-39, 1, 51), g.P(-37, 2, 53)))  # 18000 L of 36000 L
+    time.sleep(5)
+    t = g.kv(g.cmd('/water tank %s' % g.P(-39, 1, 52)))
+    ok = None
+    for sig in (8, 7):
+        r = g.mc('/testforblock %s unpowered_comparator -1 {OutputSignal:%d}' % (g.P(-41, 1, 52), sig), r'Successfully found|is |did not')
+        if 'Successfully' in r:
+            ok = sig
+            break
+    check(T, 'comparator reads the fill level from the gauge (50 %% -> signal 7..8)', ok is not None,
+          'tank %s / %s L, comparator signal=%s' % (t.get('volume_l'), t.get('capacity_l'), ok))
+
+
+def test_bucket_into_pipe(g):
+    T = 'bucket poured into a pipe'
+    # vertical pipe standing on the ground (closed bottom), open at the top
+    for y in range(0, 3):
+        g.setblock(g.P(-20, y, 70), 'waterphysics:pipe_medium')
+    time.sleep(1)
+    r = g.cmd('/water bucket %s empty' % g.P(-20, 3, 70))
+    time.sleep(4)
+    vols = [float(g.kv(g.cmd('/water pipe %s' % g.P(-20, y, 70)))['volume_l']) for y in range(0, 3)]
+    check(T, 'water poured at the open end of a pipe flows into it', sum(vols) > 100,
+          '%s; pipe contents bottom..top = %s L' % (r.split('[WP] ')[-1], ', '.join('%.1f' % v for v in vols)))
+
+
+def test_vanilla(g):
+    T = 'vanilla water interaction'
+    # a natural-like lake: 8x8, 2 deep, vanilla still water placed without block updates
+    g.mc('/fill %s %s water' % (g.P(40, -2, 40), g.P(47, -1, 47)), r'blocks filled')
+    st0 = g.stats()
+    # dig a 3-block trench next to the lake (2 deep): this disturbs the lake edge
+    # dig like a player (block updates notify the lake edge): /setblock, not /fill
+    for x in range(48, 51):
+        for z in range(42, 45):
+            for y in (-1, -2):
+                g.setblock(g.P(x, y, z), 'air')
+    time.sleep(6)
+    r = g.cmd('/water info %s' % g.P(48, -2, 43))
+    vol, cells, surf, _ = g.region(g.P(48, -2, 42), g.P(50, -1, 44))
+    st1 = g.stats()
+    conv = float(st1['in_converted']) - float(st0['in_converted'])
+    res = float(st1['in_reservoir']) - float(st1['out_reservoir']) - (float(st0['in_reservoir']) - float(st0['out_reservoir']))
+    check(T, 'disturbed vanilla water becomes physical water and flows into the trench', vol > 4000 and 'waterphysics:water' in r,
+          'trench holds %.0f L in %d blocks (surface y=%.2f); converted %.0f L' % (vol, cells, surf, conv))
+    check(T, 'the undisturbed lake acts as a reservoir: it refills the trench to its own level', res > 0 and surf > g.Y - 1.3,
+          'net inflow from the lake %.0f L, trench surface y=%.2f, lake surface y=%.2f' % (res, surf, g.Y - 1 + 0.89))
+    d = g.stats()
+    check(T, 'reservoir exchange is accounted (mass ledger balanced)', abs(float(d['drift_l'])) < 5, 'drift=%s L' % d['drift_l'])
 
 
 def test_pipes(g):
@@ -364,6 +450,10 @@ def run():
         test_fill_tank(g)
         test_leak(g)
         test_hole_sizes(g)
+        test_multi_holes(g)
+        test_gauge(g)
+        test_bucket_into_pipe(g)
+        test_vanilla(g)
         a, b = test_pipes(g)
         test_valve(g, a, b)
         test_pump(g)

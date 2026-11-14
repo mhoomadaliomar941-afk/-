@@ -181,6 +181,12 @@ public final class WaterSim {
     // ------------------------------------------------------------------------------------------------
     // activation
     // ------------------------------------------------------------------------------------------------
+    /** water data of the chunk changed: make sure Minecraft saves the chunk */
+    private static void touch(Sec s) {
+        Chunk c = s.owner.chunk;
+        if (c != null) c.markDirty();
+    }
+
     public void activate(Sec s) {
         if (s == null) return;
         s.quiet = 0;
@@ -254,6 +260,7 @@ public final class WaterSim {
         if (s.vol[i] <= 0) s.waterCells++;
         s.vol[i] += amount;
         activate(s);
+        touch(s);
         s.visualDirty = true;
         visualQueue.add(s.key);
         ensureBlock(p, s.vol[i]);
@@ -265,58 +272,54 @@ public final class WaterSim {
      * existing surface) instead of over-pressurising one block. Returns the amount placed.
      */
     public float pour(BlockPos p, float amount) {
-        int x = p.getX(), z = p.getZ();
-        float remaining = amount;
-        int y = p.getY();
-        // climb to the first block of the column that is not full (the water surface)
-        while (y < 255) {
-            IBlockState st = stateAt(x, y, z);
-            if (st == null) return 0f;
-            byte t = CellType.of(st);
-            if (t != CellType.OPEN && t != CellType.RESERVOIR) break;
-            if (vol(x, y, z) < FULL) break;
-            IBlockState up = stateAt(x, y + 1, z);
-            if (up == null || CellType.of(up) != CellType.OPEN) break;
-            y++;
-        }
-        BlockPos start = new BlockPos(x, y, z);
-        IBlockState s0 = stateAt(x, y, z);
+        IBlockState s0 = stateAt(p.getX(), p.getY(), p.getZ());
         if (s0 == null) return 0f;
         byte t0 = CellType.of(s0);
         if (t0 != CellType.OPEN && t0 != CellType.RESERVOIR) return 0f;
-        // poured water spreads over the surface layer (only over supported blocks), layer by layer
-        for (int layer = 0; layer < 64 && remaining > 1e-6f; layer++) {
-            int ly = y + layer;
-            if (ly > 255) break;
-            ArrayDeque<BlockPos> q = new ArrayDeque<>();
-            LongOpenHashSet seen = new LongOpenHashSet();
-            BlockPos c0 = new BlockPos(x, ly, z);
-            IBlockState cs = stateAt(x, ly, z);
-            if (cs == null || (CellType.of(cs) != CellType.OPEN && CellType.of(cs) != CellType.RESERVOIR)) break;
-            q.add(c0);
-            seen.add(c0.toLong());
-            int visited = 0;
-            while (!q.isEmpty() && remaining > 1e-6f && visited < 96) {
-                BlockPos c = q.poll();
-                visited++;
-                float room = Math.max(0f, 1f - getVolume(c));
-                if (room > 0f) remaining -= addWater(c, Math.min(room, remaining));
-                for (int d = 2; d < 6; d++) {
-                    BlockPos n = c.add(DX[d], 0, DZ[d]);
-                    if (!seen.add(n.toLong())) continue;
-                    IBlockState ns = stateAt(n.getX(), n.getY(), n.getZ());
-                    if (ns == null || CellType.of(ns) != CellType.OPEN) continue;
-                    // supported: water poured here would stay at this level
-                    IBlockState below = stateAt(n.getX(), n.getY() - 1, n.getZ());
-                    boolean supported = below == null || CellType.of(below) != CellType.OPEN || getVolume(n.down()) >= FULL;
-                    if (supported) q.add(n);
-                }
-            }
-            IBlockState up = stateAt(x, ly + 1, z);
-            if (up == null || CellType.of(up) != CellType.OPEN) break;
+        if (!supported(p) && getVolume(p) <= 0f) {
+            // poured into the air: it simply falls (the simulation moves it)
+            return addWater(p, amount);
         }
-        if (remaining > 1e-6f) remaining -= addWater(start, remaining);
+        // settle: fill the lowest non-full blocks of the region first (water finds its level);
+        // water only stacks up once a layer is full, and only spreads over supported blocks
+        float remaining = amount;
+        PriorityQueue<long[]> heap = new PriorityQueue<>((x, y) -> x[1] != y[1] ? Long.compare(x[1], y[1]) : Long.compare(x[2], y[2]));
+        LongOpenHashSet seen = new LongOpenHashSet();
+        long order = 0;
+        heap.add(new long[]{p.toLong(), p.getY(), order++});
+        seen.add(p.toLong());
+        BlockPos last = p;
+        int visited = 0;
+        while (!heap.isEmpty() && remaining > 1e-6f && visited < 512) {
+            BlockPos c = BlockPos.fromLong(heap.poll()[0]);
+            visited++;
+            float room = Math.max(0f, 1f - getVolume(c));
+            if (room > 0f) {
+                remaining -= addWater(c, Math.min(room, remaining));
+                last = c;
+            }
+            boolean full = getVolume(c) >= FULL;
+            for (int d = 0; d < 6; d++) {
+                BlockPos n = c.add(DX[d], DY[d], DZ[d]);
+                if (n.getY() < 0 || n.getY() > 255 || seen.contains(n.toLong())) continue;
+                IBlockState ns = stateAt(n.getX(), n.getY(), n.getZ());
+                if (ns == null || CellType.of(ns) != CellType.OPEN) continue;
+                float nv = getVolume(n);
+                if (d == UP && !full) continue;
+                if (d == DOWN && (nv <= 0f || nv >= FULL)) continue;
+                if (d >= 2 && nv <= 0f && !supported(n)) continue;
+                seen.add(n.toLong());
+                heap.add(new long[]{n.toLong(), n.getY(), order++});
+            }
+        }
+        if (remaining > 1e-6f) remaining -= addWater(last, remaining);
         return amount - Math.max(0f, remaining);
+    }
+
+    /** a block whose floor is solid or full water: water placed there stays at this level */
+    private boolean supported(BlockPos n) {
+        IBlockState below = stateAt(n.getX(), n.getY() - 1, n.getZ());
+        return below == null || CellType.of(below) != CellType.OPEN || getVolume(n.down()) >= FULL;
     }
 
     /** Puts water back into the world near p (e.g. contents of a removed pipe). Returns what could not be placed. */
@@ -348,6 +351,7 @@ public final class WaterSim {
             s.waterCells--;
         }
         activate(s);
+        touch(s);
         s.visualDirty = true;
         visualQueue.add(s.key);
         return t;
@@ -630,13 +634,11 @@ public final class WaterSim {
             IBlockState st = e.get(i & 15, i >> 8, (i >> 4) & 15);
             byte t = CellType.of(st);
             s.type[i] = t;
-            if (st.getBlock() == WaterPhysics.WATER_BLOCK && s.vol[i] <= 0 && !s.owner.fromSave) {
-                // block without any saved data (world edited externally): adopt it.
-                // (in saved chunks a water block with 0 volume is only a not yet updated visual)
-                float v = (st.getValue(BlockPhysWater.LEVEL) + 1) / 16f;
-                s.vol[i] = v;
-                s.waterCells++;
-                stats.commandIn += v;
+            if (st.getBlock() == WaterPhysics.WATER_BLOCK && s.vol[i] <= 0) {
+                // a water block without volume is a not yet updated visual (e.g. saved just before the
+                // block update was applied): it is removed by the visual pass, never turned into water
+                s.visualDirty = true;
+                visualQueue.add(s.key);
             } else if (t != CellType.OPEN && s.vol[i] > 0) {
                 displace(new BlockPos(s.worldX(i), s.worldY(i), s.worldZ(i)), s);
             }
@@ -1055,6 +1057,7 @@ public final class WaterSim {
                         if (t.vol[ti] <= 0f) t.waterCells++;
                         t.vol[ti] += a;
                         if (!t.simulatedThisTick) {
+                            touch(t);
                             activate(t);
                             t.visualDirty = true;
                             visualQueue.add(t.key);
@@ -1132,6 +1135,7 @@ public final class WaterSim {
             }
             s.waterCells = cells;
             if (changed) {
+                touch(s);
                 s.quiet = 0;
                 s.rev++;
                 s.visualDirty = true;
@@ -1190,6 +1194,7 @@ public final class WaterSim {
     }
 
     private void sleep(Sec s, long now) {
+        touch(s);
         s.active = false;
         active.remove(s.key);
         s.releaseSimArrays();
@@ -1444,6 +1449,31 @@ public final class WaterSim {
         private final Map<Integer, Integer> m = new HashMap<>();
         void add(int k, int v) { m.merge(k, v, Integer::sum); }
         int get(int k) { Integer v = m.get(k); return v == null ? 0 : v; }
+    }
+
+    /** records the water total of a chunk that is being saved (audit ledger) */
+    public void recordSavedTotal(int cx, int cz) {
+        long k = ChunkPos.asLong(cx, cz);
+        WaterChunk w = chunks.get(k);
+        double t = 0;
+        if (w != null) for (Sec s : w.secs) if (s != null) t += s.total();
+        if (t > 0) stats.savedTotals.put(k, t);
+        else stats.savedTotals.remove(k);
+        stats.markDirty();
+    }
+
+    /** before the final save (server stopping): ledger = exact totals of all loaded chunks */
+    public void recordAllLoaded() {
+        for (WaterChunk w : new ArrayList<>(chunks.values())) recordSavedTotal(w.cx, w.cz);
+    }
+
+    /** water in chunks that are not loaded, from their last save */
+    public double totalUnloaded() {
+        double t = 0;
+        for (java.util.Map.Entry<Long, Double> e : stats.savedTotals.entrySet()) {
+            if (!chunks.containsKey((long) e.getKey())) t += e.getValue();
+        }
+        return t;
     }
 
     /** total physical water (m^3) currently stored in loaded chunks */

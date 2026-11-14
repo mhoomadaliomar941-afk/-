@@ -1,0 +1,11 @@
+closegui
+hidegui true
+wait 200
+stats
+screenshot mp_01_leak
+wait 50
+stats
+screenshot mp_02_leak_later
+wait 40
+stats
+log scenario end

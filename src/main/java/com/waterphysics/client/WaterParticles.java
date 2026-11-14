@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public final class WaterParticles {
     private WaterParticles() {}
 
-    public static TextureAtlasSprite FOAM, MIST, DROP, BUBBLE;
+    private static final TextureAtlasSprite FOAM = null, MIST = null, DROP = null, BUBBLE = null;
 
     abstract static class Base extends Particle {
         float baseAlpha;
@@ -21,12 +21,12 @@ public final class WaterParticles {
             motionX = mx;
             motionY = my;
             motionZ = mz;
-            if (tex != null) setParticleTexture(tex);
         }
 
+        /** vanilla particle sheet (layer 0): 0..7 = puff, 19..22 = splash, 32 = bubble, 112/113 = drip */
         @Override
         public int getFXLayer() {
-            return 1;
+            return 0;
         }
 
         float life() {
@@ -47,6 +47,7 @@ public final class WaterParticles {
             canCollide = false;
             baseAlpha = 0.85f;
             setRBGColorF(0.95f, 0.98f, 1f);
+            setParticleTextureIndex(2 + rand.nextInt(3));
         }
 
         @Override
@@ -75,6 +76,7 @@ public final class WaterParticles {
             canCollide = false;
             baseAlpha = 0.35f;
             setRBGColorF(0.92f, 0.96f, 1f);
+            setParticleTextureIndex(7);
         }
 
         @Override
@@ -84,6 +86,7 @@ public final class WaterParticles {
             motionY *= 0.95;
             motionZ *= 0.95;
             particleScale *= 1.02f;
+            setParticleTextureIndex(7 - Math.min(7, (int) (life() * 8)));
             setAlphaF(baseAlpha * (1f - life()));
         }
     }
@@ -97,7 +100,8 @@ public final class WaterParticles {
             particleGravity = 0.9f;
             canCollide = true;
             baseAlpha = 0.9f;
-            setRBGColorF(0.75f, 0.87f, 1f);
+            setRBGColorF(0.55f, 0.72f, 1f);
+            setParticleTextureIndex(19 + rand.nextInt(4));
         }
 
         @Override
@@ -125,6 +129,7 @@ public final class WaterParticles {
             canCollide = false;
             baseAlpha = 0.8f;
             setRBGColorF(0.85f, 0.95f, 1f);
+            setParticleTextureIndex(32);
         }
 
         @Override

@@ -25,6 +25,10 @@ public class BlockTankWall extends Block implements IWaterBarrier {
         setResistance(glass ? 30f : 60f);
         setSoundType(glass ? SoundType.GLASS : SoundType.METAL);
         setHarvestLevel("pickaxe", glass ? 0 : 1);
+        // Block's constructor computed opacity before 'glass' was set: glass must let light through
+        this.fullBlock = !glass;
+        this.translucent = glass;
+        setLightOpacity(glass ? 0 : 255);
     }
 
     @Override
