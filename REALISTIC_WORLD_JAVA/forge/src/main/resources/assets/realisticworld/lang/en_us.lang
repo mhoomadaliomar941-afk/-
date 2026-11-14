@@ -1,0 +1,6 @@
+tile.realisticworld.valve.name=Water Valve
+tile.realisticworld.pipe.name=Water Pipe
+tile.realisticworld.drain.name=Water Drain
+tile.realisticworld.puddle.name=Puddle
+item.realisticworld.control_center.name=Realistic World Control Center
+item.realisticworld.water_gauge.name=Water Gauge

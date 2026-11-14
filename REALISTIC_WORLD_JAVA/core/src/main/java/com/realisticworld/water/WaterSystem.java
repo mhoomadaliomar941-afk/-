@@ -411,6 +411,11 @@ public final class WaterSystem implements Scheduler.SimSystem {
         return null;
     }
 
+    /** Measure a known tank again (picks up changes made by commands, pistons or other mods). */
+    public void rescanTank(Bodies.Tank t, String reason) {
+        rescan(t, reason);
+    }
+
     private void rescan(Bodies.Tank t, String reason) {
         int[] s = seed(t);
         if (s != null) requestScan(t.dim, s[0], s[1], s[2], reason);
