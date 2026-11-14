@@ -1,0 +1,38 @@
+[
+ {
+  "test": "persistence stress (3 restarts while water moves)",
+  "check": "restart 1: world-wide mass audit balanced",
+  "pass": true,
+  "detail": "drift=0.002 L of 239999.933 L (loaded 239999.933, unloaded 0.000, pipes 0.000)"
+ },
+ {
+  "test": "persistence stress (3 restarts while water moves)",
+  "check": "restart 1: water still moving after reload",
+  "pass": true,
+  "detail": "active sections=16"
+ },
+ {
+  "test": "persistence stress (3 restarts while water moves)",
+  "check": "restart 2: world-wide mass audit balanced",
+  "pass": true,
+  "detail": "drift=-0.010 L of 239999.892 L (loaded 239999.892, unloaded 0.000, pipes 0.000)"
+ },
+ {
+  "test": "persistence stress (3 restarts while water moves)",
+  "check": "restart 2: water still moving after reload",
+  "pass": true,
+  "detail": "active sections=24"
+ },
+ {
+  "test": "persistence stress (3 restarts while water moves)",
+  "check": "restart 3: world-wide mass audit balanced",
+  "pass": true,
+  "detail": "drift=-0.014 L of 239999.867 L (loaded 239999.867, unloaded 0.000, pipes 0.000)"
+ },
+ {
+  "test": "persistence stress (3 restarts while water moves)",
+  "check": "restart 3: water still moving after reload",
+  "pass": true,
+  "detail": "active sections=27"
+ }
+]

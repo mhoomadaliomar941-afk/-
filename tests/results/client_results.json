@@ -1,9 +1,75 @@
 [
  {
+  "test": "singleplayer (integrated server)",
+  "check": "client started, world created, scenario completed without crash",
+  "pass": true,
+  "detail": "log lines=975 crashed=False"
+ },
+ {
+  "test": "singleplayer (integrated server)",
+  "check": "player right-clicks with a water bucket: bucket becomes empty",
+  "pass": true,
+  "detail": "use -> SUCCESS; held item=minecraft:bucket count=1"
+ },
+ {
+  "test": "singleplayer (integrated server)",
+  "check": "the bucket placed exactly 1000 L of physical water",
+  "pass": true,
+  "detail": "region: 999.990 L"
+ },
+ {
+  "test": "singleplayer (integrated server)",
+  "check": "tank filled (60000 L + displaced puddle), leak lowers the level, closing the hole stops it",
+  "pass": true,
+  "detail": "full=60187 after leak=53693 -> 51100; closed: 51602.1 -> 51602.1"
+ },
+ {
+  "test": "singleplayer (integrated server)",
+  "check": "pump pushes water up into glass pipes",
+  "pass": true,
+  "detail": "pump flow=53.051 L/s, glass pipe holds 51.101 L"
+ },
+ {
+  "test": "singleplayer (integrated server)",
+  "check": "client receives physics detail packets from the (integrated) server",
+  "pass": true,
+  "detail": "client stats packets=71 sections=4 activeSections=4 overlayCells=151 particles=18 fps=12 entityParticles=379; client stats packets=118 sections=7 activeSections=7 overlayCells=289 particles=14 fps=25 entityParticles=85; client stats packets=148 sections=7 activeSections=7 overlayCells=322 particles=3 fps=27 entityParticles=185; client stats packets=161 sections=7 activeSections=7 overlayCells=330 particles=8 fps=24 entityParticles=184"
+ },
+ {
+  "test": "singleplayer (integrated server)",
+  "check": "wave/ripple overlay rendered on moving water",
+  "pass": true,
+  "detail": "overlay cells per frame: [151, 289, 322, 330]"
+ },
+ {
+  "test": "singleplayer (integrated server)",
+  "check": "mass conservation in singleplayer",
+  "pass": true,
+  "detail": "drift=-0.049 L of 136033.597 L"
+ },
+ {
+  "test": "singleplayer (integrated server)",
+  "check": "no exceptions from the mod in the client log",
+  "pass": true,
+  "detail": "0 lines"
+ },
+ {
+  "test": "singleplayer (integrated server)",
+  "check": "all mod models and textures load",
+  "pass": true,
+  "detail": "0 model/texture errors"
+ },
+ {
+  "test": "singleplayer (integrated server)",
+  "check": "screenshots captured",
+  "pass": true,
+  "detail": "sp_02_tanks_full.png, sp_03_leak_jet_a.png, sp_04_leak_jet_b.png, sp_05_leak_spreading.png, sp_06_vortex_a.png, sp_07_vortex_b.png, sp_08_pump_pipes.png, sp_09_hydrometer_hud.png, sp_10_settings_gui.png"
+ },
+ {
   "test": "multiplayer (dedicated server + client)",
   "check": "server side: the tank leaks while a client is connected",
   "pass": true,
-  "detail": "tank volume now 22563 L"
+  "detail": "tank volume now 22520 L"
  },
  {
   "test": "multiplayer (dedicated server + client)",
@@ -15,13 +81,13 @@
   "test": "multiplayer (dedicated server + client)",
   "check": "client receives physics sync packets over the network",
   "pass": true,
-  "detail": "client stats packets=46 sections=5 activeSections=5 overlayCells=264 particles=8 fps=27 entityParticles=185; client stats packets=59 sections=5 activeSections=5 overlayCells=302 particles=5 fps=28 entityParticles=154; client stats packets=69 sections=6 activeSections=6 overlayCells=327 particles=3 fps=29 entityParticles=157"
+  "detail": "client stats packets=47 sections=5 activeSections=5 overlayCells=266 particles=12 fps=25 entityParticles=169; client stats packets=60 sections=5 activeSections=5 overlayCells=300 particles=4 fps=25 entityParticles=144; client stats packets=70 sections=5 activeSections=5 overlayCells=328 particles=3 fps=28 entityParticles=95"
  },
  {
   "test": "multiplayer (dedicated server + client)",
   "check": "client renders effects from synced data (overlay cells > 0)",
   "pass": true,
-  "detail": "overlay cells: [264, 302, 327]"
+  "detail": "overlay cells: [266, 300, 328]"
  },
  {
   "test": "multiplayer (dedicated server + client)",

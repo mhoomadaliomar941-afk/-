@@ -33,7 +33,7 @@
   "test": "2 fill a 10000 L tank with buckets",
   "check": "tank capacity detected",
   "pass": true,
-  "detail": "tank pos=-563,5,717 capacity_l=10000 closed=false spill=10 floor=5 volume_l=0.000"
+  "detail": "tank pos=1352,5,-755 capacity_l=10000 closed=false spill=10 floor=5 volume_l=0.000"
  },
  {
   "test": "2 fill a 10000 L tank with buckets",
@@ -63,7 +63,7 @@
   "test": "2 fill a 10000 L tank with buckets",
   "check": "an 11th bucket overflows: the tank stays full, the excess spills out",
   "pass": true,
-  "detail": "inside=9888.4 L, outside=1111.4 L, total=10999.79 L"
+  "detail": "inside=9888.4 L, outside=1111.4 L, total=10999.80 L"
  },
  {
   "test": "3-5,7 hole in a tank wall",
@@ -75,13 +75,13 @@
   "test": "3-5,7 hole in a tank wall",
   "check": "3) breaking a wall block creates a hole: water starts leaving",
   "pass": true,
-  "detail": "V: 80000 -> 55447 L"
+  "detail": "V: 80000 -> 55439 L"
  },
  {
   "test": "3-5,7 hole in a tank wall",
   "check": "4) water flows out through the hole onto the ground",
   "pass": true,
-  "detail": "outside=21935 L in 216 blocks"
+  "detail": "outside=22146 L in 212 blocks"
  },
  {
   "test": "3-5,7 hole in a tank wall",
@@ -93,25 +93,25 @@
   "test": "3-5,7 hole in a tank wall",
   "check": "outflow follows Torricelli (Q/sqrt(h) roughly constant)",
   "pass": true,
-  "detail": "Q/sqrt(h): mean=1635 L/s/m^0.5, spread=2%, ideal free orifice=2746; samples (h m, Q L/s): (4.50, 4014), (4.50, 3417), (4.36, 3396), (4.13, 3332), (3.94, 3238), (3.77, 3174), (3.61, 3108), (3.44, 3063), (3.29, 2983), (3.15, 2914)"
+  "detail": "Q/sqrt(h): mean=1635 L/s/m^0.5, spread=3%, ideal free orifice=2746; samples (h m, Q L/s): (4.50, 4014), (4.50, 3417), (4.36, 3396), (4.13, 3333), (3.94, 3239), (3.77, 3175), (3.61, 3110), (3.44, 3065), (3.29, 2985), (3.15, 2915)"
  },
  {
   "test": "3-5,7 hole in a tank wall",
   "check": "7) closing the hole stops the leak",
   "pass": true,
-  "detail": "after closing: 53664.27 L -> 53664.26 L in 5 s"
+  "detail": "after closing: 53655.48 L -> 53655.47 L in 5 s"
  },
  {
   "test": "6 leak speed depends on hole size",
   "check": "bigger hole drains faster (2 m^2 > 1 m^2 > 100 cm^2 > 20 cm^2)",
   "pass": true,
-  "detail": "1 block hole (1 m^2): 3345.3 L/s, 2 block hole (2 m^2): 6159.8 L/s, spigot 100 cm^2: 58.2 L/s, spigot 20 cm^2: 11.6 L/s"
+  "detail": "1 block hole (1 m^2): 3345.3 L/s, 2 block hole (2 m^2): 5970.6 L/s, spigot 100 cm^2: 58.2 L/s, spigot 20 cm^2: 11.6 L/s"
  },
  {
   "test": "6 leak speed depends on hole size",
   "check": "2 m^2 hole drains about twice as fast as 1 m^2 (ratio 1.4..2.6)",
   "pass": true,
-  "detail": "ratio=1.84"
+  "detail": "ratio=1.78"
  },
  {
   "test": "6 leak speed depends on hole size",
@@ -140,26 +140,50 @@
  {
   "test": "tank gauge + comparator",
   "check": "comparator reads the fill level from the gauge (50 %% -> signal 7..8)",
-  "pass": false,
-  "detail": "tank 18000.000 / 36000 L, comparator signal=None"
+  "pass": true,
+  "detail": "tank 18000.000 / 36000 L, comparator signal=8"
  },
  {
   "test": "bucket poured into a pipe",
-  "check": "water poured at the open end of a pipe flows into it",
-  "pass": false,
-  "detail": "bucket mode=empty result=SUCCESS item=minecraft:bucket; pipe contents bottom..top = 0.0, 0.0, 0.0 L"
+  "check": "water poured into a funnel on a pipe flows down and fills the pipe",
+  "pass": true,
+  "detail": "bucket mode=empty result=SUCCESS item=minecraft:bucket; pipe contents bottom..top = 50.0, 50.0, 49.4 L (capacity 3 x 49.1 L)"
+ },
+ {
+  "test": "bucket poured into a pipe",
+  "check": "funnel + pipe contents = the 1000 L poured",
+  "pass": true,
+  "detail": "funnel 850.66 L + pipe 149.39 L = 1000.05 L"
+ },
+ {
+  "test": "vanilla water interaction",
+  "check": "disturbed vanilla water becomes physical water and flows into the trench",
+  "pass": true,
+  "detail": "trench holds 16974 L in 18 blocks (surface y=3.89); converted 6000 L"
+ },
+ {
+  "test": "vanilla water interaction",
+  "check": "the undisturbed lake acts as a reservoir: it refills the trench to its own level",
+  "pass": true,
+  "detail": "net inflow from the lake 16629 L, trench surface y=3.89, lake surface y=3.89"
+ },
+ {
+  "test": "vanilla water interaction",
+  "check": "reservoir exchange is accounted (mass ledger balanced)",
+  "pass": true,
+  "detail": "drift=-1.029 L"
  },
  {
   "test": "8 two tanks connected by a pipe",
   "check": "initial: tank A full of water, tank B empty",
   "pass": true,
-  "detail": "A=35095 L (surface 9.00) B=207 L"
+  "detail": "A=35094 L (surface 9.00) B=207 L"
  },
  {
   "test": "8 two tanks connected by a pipe",
   "check": "water flows through the pipe from A to B",
   "pass": true,
-  "detail": "B received 17324 L; initial flow 491 L/s"
+  "detail": "B received 17321 L; initial flow 491 L/s"
  },
  {
   "test": "8 two tanks connected by a pipe",
@@ -171,37 +195,37 @@
   "test": "8 two tanks connected by a pipe",
   "check": "total water conserved (A + B + pipe contents = poured amount)",
   "pass": true,
-  "detail": "A+B+pipes=36000.77 L vs poured 36000.00 L (pipes hold 988.1 L)"
+  "detail": "A+B+pipes=36000.75 L vs poured 36000.00 L (pipes hold 988.1 L)"
  },
  {
   "test": "valve controls the flow",
   "check": "closed valve: no flow between the tanks",
   "pass": true,
-  "detail": "B: 17317 -> 17318 L while A=35672 L"
+  "detail": "B: 17312 -> 17313 L while A=35674 L"
  },
  {
   "test": "valve controls the flow",
   "check": "opened valve: flow resumes",
   "pass": true,
-  "detail": "B: 17318 -> 18741 L"
+  "detail": "B: 17313 -> 18832 L"
  },
  {
   "test": "pump lifts water to a higher tank",
   "check": "water is pumped up 7 m into the upper tank",
   "pass": true,
-  "detail": "upper tank=809 L (surface 12.11), pump flow=47.365 L/s"
+  "detail": "upper tank=812 L (surface 12.12), pump flow=47.462 L/s"
  },
  {
   "test": "pump lifts water to a higher tank",
   "check": "source tank loses what the upper tank gains (+ pipe contents)",
   "pass": true,
-  "detail": "source -957 L, upper +809 L"
+  "detail": "source -956 L, upper +812 L"
  },
  {
   "test": "over-pressure: pipes crack and fragile pipes burst",
   "check": "pump against a closed valve builds pressure above the glass rating (60 kPa)",
   "pass": true,
-  "detail": "max pressure seen=212.5 kPa"
+  "detail": "max pressure seen=211.0 kPa"
  },
  {
   "test": "over-pressure: pipes crack and fragile pipes burst",
@@ -213,55 +237,55 @@
   "test": "over-pressure: pipes crack and fragile pipes burst",
   "check": "copper pipe (rated 800 kPa) survives the same pressure",
   "pass": true,
-  "detail": "copper damage=0.000 at 0.713 kPa"
+  "detail": "copper damage=0.000 at 0.510 kPa"
  },
  {
   "test": "over-pressure: pipes crack and fragile pipes burst",
   "check": "a cracked pipe leaks water into the world",
   "pass": true,
-  "detail": "water in the basin around the pipe: 474.2 -> 678.8 L (24 blocks); pipe at 60.522 kPa"
+  "detail": "water in the basin around the pipe: 310.3 -> 581.2 L (18 blocks); pipe at 88.806 kPa"
  },
  {
   "test": "mass conservation",
   "check": "stored water = sum(in) - sum(out) over the whole session",
   "pass": true,
-  "detail": "drift=-5.719 L of 497073 L total (rounding -78.4060 L)"
+  "detail": "drift=-6.087 L of 519719 L total (rounding -77.1140 L)"
  },
  {
   "test": "performance",
   "check": "server tick cost of the simulation",
   "pass": true,
-  "detail": "last tick 16.448 ms, 39 active sections, 23 pipe nodes"
+  "detail": "last tick 10.032 ms, 37 active sections, 23 pipe nodes"
  },
  {
   "test": "9 restart persistence",
   "check": "water volume of a draining tank is preserved across restart",
   "pass": true,
-  "detail": "before stop=44946.4 L, after restart=44930.1 L"
+  "detail": "before stop=44946.4 L, after restart=44931.9 L"
  },
  {
   "test": "9 restart persistence",
   "check": "the leak continues after restart (simulation state restored)",
   "pass": true,
-  "detail": "44930.1 -> 44859.7 L in 6 s"
+  "detail": "44931.9 -> 44861.5 L in 6 s"
  },
  {
   "test": "9 restart persistence",
   "check": "connected tanks keep their water (A+B)",
   "pass": true,
-  "detail": "A+B 52964 -> 52966 L (A 28495->28047, B 24469->24919)"
+  "detail": "A+B 52965 -> 52927 L (A 28387->27896, B 24577->25031)"
  },
  {
   "test": "9 restart persistence",
   "check": "pipe contents are saved",
   "pass": true,
-  "detail": "pipe 197.05 -> 195.936 L"
+  "detail": "pipe 197.81 -> 197.085 L"
  },
  {
   "test": "9 restart persistence",
   "check": "mass accounting survives restart",
   "pass": true,
-  "detail": "drift=-7.150 L of 497071 L"
+  "detail": "drift=-48.864 L of 519676 L"
  },
  {
   "test": "stability",

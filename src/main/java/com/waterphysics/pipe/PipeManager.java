@@ -204,9 +204,9 @@ public final class PipeManager {
                 // free ends only: a pipe with one link opens on the far side (or into water it touches),
                 // a pipe without links opens towards water
                 if (linked == 1) {
+                    // the end of a pipe run is open only on its far side; a capped end stays closed
                     EnumFacing far = onlyLink.getOpposite();
                     if (openSides.contains(far)) ports.add(new Port(n, far, 1f));
-                    else for (EnumFacing f : openSides) if (hasWater(n.getPos().offset(f))) ports.add(new Port(n, f, 1f));
                 } else if (linked == 0) {
                     for (EnumFacing f : openSides) if (hasWater(n.getPos().offset(f))) ports.add(new Port(n, f, 1f));
                     if (ports.isEmpty() || ports.get(ports.size() - 1).node != n) {

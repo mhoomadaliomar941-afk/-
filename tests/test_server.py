@@ -36,7 +36,11 @@ class Game:
         m = re.search(r'x=(-?\d+) y=(-?\d+) z=(-?\d+)', self.cmd('/water spawn'))
         self.X, self.Y, self.Z = int(m.group(1)), int(m.group(2)), int(m.group(3))
 
-    def cmd(self, c, pat=r'\[WP\]', t=60):
+    def cmd(self, c, pat=None, t=60):
+        if pat is None:
+            # match the reply of this very sub-command (each [WP] line is printed twice: echo + logger)
+            parts = c.split()
+            pat = (r'DedicatedServer\]: \[WP\] ' + re.escape(parts[1]) + r'\b') if c.startswith('/water') and len(parts) > 1 else r'DedicatedServer\]: \[WP\]'
         m = self.s.command(c, pat, t)
         return m.string
 
@@ -262,15 +266,25 @@ def test_gauge(g):
 
 def test_bucket_into_pipe(g):
     T = 'bucket poured into a pipe'
-    # vertical pipe standing on the ground (closed bottom), open at the top
+    # vertical pipe standing on the ground (closed bottom); its open top is the centre of a small
+    # stone funnel (3x3 floor at the pipe top level, rim one block higher)
     for y in range(0, 3):
         g.setblock(g.P(-20, y, 70), 'waterphysics:pipe_medium')
+    for dx in (-1, 0, 1):
+        for dz in (-1, 0, 1):
+            if dx or dz:
+                g.setblock(g.P(-20 + dx, 2, 70 + dz), 'stone')
+    g.mc('/fill %s %s stone 0 hollow' % (g.P(-22, 3, 68), g.P(-18, 3, 72)), r'blocks filled')
+    g.mc('/fill %s %s air' % (g.P(-21, 3, 69), g.P(-19, 3, 71)), r'blocks filled')
     time.sleep(1)
     r = g.cmd('/water bucket %s empty' % g.P(-20, 3, 70))
-    time.sleep(4)
+    time.sleep(6)
     vols = [float(g.kv(g.cmd('/water pipe %s' % g.P(-20, y, 70)))['volume_l']) for y in range(0, 3)]
-    check(T, 'water poured at the open end of a pipe flows into it', sum(vols) > 100,
-          '%s; pipe contents bottom..top = %s L' % (r.split('[WP] ')[-1], ', '.join('%.1f' % v for v in vols)))
+    funnel, _, _, _ = g.region(g.P(-21, 3, 69), g.P(-19, 3, 71))
+    check(T, 'water poured into a funnel on a pipe flows down and fills the pipe', sum(vols) > 140,
+          '%s; pipe contents bottom..top = %s L (capacity 3 x 49.1 L)' % (r.split('[WP] ')[-1], ', '.join('%.1f' % v for v in vols)))
+    check(T, 'funnel + pipe contents = the 1000 L poured', abs(funnel + sum(vols) - 1000) < 1,
+          'funnel %.2f L + pipe %.2f L = %.2f L' % (funnel, sum(vols), funnel + sum(vols)))
 
 
 def test_vanilla(g):

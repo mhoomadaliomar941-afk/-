@@ -417,6 +417,7 @@ public final class WaterSim {
             // removed (sponge, command, another fluid)
             s.vol[i] = 0f;
             s.waterCells--;
+            touch(s);
             stats.destroyedOut += v;
             stats.markDirty();
             wake(p, 1);
@@ -436,6 +437,7 @@ public final class WaterSim {
             s.waterCells++;
             stats.commandIn += v;
             stats.markDirty();
+            touch(s);
         }
         activate(s);
     }
@@ -447,6 +449,7 @@ public final class WaterSim {
         float v = s.vol[i];
         s.vol[i] = 0f;
         s.waterCells = Math.max(0, s.waterCells - 1);
+        touch(s);
         int[] order = {UP, 2, 3, 4, 5, DOWN};
         List<BlockPos> targets = new ArrayList<>();
         for (int d : order) {
@@ -468,6 +471,7 @@ public final class WaterSim {
             if (ts.vol[ti] <= 0) ts.waterCells++;
             ts.vol[ti] += each;
             activate(ts);
+            touch(ts);
             ts.visualDirty = true;
             visualQueue.add(ts.key);
         }
@@ -497,6 +501,7 @@ public final class WaterSim {
         }
         if (s.vol[i] <= 0) s.waterCells++;
         s.vol[i] += v;
+        touch(s);
         stats.convertedIn += v;
         stats.markDirty();
         s.typeAge = 0;
@@ -1080,6 +1085,7 @@ public final class WaterSim {
             float[] vol = s.vol, prev = s.prev, out = s.out;
             byte[] type = s.type, fx = s.fx;
             boolean changed = false;
+            boolean anyChange = false;
             boolean[] faceChanged = new boolean[6];
             float maxFlux = 0f;
             int cells = 0;
@@ -1099,6 +1105,7 @@ public final class WaterSim {
                 }
                 if (v > 0f) cells++;
                 float dv = Math.abs(v - prev[i]);
+                if (dv > 0f) anyChange = true;
                 if (dv > eps) {
                     changed = true;
                     int x = i & 15, y = i >> 8, z = (i >> 4) & 15;
@@ -1134,6 +1141,7 @@ public final class WaterSim {
                 }
             }
             s.waterCells = cells;
+            if (anyChange) touch(s); // even sub-threshold trickles must be saved consistently
             if (changed) {
                 touch(s);
                 s.quiet = 0;
@@ -1181,6 +1189,7 @@ public final class WaterSim {
             int nx = wx + DX[best], ny = wy + DY[best], nz = wz + DZ[best];
             Sec t = sec(nx, ny, nz);
             t.vol[Sec.idx(nx, ny, nz)] += v;
+            touch(t);
             if (t != s && !t.simulatedThisTick) activate(t);
             s.vol[i] = 0f;
             return 0f;
