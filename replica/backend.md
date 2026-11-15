@@ -104,3 +104,25 @@ listed under "Tests"; what still needs a live check is under "Before go-live".
 - **No Stripe:** it does not onboard businesses in Jordan. HyperPay hosted checkout plays the same role (no card forms in the app).
 - **No email:** members sign in by phone; there is nothing to email in the core loop.
 - **Subscriptions:** none. The product sells spots, not plans.
+
+## The owner's store and the admin panel (added 2026-11-15)
+
+Migration `…05_store_admin.sql`: `store_products`, `store_orders`,
+`store_order_items`, `checkout_store()` (shopping balance first, then cash;
+stock locked; idempotent), and admin functions that refuse anyone who isn't
+an admin (`admin_save_product`, `admin_open_product`, `admin_cancel_product`,
+`admin_save_store_product`, `admin_set_order_status`,
+`admin_set_store_order_status`). Product photos go to the public
+`product-images` bucket; only admins can upload.
+
+**Make yourself the owner/admin (once, after you sign up in the app):**
+```sql
+update profiles set is_admin = true where phone = '+9627XXXXXXXX';
+```
+The "لوحة الإدارة" (admin panel) entry then appears under حسابي (Profile).
+In the demo build, log in with **79 000 0000** to see it.
+
+Tested in `supabase/tests/run.sh`: a non-admin is refused every admin
+action; checkout splits shopping/cash correctly, never oversells, and a retry
+doesn't charge twice; other members can't see your orders; the admin sees all;
+cancelling returns the money to the same balances and the stock.

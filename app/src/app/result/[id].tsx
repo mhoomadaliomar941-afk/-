@@ -57,7 +57,7 @@ export default function Result() {
               [t.result.address, () => router.push(`/order/${product.id}`), 'primary'])
           : tookPart
             ? banner(c['accent-soft'], Gift, c['accent-strong'], t.result.creditTitle(formatJD(paid)), t.result.creditBody,
-                [t.result.shop, () => router.push('/(tabs)/stores'), 'secondary'])
+                [t.result.shop, () => router.push('/(tabs)/store'), 'secondary'])
             : banner(c.surface, ShieldCheck, c['text-muted'], t.product.assigned, `${t.result.winning} ⁦#${assignment.winningSpot}⁩`)}
       {tookPart ? <Text variant="sm" tone="text-muted">أرقام أماكنك: {mySpots.map((n) => `⁦#${n}⁩`).join('، ')}</Text> : null}
       {assignment ? <Button title={t.result.verify} variant="ghost" icon={<ShieldCheck color={c.accent} size={18} />} onPress={() => setProof(true)} /> : null}

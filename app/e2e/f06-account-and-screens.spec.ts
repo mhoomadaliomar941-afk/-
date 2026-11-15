@@ -12,7 +12,7 @@ test('F06-N1 delete is blocked while there is a balance', async ({ page, a11y })
 test('X-2 remaining screens pass axe', async ({ page, a11y }) => {
   await login(page);
   await tab(page, 'مشاركاتي').click(); await a11y('S08 mine');
-  await tab(page, 'المتاجر').click(); await a11y('S12 stores');
+  await tab(page, 'المتجر').click(); await expect(page.getByText('اصرف رصيد التسوق هون')).toBeVisible(); await a11y('S12 store');
   await tab(page, 'حسابي').click();
   await btn(page, 'المالكين').click(); await expect(page.getByText('ليث ع.')).toBeVisible(); await a11y('S11 owners');
   await page.goBack();

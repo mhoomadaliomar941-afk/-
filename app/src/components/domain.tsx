@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { ArrowDownLeft, ArrowUpRight, Clock, Gift, Store as StoreIcon, Ticket } from 'lucide-react-native';
+import { ArrowDownLeft, ArrowUpRight, Clock, Gift, ShoppingBag, Store as StoreIcon, Ticket } from 'lucide-react-native';
 import { Card, ProductArt, productChip, Row, SpotsProgress, StatusChip, Text } from './ui';
 import { radius, space, useColors } from '../theme';
 import { formatJD } from '../lib/money';
@@ -45,7 +45,7 @@ export function WalletBalanceCard({ w }: { w: Wallet }) {
   );
 }
 
-const TX_ICON = { topup: ArrowDownLeft, spend: Ticket, credit: Gift, redeem: StoreIcon, refund: ArrowDownLeft, adjust: ArrowUpRight };
+const TX_ICON = { topup: ArrowDownLeft, spend: Ticket, credit: Gift, redeem: StoreIcon, refund: ArrowDownLeft, adjust: ArrowUpRight, purchase: ShoppingBag };
 export function TransactionRow({ x }: { x: WalletTxn }) {
   const c = useColors();
   const Icon = x.status === 'pending' ? Clock : TX_ICON[x.type];

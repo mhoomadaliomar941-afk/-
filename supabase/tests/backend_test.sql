@@ -121,4 +121,46 @@ select pg_temp.expect_error($$insert into waitlist (phone, consent_at) values ('
 select pg_temp.expect_error($$select * from waitlist$$, 'permission denied');
 reset role;
 select pg_temp.check((select count(*) from waitlist) = 1, 'waitlist: anon joins with consent, cannot read');
+-- ---------------------------------------------------------------- store + admin
+update profiles set is_admin = true where id = '00000000-0000-0000-0000-00000000000a';
+set role authenticated;
+-- a non-admin cannot do admin things
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000c';
+select pg_temp.expect_error($$select admin_save_store_product('{"title_ar":"x","price_fils":1000,"stock":1}')$$, 'admins only');
+select pg_temp.expect_error($$select admin_save_product('{"title_ar":"x","retail_price_fils":1000,"spot_price_fils":1000,"total_spots":2}')$$, 'admins only');
+select pg_temp.expect_error($$insert into store_products (title_ar, price_fils) values ('x', 1)$$, 'permission denied');
+-- the admin creates a store product and a draw product, then opens the draw
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000a';
+select id as sp_id from admin_save_store_product('{"title_ar":"شاحن سريع","price_fils":4000,"stock":3,"category":"other"}') \gset
+select id as dp_id from admin_save_product('{"title_ar":"سماعات","retail_price_fils":150000,"spot_price_fils":1000,"total_spots":10,"category":"audio"}') \gset
+select pg_temp.check((select status = 'draft' from products where id = :'dp_id'), 'admin creates a draft draw product');
+select pg_temp.check((select status = 'open' and seed_hash is not null from admin_open_product(:'dp_id')), 'admin opens it (seed hash published)');
+select pg_temp.expect_error(format($$select admin_save_product('{"id":"%s","title_ar":"x","retail_price_fils":1,"spot_price_fils":1000,"total_spots":5}')$$, :'dp_id'), 'only drafts');
+-- C buys from the store: shopping first, then cash; stock goes down; ledger has both
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000c';
+insert into addresses (user_id, governorate, city, street, phone) values (auth.uid(), 'عمّان', 'عمّان', 'شارع ١', '0791234567');
+reset role;
+update wallets set shopping_fils = 3000, cash_fils = 5000 where user_id = '00000000-0000-0000-0000-00000000000c';  -- known start (the deletion test above may have zeroed C)
+insert into wallet_txns (user_id, bucket, type, amount_fils, idempotency_key) values ('00000000-0000-0000-0000-00000000000c', 'shopping', 'adjust', 3000, 'test-adjust-c');
+select cash_fils as c_cash0 from wallets where user_id = '00000000-0000-0000-0000-00000000000c' \gset
+set role authenticated;
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000c';
+select pg_temp.expect_error(format($$select checkout_store('[{"product_id":"%s","qty":4}]', (select id from addresses limit 1), 'k-big')$$, :'sp_id'), 'only 3 left');
+select total_fils, paid_shopping_fils, paid_cash_fils from checkout_store(format('[{"product_id":"%s","qty":1}]', :'sp_id')::jsonb, (select id from addresses limit 1), 'k-store-1');
+select checkout_store(format('[{"product_id":"%s","qty":1}]', :'sp_id')::jsonb, (select id from addresses limit 1), 'k-store-1');  -- retry: no second charge
+reset role;
+select pg_temp.check((select paid_shopping_fils = 3000 and paid_cash_fils = 1000 from store_orders where idempotency_key = 'k-store-1'), 'store: shopping balance first, then cash');
+select pg_temp.check((select count(*) from store_orders where user_id = '00000000-0000-0000-0000-00000000000c') = 1, 'store: retry does not double-charge');
+select pg_temp.check((select stock from store_products where id = :'sp_id') = 2, 'store: stock went down by one');
+select pg_temp.check((select shopping_fils = 0 and cash_fils = :c_cash0 - 1000 from wallets where user_id = '00000000-0000-0000-0000-00000000000c'), 'store: balances charged correctly');
+-- other members can't see C's order; the admin can, and cancelling refunds money and stock
+set role authenticated;
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000b';
+select pg_temp.check((select count(*) from store_orders) = 0, 'store: other members see no one else''s orders');
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000a';
+select pg_temp.check((select count(*) from store_orders) = 1, 'store: admin sees all orders');
+select status from admin_set_store_order_status((select id from store_orders limit 1), 'cancelled');
+reset role;
+select pg_temp.check((select stock from store_products where id = :'sp_id') = 3, 'cancel: stock returned');
+select pg_temp.check((select shopping_fils = 3000 and cash_fils = :c_cash0 from wallets where user_id = '00000000-0000-0000-0000-00000000000c'), 'cancel: money returned to the same balances');
 \echo ALL PASSED

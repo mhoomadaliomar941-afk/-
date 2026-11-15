@@ -7,7 +7,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { Platform } from 'react-native';
 import { createClient, PostgrestError } from '@supabase/supabase-js';
 import {
-  errorCode, fromAddress, pendingPaymentToTxn, toAddress, toAssignment, toNotification, toOrder, toParticipation, toProduct,
+  addressLine, errorCode, fromAddress, fromDrawProduct, fromStoreProduct, toStoreOrder, toStoreProduct, pendingPaymentToTxn, toAddress, toAssignment, toNotification, toOrder, toParticipation, toProduct,
   toRedemption, toShowcase, toStore, toTxn,
 } from './supabase-map';
 import { Api, ApiError, Profile } from './types';
@@ -82,8 +82,8 @@ export function createSupabaseApi(url: string, anonKey: string): Api {
     async me(): Promise<Profile | null> {
       const { data } = await sb.auth.getSession();
       if (!data.session) return null;
-      const row = check(await sb.from('profiles').select('id, phone, full_name').eq('id', data.session.user.id).maybeSingle());
-      return row ? { id: row.id, phone: row.phone, fullName: row.full_name } : null;
+      const row = check(await sb.from('profiles').select('id, phone, full_name, is_admin').eq('id', data.session.user.id).maybeSingle());
+      return row ? { id: row.id, phone: row.phone, fullName: row.full_name, isAdmin: !!row.is_admin } : null;
     },
     async signOut() { await sb.auth.signOut(); },
 
@@ -208,6 +208,52 @@ export function createSupabaseApi(url: string, anonKey: string): Api {
         throw new ApiError(errorCode(code ?? error?.message), code);
       }
       await sb.auth.signOut();
+    },
+
+    // ---------------------------------------------------------------- the owner's store
+    async listStoreProducts() { return list(await sb.from('store_products').select('*').eq('active', true).order('created_at', { ascending: false })).map(toStoreProduct); },
+    async getStoreProduct(id) { return toStoreProduct(one(await sb.from('store_products').select('*').eq('id', id).maybeSingle())); },
+    async checkoutStore(items, addressId, key) {
+      const row = one(await sb.rpc('checkout_store', { p_items: items.map((i) => ({ product_id: i.productId, qty: i.qty })), p_address: addressId, p_key: key }).single());
+      emit();
+      return toStoreOrder({ ...row, store_order_items: items.map((i) => ({ product_id: i.productId, title_ar: '', qty: i.qty, unit_price_fils: 0 })) });
+    },
+    async listMyStoreOrders() {
+      const me = await uid();
+      return list(await sb.from('store_orders').select('*, store_order_items(*)').eq('user_id', me).order('created_at', { ascending: false })).map(toStoreOrder);
+    },
+
+    // ---------------------------------------------------------------- admin (the database refuses non-admins)
+    async adminListProducts() { await uid(); return list(await sb.from('products').select('*').order('created_at', { ascending: false })).map(toProduct); },
+    async adminSaveProduct(p) { const r = one(await sb.rpc('admin_save_product', { p: fromDrawProduct(p) }).single()); emit(); return toProduct(r); },
+    async adminOpenProduct(id) { const r = one(await sb.rpc('admin_open_product', { p_product: id }).single()); emit(); return toProduct(r); },
+    async adminCancelProduct(id) { check(await sb.rpc('admin_cancel_product', { p_product: id })); emit(); },
+    async adminListStoreProducts() { await uid(); return list(await sb.from('store_products').select('*').order('created_at', { ascending: false })).map(toStoreProduct); },
+    async adminSaveStoreProduct(p) { const r = one(await sb.rpc('admin_save_store_product', { p: fromStoreProduct(p) }).single()); emit(); return toStoreProduct(r); },
+    async adminListOrders() {
+      await uid();
+      const [draw, store] = await Promise.all([
+        sb.from('orders').select('id, status, created_at, addresses(governorate, city, street), profiles(phone), assignments(products(title_ar))').order('created_at', { ascending: false }).limit(200),
+        sb.from('store_orders').select('id, status, created_at, total_fils, store_order_items(title_ar, qty), addresses(governorate, city, street), profiles(phone)').order('created_at', { ascending: false }).limit(200),
+      ]);
+      const d = list(draw).map((r) => ({ kind: 'draw' as const, id: r.id, status: r.status, createdAt: r.created_at,
+        title: r.assignments?.products?.title_ar ?? '', customer: { phone: r.profiles?.phone ?? '', address: addressLine(r.addresses) } }));
+      const s = list(store).map((r) => ({ kind: 'store' as const, id: r.id, status: r.status, createdAt: r.created_at, totalFils: Number(r.total_fils),
+        title: (r.store_order_items ?? []).map((i: { title_ar: string; qty: number }) => `${i.title_ar} × ${i.qty}`).join('، '),
+        customer: { phone: r.profiles?.phone ?? '', address: addressLine(r.addresses) } }));
+      return [...d, ...s].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    },
+    async adminSetOrderStatus(kind, id, status) {
+      check(await sb.rpc(kind === 'draw' ? 'admin_set_order_status' : 'admin_set_store_order_status', { p_order: id, p_status: status }));
+      emit();
+    },
+    // Photos go to the public "product-images" bucket; only admins may upload (storage policy).
+    async uploadProductImage(localUri) {
+      const body = await (await fetch(localUri)).arrayBuffer();
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+      const { error } = await sb.storage.from('product-images').upload(path, body, { contentType: 'image/jpeg', upsert: false });
+      if (error) throw new ApiError(errorCode(error.message), error.message);
+      return sb.storage.from('product-images').getPublicUrl(path).data.publicUrl;
     },
 
     subscribe(l) { listeners.add(l); return () => listeners.delete(l); },

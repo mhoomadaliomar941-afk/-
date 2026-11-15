@@ -53,13 +53,21 @@ So:
    partner commission, with a fair-price rule for partners (prices no higher
    than the shelf price outside the app).
 
+## Update: your own store instead of partner stores
+
+Credit is spent in **your** store, so the commission **k** becomes your
+store's gross margin on what members buy with credit. Same formula:
+`pool ≈ C / k`. With a 25% margin on store goods, a 150 JD product needs a
+pool of about 600 JD. Keep store prices at or below the market price: the
+reviews punished inflated prices, and members can compare.
+
 ## The model (proposal)
 
 - **Per-spot price, no subscription, no membership fee.** Spots from 1 JD.
 - **On every product page, show the math:** spots × price = pool; product cost;
   "your odds: 1 in N per spot". This is the angle (honest) applied to money.
-- **Not picked → full amount as shopping credit**, 1:1, at partners who signed
-  the fair-price rule. *Fix from the reviews.*
+- **Not picked → full amount as shopping credit**, 1:1 in your in-app store, at
+  fair prices. *Fix from the reviews.*
 - **Product doesn't fill by its deadline → full refund in cash balance.**
   Already built (`cancel_product`).
 - **Shopping credit can also buy spots** (fix #4 in `fixes.md`). It keeps the

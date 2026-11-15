@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { router } from 'expo-router';
-import { Bell, ChevronLeft, CircleHelp, Languages, LogOut, Trash2, Trophy, User } from 'lucide-react-native';
+import { Bell, ChevronLeft, CircleHelp, Languages, LayoutDashboard, LogOut, ShoppingBag, Trash2, Trophy, User } from 'lucide-react-native';
 import { Button, Card, Divider, Row, Screen, Text } from '../../components/ui';
 import { Sheet } from '../../components/sheet';
 import { api, ApiError } from '../../data';
@@ -43,7 +43,14 @@ export default function Profile() {
           <Text tone="text-muted" style={{ writingDirection: 'ltr', textAlign: 'right' }}>{user?.phone}</Text>
         </View>
       </Row>
+      {user?.isAdmin ? (
+        <Card style={{ paddingVertical: space(1), gap: 0, borderColor: c.accent }}>
+          {row(LayoutDashboard, t.profile.admin, () => router.push('/admin'))}
+        </Card>
+      ) : null}
       <Card style={{ paddingVertical: space(1), gap: 0 }}>
+        {row(ShoppingBag, t.profile.orders, () => router.push('/orders'))}
+        <Divider />
         {row(Bell, t.profile.notifications, () => router.push('/notifications'))}
         <Divider />
         {row(Trophy, t.profile.owners, () => router.push('/owners'))}

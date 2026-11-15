@@ -5,7 +5,7 @@ async function openOrder(page: Page) {
   await login(page);
   await tab(page, 'مشاركاتي').click();
   await page.getByRole('tab', { name: 'ربحتها' }).click();
-  await visible(page, 'button', /تابلت/).click();
+  await page.getByRole('button', { name: 'تابلت ١١ إنش للرسم والدراسة', exact: true }).click(); // the card in Mine, not the hidden feed card
   await expect(page.getByText('مبروك! صار المنتج إلك')).toBeVisible();
   await btn(page, 'أدخل عنوان التوصيل').click();
   await expect(page.getByText('بانتظار العنوان')).toBeVisible();

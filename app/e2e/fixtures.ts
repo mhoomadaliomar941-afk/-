@@ -28,10 +28,11 @@ export const btn = (page: Page, name: string | RegExp) => page.getByRole('button
 export const tab = (page: Page, name: string) =>
   page.getByRole('tab', { name, exact: true }).or(page.getByRole('link', { name, exact: true })).first();
 
-export async function login(page: Page) {
+/** Logs in as a member; pass '790000000' to log in as the owner/admin (demo data layer). */
+export async function login(page: Page, phone = '791234567') {
   await page.goto('/');
   await btn(page, 'تخطّي').click();
-  await page.getByTestId('phone').fill('791234567');
+  await page.getByTestId('phone').fill(phone);
   await btn(page, 'أرسل الرمز').click();
   await page.getByTestId('otp').fill('123456');
   await expect(page.getByText('منتجات مفتوحة')).toBeVisible();

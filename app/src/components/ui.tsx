@@ -1,14 +1,14 @@
 // Primitives from replica/design/components.md. Colours and sizes come only from tokens.
 import { ReactNode, useEffect, useState } from 'react';
 import {
-  ActivityIndicator, Animated, Platform, Pressable, PressableStateCallbackType, ScrollView, StyleProp, Text as RNText, TextInput, TextProps,
+  ActivityIndicator, Animated, Image, ImageStyle, Platform, Pressable, PressableStateCallbackType, ScrollView, StyleProp, Text as RNText, TextInput, TextProps,
   TextStyle, View, ViewStyle,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { CircleAlert, Gamepad2, Headphones, Inbox, Laptop, Minus, Plus, Smartphone, Tablet, Watch } from 'lucide-react-native';
+import { CircleAlert, Gamepad2, Headphones, House as Home, Inbox, Laptop, Minus, Package, Plus, Smartphone, Sparkles, Tablet, Watch } from 'lucide-react-native';
 import { layout, radius, space, typeStyle, TypeRole, useColors, Colors } from '../theme';
 import { t } from '../i18n';
-import type { Category, ProductStatus } from '../data';
+import type { ProductStatus, StoreCategory } from '../data';
 
 // ---------------------------------------------------------------- text
 
@@ -128,13 +128,17 @@ export function SpotsProgress({ filled, total, size = 'thin', done }: { filled: 
 
 // ---------------------------------------------------------------- product art (no photos of anyone's products)
 
-const ART: Record<Category, typeof Smartphone> = { phone: Smartphone, console: Gamepad2, watch: Watch, audio: Headphones, laptop: Laptop, tablet: Tablet };
-export function ProductArt({ category, size = 'card' }: { category: Category; size?: 'card' | 'thumb' | 'hero' }) {
+const ART: Record<StoreCategory, typeof Smartphone> = { phone: Smartphone, console: Gamepad2, watch: Watch, audio: Headphones, laptop: Laptop, tablet: Tablet,
+  home: Home, beauty: Sparkles, other: Package };
+/** The product's first photo when it has one; otherwise an icon for its category (never someone else's product photo). */
+export function ProductArt({ category, size = 'card', image }: { category: StoreCategory; size?: 'card' | 'thumb' | 'hero'; image?: string }) {
   const c = useColors();
-  const Icon = ART[category];
+  const Icon = ART[category] ?? Package;
   const dims: ViewStyle = size === 'thumb' ? { width: 64, height: 64 } : { width: '100%', aspectRatio: size === 'hero' ? 1.2 : 4 / 3 };
+  const r = size === 'thumb' ? radius.sm : radius.md;
+  if (image) return <Image source={{ uri: image }} accessible={false} resizeMode="cover" style={{ ...(dims as ImageStyle), borderRadius: r, backgroundColor: c.surface }} />;
   return (
-    <View accessible={false} style={[dims, { borderRadius: size === 'thumb' ? radius.sm : radius.md, backgroundColor: c['accent-soft'], alignItems: 'center', justifyContent: 'center' }]}>
+    <View accessible={false} style={[dims, { borderRadius: r, backgroundColor: c['accent-soft'], alignItems: 'center', justifyContent: 'center' }]}>
       <Icon color={c['accent-strong']} size={size === 'thumb' ? 28 : 72} strokeWidth={1.25} />
     </View>
   );
