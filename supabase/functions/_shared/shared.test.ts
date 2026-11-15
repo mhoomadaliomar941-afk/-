@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process';
 import { classifyResult, createCheckout, decryptWebhook, formatAmount, parseWebhook } from './hyperpay.ts';
 import { roundAfter, roundTime } from './drand.ts';
 import { chunk } from './push.ts';
-import { parseTopup } from './validate.ts';
+import { methodFromGateway, parseTopup } from './validate.ts';
 import { winningSpot } from '../../../app/src/data/fairness.ts';
 
 const sql = (q: string) => execFileSync('su', ['postgres', '-c', `psql -qtAX -d replica_backend_test -c "${q}"`]).toString().trim();
@@ -69,6 +69,7 @@ test('app and database pick the same winning spot', () => {
 
 test('top-up input validation', () => {
   assert.deepEqual(parseTopup({ amountFils: 5000, method: 'card' }), { amountFils: 5000, method: 'card' });
+  assert.deepEqual(parseTopup({ amountFils: 5000, method: 'google_pay' }), { amountFils: 5000, method: 'google_pay' });
   for (const bad of [{ amountFils: 500, method: 'card' }, { amountFils: 1500, method: 'card' }, { amountFils: 501000, method: 'card' }, { amountFils: '5000', method: 'card' }, { amountFils: 5000, method: 'cash' }, null]) {
     assert.throws(() => parseTopup(bad));
   }
@@ -76,4 +77,12 @@ test('top-up input validation', () => {
 
 test('push batches of 100', () => {
   assert.deepEqual(chunk(Array.from({ length: 250 }, (_, i) => i)).map((c) => c.length), [100, 100, 50]);
+});
+
+test('the stored gateway name gives back the method (unknown -> card)', () => {
+  assert.equal(methodFromGateway('hyperpay:google_pay'), 'google_pay');
+  assert.equal(methodFromGateway('hyperpay:apple_pay'), 'apple_pay');
+  assert.equal(methodFromGateway('hyperpay:card'), 'card');
+  assert.equal(methodFromGateway('hyperpay:bitcoin'), 'card');
+  assert.equal(methodFromGateway(null), 'card');
 });

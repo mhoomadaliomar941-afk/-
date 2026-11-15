@@ -5,6 +5,7 @@ import { fetchRound, roundAfter } from '../_shared/drand.ts';
 import { getCheckoutStatus } from '../_shared/hyperpay.ts';
 import { settle } from '../_shared/settle.ts';
 import { pushText, sendPush } from '../_shared/push.ts';
+import { methodFromGateway } from '../_shared/validate.ts';
 
 type Task = 'assign-owners' | 'cancel-expired' | 'expire-redemptions' | 'reconcile-payments' | 'push';
 
@@ -42,7 +43,7 @@ Deno.serve(async (req) => {
         const { data } = await db.from('payments').select('id, external_ref, gateway, created_at').eq('status', 'pending').lt('created_at', cutoff).limit(50);
         for (const p of data ?? []) {
           if (!p.external_ref) { await settle(db, p.id, 'failed', 'reconcile'); continue; }
-          const { outcome } = await getCheckoutStatus(hyperpay(p.gateway === 'hyperpay:apple_pay' ? 'apple_pay' : 'card'), p.external_ref);
+          const { outcome } = await getCheckoutStatus(hyperpay(methodFromGateway(p.gateway)), p.external_ref);
           const stale = Date.now() - new Date(p.created_at).getTime() > 24 * 3600_000;
           await settle(db, p.id, outcome === 'pending' && stale ? 'failed' : outcome, 'reconcile'); // abandoned after a day
         }

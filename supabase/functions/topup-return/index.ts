@@ -2,6 +2,7 @@
 // We ask HyperPay for the result (never trust the redirect itself), settle, and hand back to the app.
 import { admin, env, hyperpay, log } from '../_shared/env.ts';
 import { getCheckoutStatus } from '../_shared/hyperpay.ts';
+import { methodFromGateway } from '../_shared/validate.ts';
 import { settle } from '../_shared/settle.ts';
 
 Deno.serve(async (req) => {
@@ -11,8 +12,7 @@ Deno.serve(async (req) => {
   const { data: pay } = await db.from('payments').select('id, gateway').eq('external_ref', id).maybeSingle();
   if (!pay) return Response.redirect(`${app}?status=unknown`, 302);
   try {
-    const method = pay.gateway === 'hyperpay:apple_pay' ? 'apple_pay' : 'card';
-    const { outcome } = await getCheckoutStatus(hyperpay(method), id);
+    const { outcome } = await getCheckoutStatus(hyperpay(methodFromGateway(pay.gateway)), id);
     await settle(db, pay.id, outcome, 'return');
     return Response.redirect(`${app}?status=${outcome}`, 302);
   } catch (e) {
