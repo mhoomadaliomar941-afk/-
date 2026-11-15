@@ -85,24 +85,25 @@ select pg_temp.expect_error($$select * from public_assignments$$, 'permission de
 select pg_temp.check((select count(*) from products) = 1, 'anon can browse products');
 reset role;
 
--- account deletion
+-- account deletion (by a member who was not picked: the owner has an open delivery and is refused, by design)
+select user_id as del_uid from participations where status = 'credited' limit 1 \gset
 set role authenticated;
-set request.jwt.uid = '00000000-0000-0000-0000-00000000000b';
+set request.jwt.uid = :'del_uid';
 select pg_temp.expect_error($$select request_account_deletion()$$, 'balance_not_zero');
 reset role;
-update wallets set cash_fils = 0, shopping_fils = 0 where user_id = '00000000-0000-0000-0000-00000000000b';
+update wallets set cash_fils = 0, shopping_fils = 0 where user_id = :'del_uid';
 set role authenticated;
-set request.jwt.uid = '00000000-0000-0000-0000-00000000000b';
+set request.jwt.uid = :'del_uid';
 select request_account_deletion();
 reset role;
-select pg_temp.check((select phone like 'deleted:%' and full_name is null from profiles where id = '00000000-0000-0000-0000-00000000000b'), 'deletion removes phone and name');
-select pg_temp.check((select count(*) from notifications where user_id = '00000000-0000-0000-0000-00000000000b') = 0, 'deletion removes notifications');
-select pg_temp.check((select count(*) from wallet_txns where user_id = '00000000-0000-0000-0000-00000000000b') > 0, 'ledger kept for money records');
+select pg_temp.check((select phone like 'deleted:%' and full_name is null from profiles where id = :'del_uid'), 'deletion removes phone and name');
+select pg_temp.check((select count(*) from notifications where user_id = :'del_uid') = 0, 'deletion removes notifications');
+select pg_temp.check((select count(*) from wallet_txns where user_id = :'del_uid') > 0, 'ledger kept for money records');
 
--- ledger = balance for every member whose balance only moved through the ledger (B was zeroed by hand above)
+-- ledger = balance for every member whose balance only moved through the ledger (the deleted member was zeroed by hand above)
 select pg_temp.check(not exists (
   select 1 from wallets w
-  where w.user_id <> '00000000-0000-0000-0000-00000000000b'
+  where w.user_id <> :'del_uid'
     and w.cash_fils + w.shopping_fils <> (select coalesce(sum(amount_fils), 0) from wallet_txns t where t.user_id = w.user_id)
 ), 'ledger sums equal wallet balances');
 -- the Edge Functions' role can run the server-only functions
@@ -112,4 +113,12 @@ select pg_temp.check(has_function_privilege('service_role', 'confirm_topup(uuid)
   and has_function_privilege('service_role', 'assign_owner(uuid,bigint,text)', 'execute')
   and not has_function_privilege('authenticated', 'confirm_topup(uuid)', 'execute'), 'money functions: service_role yes, members no');
 reset role;
+-- waitlist: anyone can join with consent, nobody can read it
+set role anon;
+insert into waitlist (phone, consent_at) values ('+962791112233', now());
+select pg_temp.expect_error($$insert into waitlist (phone, consent_at) values ('12345', now())$$, 'check constraint');
+select pg_temp.expect_error($$insert into waitlist (phone, consent_at) values ('+962791112244', null)$$, 'not-null|row-level');
+select pg_temp.expect_error($$select * from waitlist$$, 'permission denied');
+reset role;
+select pg_temp.check((select count(*) from waitlist) = 1, 'waitlist: anon joins with consent, cannot read');
 \echo ALL PASSED

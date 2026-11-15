@@ -52,3 +52,10 @@ if os.path.isdir(os.path.dirname(app_theme)):
         "export const tokens = " + json.dumps(ts, indent=2, ensure_ascii=False) + " as const;\n"
         "export type ColorRole = keyof typeof tokens.light;\n")
     print("wrote app/src/theme/tokens.generated.ts")
+
+# The landing page uses the same CSS variables.
+landing = os.path.join(here, "..", "..", "landing")
+if os.path.isdir(landing):
+    import shutil
+    shutil.copy(os.path.join(here, "tokens.css"), os.path.join(landing, "tokens.css"))
+    print("copied tokens.css to landing/")

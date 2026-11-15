@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نزيه: نتيجة بتقدر تتحقق منها</title>
+<meta name="description" content="احجز مكان بمنتج، والنتيجة بتقدر تتحقق منها بنفسك. وإذا ما طلع مكانك، المبلغ كامل بيرجعلك رصيد تسوق.">
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); font-size: 16px; line-height: 1.7; }
+  a { color: var(--color-accent); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+  .num { unicode-bidi: isolate; direction: ltr; font-variant-numeric: tabular-nums; }
+  header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; text-decoration: none; color: var(--color-text); }
+  .logo img { width: 32px; height: 32px; border-radius: 8px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; border-radius: var(--radius-md); border: 0; background: var(--color-accent); color: var(--color-on-accent); font: 600 16px var(--font-sans); text-decoration: none; cursor: pointer; }
+  .btn:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+  .btn.secondary { background: var(--color-accent-soft); color: var(--color-accent-strong); }
+  section { padding: 56px 0; }
+  h1 { font-size: clamp(30px, 6vw, 46px); line-height: 1.3; margin: 0 0 12px; }
+  h2 { font-size: clamp(24px, 4vw, 32px); line-height: 1.35; margin: 0 0 16px; }
+  h3 { font-size: 18px; margin: 0 0 6px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--color-text-muted); }
+  .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; padding-top: 24px; }
+  .hero .lead { font-size: 19px; color: var(--color-text-muted); max-width: 520px; }
+  .shots { display: flex; gap: 16px; justify-content: center; }
+  .shots img { width: min(220px, 42vw); height: auto; border-radius: 24px; border: 1px solid var(--color-border); box-shadow: var(--shadow-card); background: var(--color-surface); }
+  .shots img:last-child { margin-top: 40px; }
+  .band { background: var(--color-surface); }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 20px; }
+  .step { font-weight: 700; color: var(--color-accent-strong); background: var(--color-accent-soft); width: 36px; height: 36px; border-radius: 999px; display: grid; place-items: center; margin-bottom: 10px; }
+  .problem li { margin-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; background: var(--color-surface-raised); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--color-border); }
+  th, td { text-align: start; padding: 12px 16px; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  th { font-weight: 600; width: 40%; }
+  tr:last-child th, tr:last-child td { border-bottom: 0; }
+  details { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 4px 16px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; min-height: 48px; display: flex; align-items: center; }
+  details p { color: var(--color-text-muted); }
+  .todo { background: var(--color-warning-soft); color: var(--color-warning); border-radius: 8px; padding: 2px 8px; font-size: 14px; }
+  form { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label { font-weight: 600; font-size: 14px; }
+  .phone { display: flex; align-items: center; direction: ltr; height: 48px; border: 1px solid var(--color-border-input); border-radius: var(--radius-md); background: var(--color-bg); padding: 0 12px; gap: 8px; }
+  .phone span { color: var(--color-text-muted); }
+  .phone input { border: 0; outline: none; background: transparent; color: var(--color-text); font: 16px var(--font-sans); width: 150px; height: 100%; }
+  .consent { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; color: var(--color-text-muted); width: 100%; }
+  .consent input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--color-accent); }
+  #msg { width: 100%; min-height: 24px; font-size: 15px; }
+  .cta { text-align: center; }
+  .cta form { justify-content: center; }
+  .cta .consent { justify-content: center; }
+  footer { padding: 32px 0 48px; color: var(--color-text-muted); font-size: 14px; border-top: 1px solid var(--color-border); }
+  @media (max-width: 760px) {
+    .hero, .grid3 { grid-template-columns: 1fr; }
+    .hero { gap: 24px; }
+    section { padding: 40px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="logo" href="#"><img src="favicon.png" alt="">نزيه</a>
+    <a class="btn secondary" href="#join">قائمة الانتظار</a>
+  </header>
+
+  <!-- 1. Hero: the angle -->
+  <section class="hero" aria-labelledby="h-hero">
+    <div>
+      <h1 id="h-hero">احجز مكان بمنتج، والنتيجة بتقدر تتحقق منها بنفسك.</h1>
+      <p class="lead">رقم عشوائي من مصدر عام ما حدا بيتحكم فيه بيحدد الفائز. وإذا ما طلع مكانك، المبلغ كامل بيرجعلك رصيد تسوق.</p>
+      <a class="btn" href="#join">سجّل بقائمة الانتظار</a>
+    </div>
+    <div class="shots">
+      <img src="img/feed.png" width="390" height="844" alt="شاشة المنتجات المفتوحة في تطبيق نزيه، مع سعر المكان وعدد الأماكن المحجوزة">
+      <img src="img/confirm.png" width="390" height="844" alt="شاشة تأكيد الحجز، وفيها سطر يوضح إنه المبلغ بيرجع رصيد تسوق إذا ما طلع مكانك">
+    </div>
+  </section>
+</div>
+
+<!-- 2. The problem (paraphrased from research, no quotes) -->
+<section class="band" aria-labelledby="h-problem">
+  <div class="wrap">
+    <h2 id="h-problem">ليش الناس ما بتثق بهيك تطبيقات؟</h2>
+    <ul class="problem">
+      <li>ما حدا بيشوف كيف انختار الفائز، فبيضل السؤال: <strong>هل في حدا فعلاً بيربح؟</strong></li>
+      <li>ما بتعرف وين بتروح مصاريك إذا ما ربحت، ولا بأي سعر رح تصرف رصيدك.</li>
+    </ul>
+  </div>
+</section>
+
+<div class="wrap">
+  <!-- 3. How it works -->
+  <section aria-labelledby="h-how">
+    <h2 id="h-how">كيف بيشتغل</h2>
+    <div class="grid3">
+      <div class="card"><div class="step num">1</div><h3>اختار المنتج</h3><p class="muted">كل منتج إله عدد أماكن محدد، وسعر المكان واضح قبل ما تدفع.</p></div>
+      <div class="card"><div class="step num">2</div><h3>احجز مكانك</h3><p class="muted">بتدفع من رصيدك، وكل مكان إلك إله رقم بتشوفه.</p></div>
+      <div class="card"><div class="step num">3</div><h3>تحقق من النتيجة</h3><p class="muted">لما تكتمل الأماكن، الرقم العام بيحدد الفائز. وإذا ما طلع مكانك، المبلغ كامل بيرجعلك رصيد.</p></div>
+    </div>
+  </section>
+
+  <!-- 4. Features, led by the fixes -->
+  <section aria-labelledby="h-features">
+    <h2 id="h-features">شو بيميّز نزيه</h2>
+    <div class="grid3">
+      <div class="card"><h3>إثبات لكل نتيجة</h3><p class="muted">قبل ما يبلش الحجز بننشر بصمة سرّ. بعد النتيجة بنكشف السرّ والرقم العام والمعادلة، وأي حدا بيقدر يعيد الحساب.</p></div>
+      <div class="card"><h3>المبلغ كامل بيرجعلك</h3><p class="muted">إذا ما طلع مكانك، كل اللي دفعته بيرجع رصيد تسوق. وإذا المنتج ما اكتمل بوقته، بيرجعلك لرصيدك.</p></div>
+      <div class="card"><h3>كل فلس واضح</h3><p class="muted">محفظة فيها كل حركة: شحن، حجز، رصيد راجع، وشراء من متجر.</p></div>
+      <div class="card"><h3>أرقام أماكنك قدامك</h3><p class="muted">بتعرف بالضبط أي أرقام إلك، وكم مكان باقي.</p></div>
+      <div class="card"><h3>توصيل للمالك</h3><p class="muted">بتدخل عنوانك وبتتابع الطلب من التطبيق.</p></div>
+      <div class="card"><h3>حسابك إلك</h3><p class="muted">بتقدر تحذف حسابك من داخل التطبيق.</p></div>
+    </div>
+  </section>
+
+  <!-- 5. Pricing -->
+  <section aria-labelledby="h-pricing">
+    <h2 id="h-pricing">شو بتدفع</h2>
+    <table>
+      <tr><th scope="row">سعر المكان</th><td>من <span class="num">1</span> دينار، مكتوب على كل منتج قبل ما تحجز.</td></tr>
+      <tr><th scope="row">فرصتك</th><td>مكتوبة على كل منتج: مكان واحد من كل الأماكن.</td></tr>
+      <tr><th scope="row">اشتراك أو رسوم شهرية</th><td>ما في.</td></tr>
+      <tr><th scope="row">إذا ما طلع مكانك</th><td>المبلغ كامل رصيد تسوق.</td></tr>
+      <tr><th scope="row">إذا المنتج ما اكتمل بوقته</th><td>المبلغ كامل بيرجع لرصيدك.</td></tr>
+    </table>
+  </section>
+
+  <!-- 6. FAQ: the real objections -->
+  <section aria-labelledby="h-faq">
+    <h2 id="h-faq">أسئلة</h2>
+    <details><summary>كيف بعرف إنه النتيجة مش مرتّبة؟</summary>
+      <p>قبل ما يبلش الحجز بننشر بصمة (SHA-256) لسرّ عشوائي. لما تكتمل الأماكن بناخذ أول رقم بيطلع بعدها من مصدر عام اسمه drand، ما حدا بيتحكم فيه، ولا حتى إحنا. السرّ مع الرقم العام بيحددوا رقم المكان الفائز، وبنعرض الثلاثة بشاشة "تحقق من النتيجة" عشان تعيد الحساب بنفسك.</p></details>
+    <details><summary>هل هاد قمار أو يانصيب؟</summary>
+      <p><span class="todo">جواب هذا السؤال بيجي بعد الرأي القانوني. لا تنشر الصفحة قبله.</span></p></details>
+    <details><summary>وين بتروح مصاريّ إذا ما ربحت؟</summary>
+      <p>كامل المبلغ بيرجعلك رصيد تسوق، بتصرفه بالمتاجر الشريكة. وكل حركة بتشوفها بالمحفظة.</p></details>
+    <details><summary>شو بصير إذا المنتج ما اكتمل؟</summary>
+      <p>إذا انتهى وقت المنتج قبل ما تكتمل أماكنه، كل اللي دفعته بيرجع لرصيدك.</p></details>
+    <details><summary>وين بتوصلوا؟</summary>
+      <p>داخل الأردن.</p></details>
+  </section>
+</div>
+
+<!-- 7. Final call to action: waitlist -->
+<section class="band cta" id="join" aria-labelledby="h-join">
+  <div class="wrap">
+    <h2 id="h-join">بدك تكون من أول الناس؟</h2>
+    <p class="muted">سجّل رقمك، وبنبعتلك رسالة وحدة لما يفتح التطبيق.</p>
+    <form id="waitlist" novalidate>
+      <div class="field">
+        <label for="phone">رقم الهاتف</label>
+        <div class="phone"><span>+962</span><input id="phone" name="phone" inputmode="tel" autocomplete="tel-national" placeholder="7X XXX XXXX" required></div>
+      </div>
+      <button class="btn" type="submit" style="align-self:flex-end">سجّلني</button>
+      <label class="consent"><input type="checkbox" id="consent" required> بوافق إنكم تبعتولي رسالة لما يفتح التطبيق، وبس.</label>
+      <div id="msg" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
+<div class="wrap">
+  <footer>
+    <p>نزيه · متوفر بالأردن فقط</p>
+    <p><a href="privacy.html">سياسة الخصوصية</a> · <a href="terms.html">الشروط</a></p>
+  </footer>
+</div>
+
+<script src="config.js"></script>
+<script>
+  (function () {
+    var form = document.getElementById('waitlist');
+    var msg = document.getElementById('msg');
+    var input = document.getElementById('phone');
+    function normalize(s) {
+      var d = s.replace(/\D/g, '');
+      if (d.indexOf('00962') === 0) d = d.slice(5); else if (d.indexOf('962') === 0) d = d.slice(3);
+      if (d.charAt(0) === '0') d = d.slice(1);
+      return d.slice(0, 9);
+    }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var d = normalize(input.value);
+      if (!/^7[789]\d{7}$/.test(d)) { msg.textContent = 'أدخل رقم أردني صحيح يبدأ بـ 7'; input.focus(); return; }
+      if (!document.getElementById('consent').checked) { msg.textContent = 'لازم توافق على الرسالة عشان نسجّلك'; return; }
+      var cfg = window.NAZIH_CONFIG || {};
+      if (!cfg.supabaseUrl) { msg.textContent = 'التسجيل بيفتح قريباً.'; return; }
+      msg.textContent = '…';
+      fetch(cfg.supabaseUrl + '/rest/v1/waitlist', {
+        method: 'POST',
+        headers: { apikey: cfg.supabaseAnonKey, Authorization: 'Bearer ' + cfg.supabaseAnonKey, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify({ phone: '+962' + d, consent_at: new Date().toISOString() })
+      }).then(function (r) {
+        // 201 new, 409 already on the list: same answer either way (no hint whether a number is listed)
+        msg.textContent = (r.ok || r.status === 409) ? 'تمام، سجّلناك. بنبعتلك لما يفتح.' : 'صار خلل، جرّب كمان شوي.';
+      }).catch(function () { msg.textContent = 'صار خلل بالاتصال، جرّب كمان شوي.'; });
+    });
+  })();
+</script>
+</body>
+</html>
