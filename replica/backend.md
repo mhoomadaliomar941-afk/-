@@ -119,6 +119,11 @@ an admin (`admin_save_product`, `admin_open_product`, `admin_cancel_product`,
 ```sql
 update profiles set is_admin = true where phone = '+9627XXXXXXXX';
 ```
+For the owner's number (0786055772), ready to paste:
+```sql
+update profiles set is_admin = true where phone = '+962786055772';
+select phone, is_admin from profiles where is_admin = true;   -- check
+```
 The "لوحة الإدارة" (admin panel) entry then appears under حسابي (Profile).
 In the demo build, log in with **79 000 0000** to see it.
 

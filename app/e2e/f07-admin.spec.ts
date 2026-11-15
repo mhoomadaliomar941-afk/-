@@ -93,3 +93,9 @@ test('F07-H3 admin ships a store order; cancelling refunds the buyer', async ({ 
   await tab(page, 'المحفظة').click();
   await expect(page.getByText('رصيد التسوق', { exact: true }).locator('xpath=..')).toContainText('5.000');
 });
+
+test('F07-H4 the owner\'s own number opens the admin panel', async ({ page }) => {
+  await login(page, '786055772');
+  await tab(page, 'حسابي').click();
+  await expect(btn(page, 'لوحة الإدارة')).toBeVisible();
+});

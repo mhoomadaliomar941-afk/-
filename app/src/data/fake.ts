@@ -11,8 +11,8 @@ import {
 const DEV_OTP = '123456';
 const LATENCY = 250;
 const ME = 'u-me';
-/** Demo: log in with 79 000 0000 to be the owner/admin; any other number is a regular member. */
-export const ADMIN_PHONE = '+962790000000';
+/** Demo: these numbers log in as the owner/admin (the test number and the owner's own); any other number is a regular member. */
+export const ADMIN_PHONES = ['+962790000000', '+962786055772'];
 
 let n = 0;
 const id = (p: string) => `${p}-${Date.now().toString(36)}-${(n++).toString(36)}`;
@@ -233,7 +233,7 @@ export const fakeApi: Api = {
     if (code !== DEV_OTP) throw new ApiError('wrong_otp');
     const p = db.profiles.get(ME)!;
     p.phone = phone;
-    p.isAdmin = phone === ADMIN_PHONE;
+    p.isAdmin = ADMIN_PHONES.includes(phone);
     db.session = p;
     emit();
     return p;
