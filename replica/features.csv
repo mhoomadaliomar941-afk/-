@@ -1,15 +1,15 @@
 feature,area,priority,original,clone,notes
-Sign up / log in (phone number + OTP likely),onboarding,must,yes,partial,login method is a guess; confirm from screenshots; S02 built; fake OTP 123456 until /replica-backend wires Twilio via Supabase Auth
+Sign up / log in (phone number + OTP likely),onboarding,must,yes,partial,login method is a guess; confirm from screenshots; S02 built; fake OTP 123456 until /replica-backend wires Twilio via Supabase Auth; backend: Supabase phone OTP wired; needs your Twilio + a live run
 Product feed of premium items (phones consoles watches),catalog,must,yes,yes,S03; icons instead of product photos until real photos exist
 Product detail with total spots / spots filled progress,catalog,must,yes,yes,"""each product shows its participation details""; S04"
 Buy one or more spots in a product (from 1 JD),participation,must,yes,yes,"whether multiple spots per user is allowed is unconfirmed; S04+S05; idempotency key, oversell and per-member limit enforced in the data layer"
 In-app wallet with balance,wallet,must,yes,yes,S07; cash and shopping balances
-Top up wallet with multiple payment methods,wallet,must,yes,partial,Jordanian gateways; methods not confirmed; S06 UI done; fake gateway until /replica-backend (HyperPay or similar)
+Top up wallet with multiple payment methods,wallet,must,yes,partial,Jordanian gateways; methods not confirmed; S06 UI done; fake gateway until /replica-backend (HyperPay or similar); backend: HyperPay hosted checkout + webhook + reconcile written and unit-tested; needs sandbox run
 Close a product when all spots fill,participation,must,yes,yes,status full when last spot is bought
-Select one owner when spots fill,participation,must,yes,partial,selection method not public; regulated - see recon.md; same formula as SQL assign_owner; fake beacon until the real job uses drand
+Select one owner when spots fill,participation,must,yes,yes,"selection method not public; regulated - see recon.md; same formula as SQL assign_owner; fake beacon until the real job uses drand; backend: job uses the first drand round after filling, enforced in SQL; signature check TODO"
 Credit non-selected members' spend back as shopping balance,wallet,must,yes,yes,"""goes back to your in-app shopping balance automatically""; S09 + wallet ledger"
 My participations list (active / closed / owned),participation,must,yes,yes,S08 three tabs
-Result notification (you own it / balance credited),notifications,must,yes,partial,in-app inbox S14 done; push needs /replica-backend
+Result notification (you own it / balance credited),notifications,must,yes,partial,in-app inbox S14 done; push needs /replica-backend; backend: Expo push job written; needs EAS project id + live run
 Delivery of the owned product across Amman and governorates,fulfilment,must,yes,partial,needs address capture + order tracking; address + status in app (S10); shipping ops and admin side not built
 Delivery address and order status,fulfilment,should,yes,yes,S10 with validation and timeline
 Owners showcase (verified owners shown in app),trust,should,yes,yes,needs owner consent for photo/name; S11; first name + initial only
@@ -17,7 +17,7 @@ Partner stores directory,partners,should,yes,yes,S12 with governorate filter
 Redeem shopping balance at a partner store from the app,partners,should,yes,partial,redemption mechanic (QR/code) is a guess; S13 member code + countdown; store-staff scanner portal not built
 Wallet transaction history,wallet,should,yes,yes,S07
 Arabic + English UI with RTL,platform,should,likely,partial,reviews are partly Arabic; assumed; Arabic RTL done; English strings not written yet
-Push notifications for new products and closing soon,notifications,should,likely,no,assumed; needs /replica-backend (Expo Push)
+Push notifications for new products and closing soon,notifications,should,likely,partial,"assumed; needs /replica-backend (Expo Push); new-product push on open_product; ""closing soon"" not built"
 Profile and settings,account,should,yes,yes,S15; language switch waits for English
 Help / FAQ / terms,support,should,yes,partial,support email shown on listing; S16 FAQ + contact; terms page with /replica-launch
 Categories / search / filter,catalog,could,unknown,no,

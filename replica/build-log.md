@@ -39,3 +39,12 @@ Known rough edges:
 - Web header back arrow does not mirror for RTL (native does via I18nManager).
 - Reloading the web page resets the fake data layer (by design until backend).
 - One end-to-end run in dark mode timed out once and passed on rerun: test timing, watch it in `/replica-test`.
+
+## Backend (2026-11-15)
+
+| part | status | note |
+| --- | --- | --- |
+| migrations + RLS | done, tested locally | 36 SQL checks incl. a second user; found and fixed: members could read winners' ids, anon could read results, server role had lost access to the money functions |
+| Edge Functions | written, type-checked, partly run locally | not yet run against live Supabase/HyperPay (unreachable from here, and the accounts are yours) |
+| app → Supabase | written, type-checked, mappers tested | switches on with `app/.env.local`; fake layer unchanged and still passes the full flow |
+| account deletion | done (fake + backend) | blocked while a balance, an open product or an open delivery exists |
