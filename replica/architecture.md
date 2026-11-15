@@ -9,7 +9,7 @@ screenshots). The name, colours and copy come later, in `/replica-brand`.
 | --- | --- | --- |
 | mobile app | Expo (React Native) + TypeScript | Android first, the same code gives iOS later; built-in Arabic RTL via `I18nManager` |
 | admin + partner portal | Next.js (App Router) on Vercel | one small web app: admins add products and ship orders; store staff scan redemption codes |
-| styling | NativeWind (Tailwind) on mobile, Tailwind on web | one set of tokens from `/replica-design` |
+| styling | mobile: StyleSheet + typed tokens generated from `tokens.json` (`app/src/theme/tokens.generated.ts`); web portal: Tailwind via `tailwind.tokens.js` | one set of tokens from `/replica-design`; NativeWind was dropped during the build to keep the Expo setup simple |
 | database | Postgres on Supabase | money needs real transactions and row locks; RLS for access |
 | auth | Supabase Auth, **phone + SMS OTP** (Twilio Verify) | Jordanian users expect a phone number, not email; works with Jordanian numbers |
 | payments | **a gateway that serves Jordanian merchants**, e.g. HyperPay (cards, Apple Pay); CliQ later | Stripe does not onboard businesses in Jordan. Confirm the gateway with your bank; the code only assumes "hosted checkout + signed webhook" |
