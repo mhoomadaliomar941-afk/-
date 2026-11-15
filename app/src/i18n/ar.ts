@@ -35,7 +35,7 @@ export const ar = {
     types: { topup: 'شحن المحفظة', spend: 'حجز أماكن', credit: 'رصيد تسوق', redeem: 'شراء من متجر', refund: 'استرجاع', adjust: 'تعديل' },
     pending: 'قيد المعالجة', failed: 'فشل',
   },
-  topup: { title: 'شحن المحفظة', amount: 'المبلغ', other: 'مبلغ آخر', method: 'طريقة الدفع', card: 'بطاقة بنكية', applePay: 'Apple Pay', cliq: 'كليك (قريباً)', pay: (a: string) => `ادفع ${a}`, success: 'تم شحن المحفظة' },
+  topup: { title: 'شحن المحفظة', amount: 'المبلغ', other: 'مبلغ آخر', method: 'طريقة الدفع', card: 'بطاقة بنكية', applePay: 'Apple Pay', cliq: 'كليك (قريباً)', pay: (a: string) => `ادفع ${a}`, success: 'تم شحن المحفظة', note: 'بتدفع على صفحة بوابة الدفع. الرصيد بيوصل أول ما البوابة تأكد الدفع.' },
   mine: { title: 'مشاركاتي', active: 'جارية', closed: 'منتهية', owned: 'ربحتها', empty: 'ما شاركت بأي منتج لسا', emptyAction: 'تصفّح المنتجات', spots: (n: number) => `${n} أماكن`, waiting: 'بانتظار اختيار المالك' },
   result: {
     ownerTitle: 'مبروك! صار المنتج إلك', ownerBody: (n: number) => `رقم مكانك الفائز \u2066#${n}\u2069`, address: 'أدخل عنوان التوصيل',
@@ -49,7 +49,13 @@ export const ar = {
   stores: { title: 'المتاجر الشريكة', empty: 'ما في متاجر بهالمحافظة', all: 'الكل', redeem: 'اشترِ بالرصيد' },
   redeem: { title: 'الدفع بالمتجر', amount: 'المبلغ', create: 'أنشئ رمز', show: 'ورّي الرمز للكاشير', expires: (m: string) => `ينتهي خلال ${m}`, expired: 'انتهى الرمز', confirmed: 'تم الدفع', low: 'رصيد التسوق ما بيكفي', again: 'أنشئ رمز جديد' },
   notifications: { title: 'الإشعارات', empty: 'ما في إشعارات' },
-  profile: { title: 'حسابي', language: 'اللغة', owners: 'المالكين', help: 'المساعدة والشروط', logout: 'تسجيل الخروج', notifications: 'الإشعارات' },
+  profile: { title: 'حسابي', language: 'اللغة', owners: 'المالكين', help: 'المساعدة والشروط', logout: 'تسجيل الخروج', notifications: 'الإشعارات',
+    delete: 'حذف الحساب', deleteTitle: 'حذف الحساب نهائياً؟', deleteBody: 'رح نحذف رقمك واسمك وعناوينك وإشعاراتك. سجلات الدفع بتضل محفوظة بدون بياناتك لأن القانون بيطلبها.',
+    deleteConfirm: 'احذف حسابي', deleteErrors: {
+      balance_not_zero: 'عندك رصيد. اصرفه أو تواصل معنا لنرجعه قبل الحذف.',
+      active_participation: 'عندك أماكن بمنتج لسا مفتوح. استنى لحد ما يكتمل.',
+      open_order: 'عندك طلب توصيل لسا ما وصل.',
+    } as Record<string, string> },
   help: { title: 'المساعدة', contact: 'تواصل معنا', faq: [
     { q: 'شو بصير إذا ما انختار مكاني؟', a: 'بيرجعلك كامل المبلغ اللي دفعته كرصيد تسوق، بتصرفه بأي متجر شريك.' },
     { q: 'كيف بتختاروا المالك؟', a: 'برقم عشوائي من مصدر عام ما حدا بيتحكم فيه، وبتقدر تتحقق من النتيجة من شاشة النتيجة.' },

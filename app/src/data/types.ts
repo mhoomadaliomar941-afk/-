@@ -33,7 +33,8 @@ export interface Profile { id: string; phone: string; fullName: string | null }
 export type PaymentMethod = 'card' | 'apple_pay';
 
 export class ApiError extends Error {
-  constructor(public code: 'not_signed_in' | 'not_open' | 'sold_out' | 'limit' | 'insufficient' | 'not_found' | 'invalid' | 'wrong_otp', message?: string) {
+  constructor(public code: 'not_signed_in' | 'not_open' | 'sold_out' | 'limit' | 'insufficient' | 'not_found' | 'invalid' | 'wrong_otp'
+    | 'balance_not_zero' | 'active_participation' | 'open_order' | 'rate_limited' | 'network' | 'unknown', message?: string) {
     super(message ?? code);
   }
 }
@@ -64,5 +65,8 @@ export interface Api {
   getRedemption(id: string): Promise<Redemption>;
   listNotifications(): Promise<Notification[]>;
   markNotificationsRead(): Promise<void>;
+  registerPushToken(token: string, platform: 'android' | 'ios' | 'web'): Promise<void>;
+  /** Fails with 'balance_not_zero' | 'active_participation' | 'open_order' when the account can't be closed yet. */
+  deleteAccount(): Promise<void>;
   subscribe(listener: () => void): () => void;
 }

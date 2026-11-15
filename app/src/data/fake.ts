@@ -317,5 +317,16 @@ export const fakeApi: Api = {
   async listNotifications() { requireMe(); return wait([...db.notifications]); },
   async markNotificationsRead() { db.notifications.forEach((x) => { x.readAt ??= now(); }); emit(); },
 
+  async registerPushToken() { /* nothing to deliver in the fake layer */ },
+  // request_account_deletion(): same preconditions as the SQL function
+  async deleteAccount() {
+    const uid = requireMe();
+    await wait(null);
+    const w = wallet(uid);
+    if (w.cashFils > 0 || w.shoppingFils > 0) throw new ApiError('balance_not_zero');
+    if (db.participations.some((x) => x.userId === uid && x.status === 'active')) throw new ApiError('active_participation');
+    if (db.orders.some((o) => ['awaiting_address', 'pending', 'shipped'].includes(o.status) && db.assignments.find((a) => a.id === o.assignmentId)?.ownerId === uid)) throw new ApiError('open_order');
+    db.session = null; emit();
+  },
   subscribe(l) { listeners.add(l); return () => listeners.delete(l); },
 };

@@ -1,13 +1,16 @@
+import { useEffect } from 'react';
 import { Redirect, Tabs } from 'expo-router';
 import { House, Store, Ticket, User, Wallet } from 'lucide-react-native';
 import { Text as RNText } from 'react-native';
 import { fonts, layout, useColors } from '../../theme';
 import { useSession } from '../../lib/session';
+import { registerForPush } from '../../lib/push';
 import { t } from '../../i18n';
 
 export default function TabsLayout() {
   const c = useColors();
   const { user, ready } = useSession();
+  useEffect(() => { if (user) registerForPush(); }, [user]);
   if (!ready) return null;
   if (!user) return <Redirect href="/login" />;
   return (

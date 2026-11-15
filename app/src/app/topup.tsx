@@ -63,6 +63,7 @@ export default function Topup() {
         {methodRow('apple_pay', Smartphone, t.topup.applePay)}
         {methodRow('cliq', Wallet, t.topup.cliq, true)}
       </View>
+      <Text variant="sm" tone="text-muted">{t.topup.note}</Text>
       {error ? <Text tone="danger">{error}</Text> : null}
       <Button full size="lg" title={value ? t.topup.pay(formatJD(value)) : t.topup.pay('')} disabled={!value} loading={busy} onPress={pay} />
     </Screen>
