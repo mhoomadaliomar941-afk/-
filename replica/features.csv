@@ -1,0 +1,26 @@
+feature,area,priority,original,clone,notes
+Level player with question and interactive scene,gameplay,must,yes,no,
+Tap and drag interactions on scene objects,gameplay,must,yes,no,inferred - verify
+Right and wrong answer feedback,gameplay,must,yes,no,inferred - verify
+Level solved screen with next level,gameplay,must,yes,no,
+Linear level progression saved on device,progress,must,yes,no,
+Bulb currency with on-screen counter,economy,must,yes,no,called lamps or bulbs by region
+Hint for bulbs or a rewarded ad,economy,must,yes,no,
+Skip a level for bulbs,economy,must,yes,no,
+Data-driven level format for original puzzles,content,must,yes,no,format is ours to design
+Interstitial ad between levels,ads,should,yes,no,top user complaint - consider fewer
+Remove-ads purchase,store,should,yes,no,reports of it not applying - test hard
+Bulb pack purchases,store,should,yes,no,
+Restore purchases,store,should,yes,no,inferred - store rules require it
+Daily gift,retention,should,yes,no,
+Level map with replay,progress,should,yes,no,inferred - verify
+Device interactions (shake tilt multi-touch),gameplay,should,yes,no,inferred - verify
+Settings (sound vibration language),settings,should,yes,no,inferred - verify
+Subscription (no ads cheaper hints and skips double gift),store,could,yes,no,seen in one regional listing
+Offline play,platform,could,yes,no,sources conflict
+Localisation,platform,could,yes,no,
+Rate and share prompts,growth,could,yes,no,inferred
+The original puzzles and their solutions,content,skip,yes,skip,creative content - write your own
+Characters art animation and audio,content,skip,yes,skip,owned assets
+Name logo and branding,brand,skip,yes,skip,trademark
+Level order and difficulty curve one-for-one,content,skip,yes,skip,design your own curve
