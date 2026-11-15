@@ -21,11 +21,11 @@ export default function Stores() {
     <Screen>
       <Text variant="2xl" accessibilityRole="header">{t.stores.title}</Text>
       {w.data ? <Text tone="text-muted">{t.wallet.shopping}: <Text weight={600}>{formatJD(w.data.shoppingFils)}</Text></Text> : null}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: space(2) }}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: space(2) }} role="radiogroup" aria-label={t.order.governorate}>
         {[null, ...govs].map((g) => {
           const on = gov === g;
           return (
-            <Pressable key={g ?? 'all'} accessibilityRole="radio" accessibilityState={{ checked: on }} onPress={() => setGov(g)}
+            <Pressable key={g ?? 'all'} role="radio" aria-checked={on} onPress={() => setGov(g)}
               style={{ height: 36, paddingHorizontal: space(4), borderRadius: radius.pill, justifyContent: 'center',
                 backgroundColor: on ? c['accent-soft'] : c.surface }}>
               <Text variant="sm" weight={on ? 600 : 400} tone={on ? 'accent-strong' : 'text-muted'}>{g ?? t.stores.all}</Text>

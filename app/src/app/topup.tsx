@@ -30,7 +30,7 @@ export default function Topup() {
   const chip = (fils: number) => {
     const on = amount === fils;
     return (
-      <Pressable key={fils} accessibilityRole="radio" accessibilityState={{ checked: on }} onPress={() => { setAmount(fils); setOther(''); }}
+      <Pressable key={fils} role="radio" aria-checked={on} onPress={() => { setAmount(fils); setOther(''); }}
         style={{ flex: 1, height: 48, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center',
           backgroundColor: on ? c['accent-soft'] : c.surface, borderWidth: on ? 2 : 1, borderColor: on ? c.accent : c.border }}>
         <Text weight={600} tone={on ? 'accent-strong' : 'text'}>{formatJD(fils)}</Text>
@@ -40,7 +40,7 @@ export default function Topup() {
   const methodRow = (m: PaymentMethod | 'cliq', Icon: typeof CreditCard, label: string, unavailable = false) => {
     const on = method === m;
     return (
-      <Pressable key={m} accessibilityRole="radio" accessibilityState={{ checked: on, disabled: unavailable }}
+      <Pressable key={m} role="radio" aria-checked={on} disabled={unavailable}
         onPress={unavailable ? undefined : () => setMethod(m as PaymentMethod)}
         style={{ flexDirection: 'row', alignItems: 'center', gap: space(3), height: 56, paddingHorizontal: space(4), borderRadius: radius.md,
           borderWidth: on ? 2 : 1, borderColor: on ? c.accent : c.border, opacity: unavailable ? 0.5 : 1 }}>
@@ -53,12 +53,14 @@ export default function Topup() {
   return (
     <Screen edges={['bottom']}>
       <SectionTitle>{t.topup.amount}</SectionTitle>
-      <Row>{PRESETS.slice(0, 2).map(chip)}</Row>
-      <Row>{PRESETS.slice(2).map(chip)}</Row>
+      <View role="radiogroup" aria-label={t.topup.amount} style={{ gap: space(2) }}>
+        <Row>{PRESETS.slice(0, 2).map(chip)}</Row>
+        <Row>{PRESETS.slice(2).map(chip)}</Row>
+      </View>
       <TextField label={t.topup.other} value={other} onChangeText={(s) => { setOther(s.replace(/\D/g, '').slice(0, 3)); setAmount(null); }}
         keyboardType="number-pad" prefix="د.ا" placeholder="0" />
       <SectionTitle>{t.topup.method}</SectionTitle>
-      <View style={{ gap: space(2) }}>
+      <View role="radiogroup" aria-label={t.topup.method} style={{ gap: space(2) }}>
         {methodRow('card', CreditCard, t.topup.card)}
         {methodRow('apple_pay', Smartphone, t.topup.applePay)}
         {methodRow('cliq', Wallet, t.topup.cliq, true)}

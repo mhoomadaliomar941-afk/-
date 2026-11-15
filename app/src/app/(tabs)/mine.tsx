@@ -26,9 +26,9 @@ export default function Mine() {
   return (
     <Screen>
       <Text variant="2xl" accessibilityRole="header">{t.mine.title}</Text>
-      <View accessibilityRole="tablist" style={{ flexDirection: 'row', backgroundColor: c.surface, borderRadius: radius.md, padding: 4 }}>
+      <View role="tablist" style={{ flexDirection: 'row', backgroundColor: c.surface, borderRadius: radius.md, padding: 4 }}>
         {(['active', 'closed', 'owned'] as Tab[]).map((k) => (
-          <Pressable key={k} accessibilityRole="tab" accessibilityState={{ selected: tab === k }} onPress={() => setTab(k)}
+          <Pressable key={k} role="tab" aria-selected={tab === k} onPress={() => setTab(k)}
             style={{ flex: 1, height: 40, borderRadius: radius.sm, alignItems: 'center', justifyContent: 'center', backgroundColor: tab === k ? c['surface-raised'] : 'transparent' }}>
             <Text variant="sm" weight={tab === k ? 600 : 400} tone={tab === k ? 'text' : 'text-muted'}>{t.mine[k]}</Text>
           </Pressable>

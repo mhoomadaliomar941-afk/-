@@ -15,7 +15,7 @@ export default function Help() {
         {t.help.faq.map((f, i) => (
           <View key={f.q}>
             {i > 0 ? <Divider /> : null}
-            <Pressable accessibilityRole="button" accessibilityState={{ expanded: open === i }} onPress={() => setOpen(open === i ? null : i)}
+            <Pressable role="button" aria-expanded={open === i} onPress={() => setOpen(open === i ? null : i)}
               style={{ flexDirection: 'row', alignItems: 'center', minHeight: 52, gap: space(2) }}>
               <Text weight={600} style={{ flex: 1 }}>{f.q}</Text>
               <ChevronDown color={c['text-muted']} size={18} style={{ transform: [{ rotate: open === i ? '180deg' : '0deg' }] }} />

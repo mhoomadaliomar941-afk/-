@@ -13,3 +13,14 @@ export function formatJD(fils: number, lang: 'ar' | 'en' = 'ar', showPlus = fals
 }
 
 export const JD = 1000;
+
+/** Jordanian mobile from whatever the person typed or pasted: "+962 79 123 4567",
+ *  "00962791234567", "0791234567", "79 123 4567" -> "79 123 4567" (max 9 digits, grouped). */
+export function normalizeJoMobile(input: string): string {
+  let d = input.replace(/[^\d]/g, '');
+  if (d.startsWith('00962')) d = d.slice(5);
+  else if (d.startsWith('962')) d = d.slice(3);
+  if (d.startsWith('0')) d = d.slice(1);
+  d = d.slice(0, 9);
+  return [d.slice(0, 2), d.slice(2, 5), d.slice(5)].filter(Boolean).join(' ');
+}

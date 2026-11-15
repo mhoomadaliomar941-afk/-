@@ -22,7 +22,7 @@ export function Sheet({ visible, onClose, title, children }: { visible: boolean;
   const insets = useSafeAreaInsets();
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable accessibilityLabel={t.common.cancel} onPress={onClose} style={{ flex: 1, backgroundColor: c.scrim, opacity: 0.5 }} />
+      <Pressable role="button" aria-label={t.common.cancel} onPress={onClose} style={{ flex: 1, backgroundColor: c.scrim, opacity: 0.5 }} />
       <View accessibilityViewIsModal style={{ backgroundColor: c['surface-raised'], borderTopLeftRadius: radius.xl, borderTopRightRadius: radius.xl,
         padding: space(5), paddingBottom: space(5) + insets.bottom, gap: space(4) }}>
         <View style={{ maxWidth: 600, width: '100%', alignSelf: 'center', gap: space(4) }}>

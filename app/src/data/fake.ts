@@ -94,6 +94,17 @@ for (const p of db.products) {
   const win = winningSpot(p.serverSeed, beaconValue, p.totalSpots);
   db.assignments.push({ id: 'a-laptop', productId: p.id, winningSpot: win, ownerId: 'u-other-3', ownerName: 'ليث ع.',
     serverSeed: p.serverSeed, beaconRound: 4_812_337, beaconValue, assignedAt: ago(60 * 24 * 2) });
+  // this member held one spot (not the winning one) and was credited 5 JD shopping balance
+  const holders = db.spots.get(p.id)!;
+  holders[win - 1] = 'u-other-3';
+  const mine = win === 1 ? 2 : 1;
+  holders[mine - 1] = ME;
+  db.participations.push({ id: 'pa-laptop', userId: ME, productId: p.id, spots: 1, amountFils: 5_000, status: 'credited',
+    createdAt: ago(60 * 24 * 6), spotNumbers: [mine] });
+  wallet(ME).shoppingFils += 5_000;
+  db.txns.push({ id: 't-laptop-credit', bucket: 'shopping', type: 'credit', amountFils: 5_000, status: 'done', label: p.titleAr, createdAt: ago(60 * 24 * 2) });
+  db.txns.push({ id: 't-laptop-spend', bucket: 'cash', type: 'spend', amountFils: -5_000, status: 'done', label: p.titleAr, createdAt: ago(60 * 24 * 6) });
+  db.txns.push({ id: 't-seed1', bucket: 'cash', type: 'topup', amountFils: 5_000, status: 'done', createdAt: ago(60 * 24 * 7) });
 }
 
 // a tablet this member already won, waiting for a delivery address (shows S10 and the "won" tab)
@@ -124,6 +135,9 @@ for (const p of db.products) {
 // ---------------------------------------------------------------- store events
 
 const listeners = new Set<() => void>();
+// Call counts, read by the e2e tests (window.__fakeCalls) to catch request loops.
+const calls = { getRedemption: 0 };
+(globalThis as { __fakeCalls?: typeof calls }).__fakeCalls = calls;
 const emit = () => listeners.forEach((l) => l());
 
 function requireMe(): string {
@@ -175,6 +189,20 @@ function scheduleAssignment(pid: string) {
     emit();
   }, 2500);
 }
+
+// The "expire-redemptions" job: like the real cron, once a minute, not when a code is read.
+function expireRedemptionsJob() {
+  let changed = false;
+  for (const r of db.redemptions) {
+    if (r.status !== 'pending' || new Date(r.expiresAt) > new Date()) continue;
+    r.status = 'expired';
+    wallet(ME).shoppingFils += r.amountFils;
+    db.txns.unshift({ id: id('t'), bucket: 'shopping', type: 'refund', amountFils: r.amountFils, status: 'done', createdAt: now() });
+    changed = true;
+  }
+  if (changed) emit(); // BUG-006: screens showing the balance reload
+}
+setInterval(expireRedemptionsJob, 60_000);
 
 // ---------------------------------------------------------------- the API
 
@@ -304,13 +332,9 @@ export const fakeApi: Api = {
     return r;
   },
   async getRedemption(rid) {
+    calls.getRedemption++;
     const r = db.redemptions.find((x) => x.id === rid);
     if (!r) throw new ApiError('not_found');
-    if (r.status === 'pending' && new Date(r.expiresAt) <= new Date()) {
-      r.status = 'expired';
-      wallet(requireMe()).shoppingFils += r.amountFils; // expire_redemptions(): give it back
-      db.txns.unshift({ id: id('t'), bucket: 'shopping', type: 'refund', amountFils: r.amountFils, status: 'done', createdAt: now() });
-    }
     return wait({ ...r });
   },
 

@@ -5,6 +5,7 @@ import { Button, Screen, Text, TextField } from '../components/ui';
 import { radius, space, typeStyle, useColors } from '../theme';
 import { api, ApiError } from '../data';
 import { t } from '../i18n';
+import { normalizeJoMobile } from '../lib/money';
 
 // S02: phone number, then a 6-digit code.
 export default function Login() {
@@ -13,7 +14,7 @@ export default function Login() {
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const e164 = '+962' + phone.replace(/\D/g, '').replace(/^0/, '');
+  const e164 = '+962' + phone.replace(/\D/g, '');
 
   async function send() {
     setError(null); setBusy(true);
@@ -36,8 +37,8 @@ export default function Login() {
       </View>
       {step === 'phone' ? (
         <>
-          <TextField label={t.login.phone} value={phone} onChangeText={(s) => setPhone(s.replace(/[^\d ]/g, ''))} prefix="+962"
-            keyboardType="phone-pad" placeholder="7X XXX XXXX" ltr autoFocus maxLength={12} error={error} testID="phone" />
+          <TextField label={t.login.phone} value={phone} onChangeText={(s) => setPhone(normalizeJoMobile(s))} prefix="+962"
+            keyboardType="phone-pad" placeholder="7X XXX XXXX" ltr autoFocus error={error} testID="phone" />
           <Button full size="lg" title={t.login.send} onPress={send} loading={busy} disabled={phone.replace(/\D/g, '').length < 9} />
         </>
       ) : (

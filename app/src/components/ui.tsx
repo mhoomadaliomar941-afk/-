@@ -73,7 +73,7 @@ export function Button({ title, onPress, variant = 'primary', size = 'md', disab
   const off = disabled || loading;
   return (
     <Pressable onPress={off ? undefined : onPress} accessibilityRole="button" accessibilityLabel={title}
-      accessibilityState={{ disabled: !!disabled, busy: !!loading }}
+      disabled={!!disabled} aria-busy={!!loading}
       style={(st) => [{
         height: h, paddingHorizontal: space(4), borderRadius: radius.md, backgroundColor: bg, flexDirection: 'row',
         alignItems: 'center', justifyContent: 'center', gap: space(2), opacity: disabled ? 0.4 : st.pressed ? 0.85 : 1,
@@ -112,12 +112,13 @@ export function productChip(status: ProductStatus, filled: number, total: number
 }
 
 export function SpotsProgress({ filled, total, size = 'thin', done }: { filled: number; total: number; size?: 'thin' | 'large'; done?: boolean }) {
+  const label = t.product.spotsTaken(String(filled), String(total));
   const c = useColors();
   const pct = Math.min(1, filled / total);
   const [anim] = useState(() => new Animated.Value(pct));
   useEffect(() => { Animated.timing(anim, { toValue: pct, duration: 220, useNativeDriver: false }).start(); }, [pct, anim]);
   return (
-    <View accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: total, now: filled }}
+    <View role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={total} aria-valuenow={filled}
       style={{ height: size === 'thin' ? 6 : 10, borderRadius: radius.pill, backgroundColor: c['progress-track'], overflow: 'hidden' }}>
       <Animated.View style={{ height: '100%', borderRadius: radius.pill, backgroundColor: done || pct >= 1 ? c.success : c['progress-fill'],
         width: anim.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }} />
@@ -145,7 +146,7 @@ export function QuantityStepper({ value, min = 1, max, onChange, disabled }:
   { value: number; min?: number; max: number; onChange: (n: number) => void; disabled?: boolean }) {
   const c = useColors();
   const btn = (label: string, Icon: typeof Plus, next: number, off: boolean) => (
-    <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled: off }} onPress={off ? undefined : () => onChange(next)}
+    <Pressable accessibilityRole="button" accessibilityLabel={label} disabled={off} onPress={off ? undefined : () => onChange(next)}
       style={(st) => [{ width: 44, height: 44, borderRadius: radius.md, borderWidth: 1, borderColor: c.border, backgroundColor: c.surface,
         alignItems: 'center', justifyContent: 'center', opacity: off ? 0.4 : 1 }, isFocused(st) && focusRing(c)]}>
       <Icon color={c.text} size={20} />

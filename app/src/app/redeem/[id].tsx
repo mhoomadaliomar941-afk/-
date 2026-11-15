@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { QrCode } from 'lucide-react-native';
@@ -23,7 +23,16 @@ export default function Redeem() {
   useEffect(() => { const i = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(i); }, []);
 
   const left = r ? Math.max(0, new Date(r.expiresAt).getTime() - nowMs) : 0;
-  useEffect(() => { if (r && r.status === 'pending' && left === 0) api.getRedemption(r.id).then(setR); }, [left, r]);
+  // Out of time: show "expired" right away and ask the server once (BUG-007: it used to re-ask on
+  // every render while the expiry job hadn't run yet). The held balance comes back via the job.
+  const timedOut = !!r && r.status === 'pending' && left === 0;
+  const status = timedOut ? 'expired' : r?.status;
+  const asked = useRef<string | null>(null);
+  useEffect(() => {
+    if (!timedOut || !r || asked.current === r.id) return;
+    asked.current = r.id;
+    api.getRedemption(r.id).then((x) => { if (x.status !== 'pending') setR(x); }).catch(() => {});
+  }, [timedOut, r]);
 
   if (store.error) return <Screen edges={[]}><ErrorState onRetry={store.reload} /></Screen>;
   if (!store.data) return <Screen edges={[]}><Skeleton height={120} r={radius.lg} /></Screen>;
@@ -48,14 +57,14 @@ export default function Redeem() {
         </>
       ) : (
         <Card style={{ alignItems: 'center', gap: space(3), paddingVertical: space(6) }}>
-          {r.status === 'pending' ? <StatusChip tone="warning" label={t.redeem.expires(`⁦${mm}⁩`)} />
-            : <StatusChip tone={r.status === 'confirmed' ? 'success' : 'neutral'} label={r.status === 'confirmed' ? t.redeem.confirmed : t.redeem.expired} />}
-          <View style={{ opacity: r.status === 'pending' ? 1 : 0.3, width: 180, height: 180, borderRadius: radius.lg, backgroundColor: c.surface, alignItems: 'center', justifyContent: 'center' }}>
+          {status === 'pending' ? <StatusChip tone="warning" label={t.redeem.expires(`⁦${mm}⁩`)} />
+            : <StatusChip tone={status === 'confirmed' ? 'success' : 'neutral'} label={status === 'confirmed' ? t.redeem.confirmed : t.redeem.expired} />}
+          <View style={{ opacity: status === 'pending' ? 1 : 0.3, width: 180, height: 180, borderRadius: radius.lg, backgroundColor: c.surface, alignItems: 'center', justifyContent: 'center' }}>
             <QrCode color={c.text} size={140} strokeWidth={1} />
           </View>
           <Text variant="2xl" selectable style={{ letterSpacing: 2, writingDirection: 'ltr' }}>{r.code.slice(0, 5)} {r.code.slice(5)}</Text>
           <Text tone="text-muted">{t.redeem.show} · {formatJD(r.amountFils)}</Text>
-          {r.status !== 'pending' ? <Button title={t.redeem.again} variant="secondary" onPress={() => { setR(null); setAmount(''); }} /> : null}
+          {status !== 'pending' ? <Button title={t.redeem.again} variant="secondary" onPress={() => { setR(null); setAmount(''); }} /> : null}
         </Card>
       )}
     </Screen>
