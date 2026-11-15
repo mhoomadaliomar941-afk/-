@@ -7,9 +7,9 @@
   --color-border-input: #7b8391;
   --color-text: #111418;
   --color-text-muted: #58606d;
-  --color-accent: #3a4bd4;
-  --color-accent-strong: #2b39a8;
-  --color-accent-soft: #eceefc;
+  --color-accent: #0f6e7a;
+  --color-accent-strong: #0a4f58;
+  --color-accent-soft: #e2f3f5;
   --color-on-accent: #ffffff;
   --color-danger: #c22f29;
   --color-on-danger: #ffffff;
@@ -19,8 +19,8 @@
   --color-warning: #985500;
   --color-warning-soft: #fdf3e3;
   --color-progress-track: #c9cdd6;
-  --color-progress-fill: #3a4bd4;
-  --color-focus: #3a4bd4;
+  --color-progress-fill: #0f6e7a;
+  --color-focus: #0f6e7a;
   --color-scrim: #0b0d12;
   --font-sans: 'IBM Plex Sans Arabic', 'IBM Plex Sans', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
@@ -46,9 +46,9 @@
     --color-border-input: #737b88;
     --color-text: #f2f4f7;
     --color-text-muted: #a5adba;
-    --color-accent: #8f9bff;
-    --color-accent-strong: #c3c9ff;
-    --color-accent-soft: #232848;
+    --color-accent: #5ccfdb;
+    --color-accent-strong: #b3ebf1;
+    --color-accent-soft: #10303a;
     --color-on-accent: #0f1115;
     --color-danger: #ff8077;
     --color-on-danger: #1a0a09;
@@ -58,8 +58,8 @@
     --color-warning: #f0ad4e;
     --color-warning-soft: #33260f;
     --color-progress-track: #3a404b;
-    --color-progress-fill: #8f9bff;
-    --color-focus: #8f9bff;
+    --color-progress-fill: #5ccfdb;
+    --color-focus: #5ccfdb;
     --color-scrim: #000000;
   }
 }
@@ -72,9 +72,9 @@
   --color-border-input: #737b88;
   --color-text: #f2f4f7;
   --color-text-muted: #a5adba;
-  --color-accent: #8f9bff;
-  --color-accent-strong: #c3c9ff;
-  --color-accent-soft: #232848;
+  --color-accent: #5ccfdb;
+  --color-accent-strong: #b3ebf1;
+  --color-accent-soft: #10303a;
   --color-on-accent: #0f1115;
   --color-danger: #ff8077;
   --color-on-danger: #1a0a09;
@@ -84,8 +84,8 @@
   --color-warning: #f0ad4e;
   --color-warning-soft: #33260f;
   --color-progress-track: #3a404b;
-  --color-progress-fill: #8f9bff;
-  --color-focus: #8f9bff;
+  --color-progress-fill: #5ccfdb;
+  --color-focus: #5ccfdb;
   --color-scrim: #000000;
 }
 
@@ -97,9 +97,9 @@
   --color-border-input: #7b8391;
   --color-text: #111418;
   --color-text-muted: #58606d;
-  --color-accent: #3a4bd4;
-  --color-accent-strong: #2b39a8;
-  --color-accent-soft: #eceefc;
+  --color-accent: #0f6e7a;
+  --color-accent-strong: #0a4f58;
+  --color-accent-soft: #e2f3f5;
   --color-on-accent: #ffffff;
   --color-danger: #c22f29;
   --color-on-danger: #ffffff;
@@ -109,7 +109,7 @@
   --color-warning: #985500;
   --color-warning-soft: #fdf3e3;
   --color-progress-track: #c9cdd6;
-  --color-progress-fill: #3a4bd4;
-  --color-focus: #3a4bd4;
+  --color-progress-fill: #0f6e7a;
+  --color-focus: #0f6e7a;
   --color-scrim: #0b0d12;
 }

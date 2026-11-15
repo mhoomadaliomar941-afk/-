@@ -1,4 +1,4 @@
--- Schema for the FORTUNEiT-style clone ("community ownership": buy spots,
+-- Schema for Nazih ("community ownership": buy spots,
 -- one owner is picked when the product fills, everyone else is credited
 -- shopping balance).
 --

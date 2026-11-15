@@ -113,7 +113,7 @@ export function createSupabaseApi(url: string, anonKey: string): Api {
     async startTopup(amountFils, method) {
       const { data, error } = await sb.functions.invoke('topup-start', { body: { amountFils, method } });
       if (error || !data?.payUrl) throw new ApiError(errorCode(error?.message ?? data?.error), error?.message);
-      await WebBrowser.openAuthSessionAsync(data.payUrl, 'spot://topup');
+      await WebBrowser.openAuthSessionAsync(data.payUrl, 'nazih://topup');
       emit();
       return { paymentId: data.paymentId };
     },

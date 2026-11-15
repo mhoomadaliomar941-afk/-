@@ -64,7 +64,7 @@ const NOTE_TEXT: Record<Notification['type'], { title: string; body: string }> =
 };
 export const toNotification = (r: Row, productTitles: Record<string, string> = {}): Notification => {
   const productId = r.payload?.product_id as string | undefined;
-  const text = NOTE_TEXT[r.type as Notification['type']] ?? { title: 'سبوت', body: '' };
+  const text = NOTE_TEXT[r.type as Notification['type']] ?? { title: 'نزيه', body: '' };
   return { id: r.id, type: r.type, title: text.title, body: (productId && productTitles[productId]) || text.body, productId, readAt: r.read_at ?? null, createdAt: r.created_at };
 };
 

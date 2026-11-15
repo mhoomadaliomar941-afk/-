@@ -1,4 +1,4 @@
-# Spot (working name): mobile app
+# Nazih (نزيه): mobile app
 
 Expo SDK 58 + Expo Router + TypeScript. Arabic, right-to-left.
 

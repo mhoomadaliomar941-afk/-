@@ -1,0 +1,8 @@
+{
+  "_about": "What must never appear in the product (sweep.py skips replica/). Read by sweep.py, listing.py and replica-deploy.",
+  "name": "Nazih",
+  "name_ar": "نزيه",
+  "avoid": ["FORTUNEiT", "FortuneIT", "Fortune it", "فورشنت", "Softylus", "Own it for less", "امتلك بسعر اقل", "امتلك بسعر أقل"],
+  "domains": ["fortuneit.app", "fortuneit.net"],
+  "colors": ["#fcc800", "#fcc400", "#fccc00", "#fcd000"]
+}

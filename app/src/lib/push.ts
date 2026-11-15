@@ -16,7 +16,7 @@ export async function registerForPush() {
     if (status !== 'granted') status = (await Notifications.requestPermissionsAsync()).status;
     if (status !== 'granted') return;
     if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', { name: 'سبوت', importance: AndroidImportance.DEFAULT });
+      await Notifications.setNotificationChannelAsync('default', { name: 'نزيه', importance: AndroidImportance.DEFAULT });
     }
     const { data: token } = await Notifications.getExpoPushTokenAsync({ projectId });
     await api.registerPushToken(token, Platform.OS === 'ios' ? 'ios' : 'android');

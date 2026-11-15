@@ -6,7 +6,7 @@ import { settle } from '../_shared/settle.ts';
 
 Deno.serve(async (req) => {
   const id = new URL(req.url).searchParams.get('id') ?? '';
-  const app = env('APP_RETURN_URL'); // e.g. spot://topup
+  const app = env('APP_RETURN_URL'); // e.g. nazih://topup
   const db = admin();
   const { data: pay } = await db.from('payments').select('id, gateway').eq('external_ref', id).maybeSingle();
   if (!pay) return Response.redirect(`${app}?status=unknown`, 302);

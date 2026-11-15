@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
         if (!notes?.length) return { sent: 0 };
         const { data: tokens } = await db.from('push_tokens').select('token, user_id').in('user_id', [...new Set(notes.map((n) => n.user_id))]);
         const msgs = notes.flatMap((n) => (tokens ?? []).filter((t) => t.user_id === n.user_id).map((t) => ({
-          to: t.token, ...(pushText[n.type]?.(n.payload) ?? { title: 'سبوت', body: '' }), data: { type: n.type, ...n.payload },
+          to: t.token, ...(pushText[n.type]?.(n.payload) ?? { title: 'نزيه', body: '' }), data: { type: n.type, ...n.payload },
         })));
         if (msgs.length) await sendPush(msgs);
         await db.from('notifications').update({ pushed_at: new Date().toISOString() }).in('id', notes.map((n) => n.id));

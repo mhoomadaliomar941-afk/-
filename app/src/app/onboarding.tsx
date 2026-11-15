@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { router } from 'expo-router';
-import { Gift, Ticket, Sparkles } from 'lucide-react-native';
+import { ShieldCheck, Ticket, Sparkles } from 'lucide-react-native';
 import { Button, Row, Screen, Text } from '../components/ui';
 import { radius, space, useColors } from '../theme';
 import { onboarding } from '../lib/session';
 import { t } from '../i18n';
 
-const ICONS = [Sparkles, Ticket, Gift];
+const ICONS = [Sparkles, Ticket, ShieldCheck];
 
 // S01: three slides, skip always reachable.
 export default function Onboarding() {

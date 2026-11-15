@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Spot",
-    "slug": "spot",
+    "name": "Nazih",
+    "slug": "nazih",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,7 +11,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#0F6E7A",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -28,7 +28,7 @@
       "expo-font",
       "expo-web-browser"
     ],
-    "scheme": "spot",
+    "scheme": "nazih",
     "extra": {
       "supportsRTL": true,
       "forcesRTL": true

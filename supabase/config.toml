@@ -1,10 +1,10 @@
 # Supabase CLI project config (only what differs from the defaults).
 # `supabase link --project-ref <ref>` then `supabase db push` and `supabase functions deploy`.
-project_id = "spot"
+project_id = "nazih"
 
 [auth]
-site_url = "spot://"
-additional_redirect_urls = ["spot://topup"]
+site_url = "nazih://"
+additional_redirect_urls = ["nazih://topup"]
 enable_signup = true
 
 [auth.sms]

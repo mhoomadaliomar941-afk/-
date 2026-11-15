@@ -143,6 +143,7 @@ function ConfirmSheet({ product: p, spots, onClose }: { product: Product; spots:
       <Divider />
       {line(t.confirm.balance, w.data ? formatJD(bal) : '…', low ? 'danger' : 'text')}
       {w.data && !low ? line(t.confirm.after, formatJD(bal - cost)) : null}
+      <Text variant="sm" tone="text-muted">{t.confirm.ifNot}</Text>
       {low ? <Text tone="danger" variant="sm">{t.confirm.low}</Text> : null}
       {error ? <Text tone="danger" variant="sm" accessibilityLiveRegion="assertive">{error}</Text> : null}
       {low
