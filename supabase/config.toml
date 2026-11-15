@@ -1,0 +1,29 @@
+# Supabase CLI project config (only what differs from the defaults).
+# `supabase link --project-ref <ref>` then `supabase db push` and `supabase functions deploy`.
+project_id = "spot"
+
+[auth]
+site_url = "spot://"
+additional_redirect_urls = ["spot://topup"]
+enable_signup = true
+
+[auth.sms]
+enable_signup = true
+enable_confirmations = true
+# Provider (Twilio Verify) and its keys are set in the dashboard: Authentication > Providers > Phone.
+
+[auth.rate_limit]
+# per hour, per IP; Jordan SMS costs money
+sms_sent = 30
+token_verifications = 30
+
+# Called by HyperPay or pg_cron, not by signed-in members: they check their own secrets.
+[functions.pay-page]
+verify_jwt = false
+[functions.topup-return]
+verify_jwt = false
+[functions.payments-webhook]
+verify_jwt = false
+[functions.jobs]
+verify_jwt = false
+# topup-start and delete-account keep the default: a member's JWT is required.
