@@ -50,7 +50,7 @@ jobs:
         env:
           CI: 1
 
-      - name: Build the APK (release, signed with the debug key: for testing only)
+      - name: "Build the APK (release, signed with the debug key: for testing only)"
         working-directory: app/android
         run: ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a,armeabi-v7a --no-daemon
 
