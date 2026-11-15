@@ -2,87 +2,84 @@
 
 Date: 2026-11-15.
 
-## Sample size: 0 verified reviews
+## Sample: 8 reviews, 1 source
 
-Nothing below is based on what FORTUNEiT's users said, because we haven't
-been able to read a single review word for word. What was tried:
+Google Play, copied word for word from your screenshots of the app page
+(sorted "most relevant", not newest). 4 × 1★, 4 × 5★. The page itself now shows
+**3.7★**. Reviewer names are left out on purpose.
 
-| source | result |
-| --- | --- |
-| Google Play listing (the only place with reviews: ~94 on one regional listing, ~21 on another) | blocked from this session; seen only through search summaries, which paraphrase and can't be quoted |
-| App Store | no FORTUNEiT listing found |
-| Reddit, Hacker News | nothing about the app |
-| Jordanian news / forums (Arabic search) | nothing about the app |
-| fortuneit.app, fortuneit.net | blocked from this session |
-| its own feature board / changelog | none found |
+**8 reviews support a direction, not a ranking.** Every theme below is *thin*
+(one source, and fewer than 5 reviews). The "found helpful" counts shown on the
+page are included because they show how many other people agreed.
 
-Rules of this step: no invented reviews, no paraphrases passed off as quotes,
-every quote verbatim with a link. So the three lists are empty until reviews
-come in.
+Google Play has no link per review, so every quote links to the
+[app's page](https://play.google.com/store/apps/details?id=com.softylus.fortuneit).
 
-## The three lists
+## 1. What they hate
 
-1. **What they hate:** no evidence yet.
-2. **What is missing:** no evidence yet.
-3. **What is unsolved:** no evidence yet.
+| # | problem | reviews | helpful votes | sources |
+| --- | --- | --- | --- | --- |
+| 1 | **It feels like a scam: no trust that anyone really wins** | 4 of 4 negative | 6 + 10 + 6 + 35 | 1 |
+| 2 | **It feels like gambling** ("either a scam or gambling, no third option") | 1 | **35** (most of any review) | 1 |
+| 3 | **The shopping balance is a trap**: forced to buy at partner stores at inflated prices, no refunds, withdrawals "irregular" | 1 | 6 | 1 |
+| 4 | **App down for "comprehensive maintenance"**: only the withdrawal page shows (Sep 2026) | 1 (rated 5★, but a complaint) | - | 1 |
 
-## What we do know (from the original's public pages, not from users)
+Quotes (verbatim):
 
-These are facts about how the original presents itself, read through search
-results. They are not complaints.
+- 1★, 2026-02-27: "التطبيق نصب نصيحة لا تضيعوا لا وقتكم ولا فلوسكم" ([Google Play](https://play.google.com/store/apps/details?id=com.softylus.fortuneit))
+- 1★, 2026-03-30: "سيء جداً وغير واقعي شاركت مره واحده ولم استفد شيء.لا يعتمد على المصداقيه.ولايستحق نجمه واحده.اسلوب نصب واحتيال الكتروني جديد" ([Google Play](https://play.google.com/store/apps/details?id=com.softylus.fortuneit))
+- 1★, 2025-07-02, 35 found helpful: "بتخيل الموضوع يا اما نصب يا اما قمار مفيش خيار ثالث ، كيف يعني انا بدفع ٢ دأ في ورقة حظ وممكن يطلعلي فيها ايفون او بيت او بغض النظر عن الاصل الموجود ، واذا ما تم اختيار الورقة تبعتي او يعني السهم الي انا بشتريه بترجعلي قيمته كاملة ، مش منطق" ([Google Play](https://play.google.com/store/apps/details?id=com.softylus.fortuneit))
+- 1★, 2026-04-16: "تطبيق غير موثوق ورصيدك اذا ما ربحت بجبرك تشتري من متاجر الي بتيمو بربع عندهم ب 10 وماعندهم ترجيع حتي السحب بتم بطريقه غير نظاميه" ([Google Play](https://play.google.com/store/apps/details?id=com.softylus.fortuneit))
+- 5★, 2026-09-07: "متى تنتهي الصيانه الشامله لان مافي اشي طالع الي غير صفحة السحب" ([Google Play](https://play.google.com/store/apps/details?id=com.softylus.fortuneit))
 
-- Its two pages state different member counts (35,000+ on the store listing,
-  14,000+ on the website). [Play listing](https://play.google.com/store/apps/details?id=com.softylus.fortuneit&hl=en),
-  [website](https://fortuneit.app/)
-- Its public pages don't explain how the owner of a product is chosen.
-  [features page](https://fortuneit.app/features)
-- Store rating around 3.2 (94 reviews) on one regional listing and 2.6 (21) on
-  another, as shown in search snippets. Not checked on the page itself.
+What the 5★ reviews like: the idea itself, and **friendly support**:
+"…وهناك كادر رائع في اي وقت يتم التواصل معك بكل لطف…" (5★, 2026-04-21, [Google Play](https://play.google.com/store/apps/details?id=com.softylus.fortuneit)). Keep that.
 
-## Hypotheses to test (not added to `features.csv` until reviews back them)
+## 2. What is missing
 
-| # | hypothesis | theme it would show up in | if true, the fix | size | already in the clone? |
+Nobody asked for a feature by name in these 8. (The tool matched "اتمنى لكم
+التوفيق", "I wish you luck", as a request; it isn't.) Collect more, newest
+first, before deciding.
+
+## 3. What is unsolved
+
+**Trust.** All four negative reviews are about the same job: *believing the
+model is honest*, the draw, the refund and the stores. Nobody complained about
+screens or features. A rival wins by being the one people can trust, not by
+having more features.
+
+## Fix plan
+
+| # | fix | evidence | size | skill | in the clone today |
 | --- | --- | --- | --- | --- | --- |
-| H1 | People doubt anyone really wins | fairness, transparency | provable draw + public winners list | - | **yes**: verify screen, owners wall |
-| H2 | Shopping balance is hard to spend (few stores) | shopping_balance, refund | more partner stores; or cash refund option where legal | M / business | partly: store list |
-| H3 | Products take long to fill | slow_fill | smaller products, a fill deadline with automatic refund, "closing soon" push | S–M | partly: refund on deadline exists in the backend |
-| H4 | Payment methods are limited | payment_methods | CliQ, Zain Cash, eFAWATEERcom | M | planned: CliQ |
-| H5 | Support is slow | support | in-app help with order status, WhatsApp support | S | partly: help + order timeline |
+| 1 | **Legal answer first**; then say it plainly in the app (licence / terms in "how it works") | gambling (35 votes), scam ×4 | business + S | lawyer, then `/replica-launch` | blocker listed in recon |
+| 2 | **Public proof per product**: anyone, even signed out, sees the winning spot, seed, beacon round and the check, without the winner's identity | scam ×4 | S | `/replica-build` + backend (open the proof view to anon, not the owner) | members only |
+| 3 | **"How it works" with the money path**: where your money goes if you don't win, before you pay | scam, balance trap | S | `/replica-build` | FAQ only |
+| 4 | **Shopping balance can also buy spots** (not only partner stores) | balance trap | S | `/replica-build` + SQL `buy_spots` | no: stores only |
+| 5 | **Fair-price partners**: show the store's price list or a price pledge; drop stores that inflate | balance trap | M (business) | `/replica-launch` | no |
+| 6 | **Status banner** during maintenance; balances always visible | outage | S | `/replica-build` | no |
 
-## Angle options (pending evidence)
+All six are added to `features.csv` with `original` = no.
 
-Each angle should rest on a review theme. None can yet, so these are
-**hypotheses**, ranked by how well the clone already supports them.
+## Angle
 
-1. **Provable fairness** (recommended, provisionally)
-   For people in Jordan who wonder whether these draws are real,
-   *Spot* shows you the proof: the number that picks the winner comes from a
-   public source nobody controls, and you can check every result yourself.
-   Evidence: 0 reviews. Rests on: the original's pages don't explain selection;
-   "is it rigged?" is the first question in this category. Already built.
-2. **Your money is never stuck**
-   For people whose balance gets tied up, *Spot* refunds automatically when a
-   product doesn't fill by its deadline, and shows every fils in a clear ledger.
-   Evidence: 0 reviews. Partly built.
-3. **Pay the way Jordan pays**
-   For people without a card, *Spot* takes CliQ and local wallets.
-   Evidence: 0 reviews. Not built.
+```
+For people in Jordan who think these apps are a scam,
+Spot shows its work: every result can be checked by anyone, and if you
+don't win, your balance stays yours to use (on the next product or at a store).
+Evidence: "scam / not trustworthy" theme, 4 of 4 negative reviews, 1 source (thin).
+```
 
-Recommendation: start `/replica-brand` with angle 1. It's the one the clone can
-already prove on screen, and it needs no claims about the original. Re-rank
-when the reviews are in. Never put the original's name in your name, ads or
-store listing.
+Alternatives considered:
+- "Your money never gets stuck" (the balance-trap theme, 1 review, too thin to lead with).
+- "Always available" (the outage, 1 review).
 
-## Collecting reviews (5–10 minutes, on your phone)
+**Recommended: the trust angle above.** It's what every complaint shares,
+and the clone can prove it on screen. Two cautions:
+- Never call the original a scam, and never name it, in your name, ads or store listing.
+- Don't reuse these reviewers' words in marketing. They're research, not testimonials.
 
-Google Play works from Jordan, so you can read them directly:
+## Next
 
-1. Open the app's page on Google Play → **Ratings and reviews** → the arrow → **See all reviews**.
-2. Sort by **Most recent**. Read the 1, 2 and 3-star ones first, then the 4-star "good, but…" ones.
-3. For each review, send me: **stars, date, and the text copied exactly** (Arabic or English, as written).
-   Copy and paste. Don't summarise.
-4. 30–50 reviews is enough to see patterns; all ~94 is better.
-
-Google Play has no link per review, so I'll use the listing URL as the link for
-each row. I'll put them in `reviews.csv`, run the tool and rewrite this page
-with real counts and quotes.
+- Collect 30+ more reviews, **sorted newest**, to confirm before building fixes 4–6.
+- `/replica-brand` with the trust angle.

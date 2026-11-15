@@ -25,3 +25,9 @@ Referral / invite friends,growth,could,unknown,no,
 Partner-store network and agreements,partners,could,yes,skip,a business network you must build yourself; not software
 Gaming / prize-draw licence in Jordan,legal,must,yes,skip,the owner-selection model is likely a regulated prize draw; get legal advice before running it
 Authorized-distributor supply deals,fulfilment,could,yes,skip,their supplier relationships are not part of the product
+Legal status explained in the app (licence / terms in how-it-works),trust,must,no,no,"reviews: gambling (35 helpful), scam x4; needs the legal answer first"
+"Public proof per product for anyone (spot, seed, beacon), winner identity hidden",trust,should,no,partial,reviews: scam x4; clone shows proof to signed-in members only
+How it works with the money path before paying,trust,should,no,partial,"reviews: scam, balance trap; FAQ exists, no up-front explainer"
+Shopping balance can also buy spots,wallet,should,no,no,reviews: balance trap (1); change buy_spots to accept shopping balance
+Fair-price partner pledge / visible store prices,partners,could,no,no,reviews: balance trap (1); business change
+"Maintenance / status banner, balances always visible",platform,could,no,no,reviews: outage (1)

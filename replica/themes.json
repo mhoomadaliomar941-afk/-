@@ -1,27 +1,246 @@
 {
-  "_about": "Themes for a community-ownership / prize-style shopping app in Jordan (Arabic + English). Arabic patterns are plain substrings (no \\b) because Arabic words take prefixes like ال، و، ب، ف. Edit freely once real reviews are in.",
-  "request_patterns": ["\\bi wish\\b", "\\bplease add\\b", "\\bwould be (nice|great|good|helpful)\\b", "\\bneeds? (a|an|more)\\b",
-    "ياريت", "يا ريت", "يا ليت", "ياليت", "بتمنى", "أتمنى", "اتمنى", "نتمنى", "ضيفوا", "أضيفوا", "اضيفوا", "لازم يكون", "بدنا", "ممكن تضيفوا"],
-  "themes": [
-    {"id": "fairness", "label": "Doubts the draw is fair / nobody really wins", "kind": "complaint",
-     "patterns": ["\\bscam\\b", "\\bfake\\b", "\\brigged\\b", "\\bfraud\\b", "\\bnever win\\b", "\\bno one wins\\b", "نصب", "نصاب", "احتيال", "حرامي", "سرقة", "مزور", "وهمي", "ما حدا بيربح", "محدش بيربح", "عمري ما ربحت", "ما ربحت", "مش عادل", "مرتب", "مضروب"]},
-    {"id": "refund", "label": "Money / shopping balance not returned or hard to use", "kind": "complaint",
-     "patterns": ["\\brefund\\b", "\\bmy money\\b", "\\bbalance\\b", "\\bwithdraw", "فلوسي", "مصاري", "مصريات", "رصيد", "استرجاع", "استرداد", "ما رجع", "ما رجعت", "سحب الرصيد", "رجعوا المبلغ"]},
-    {"id": "shopping_balance", "label": "Shopping balance only usable at a few stores", "kind": "complaint",
-     "patterns": ["\\bpartner stores?\\b", "\\bvoucher\\b", "المتاجر", "متاجر قليلة", "محلات", "قسيمة", "كوبون", "ما بقدر أصرف", "ما بقدر اصرف", "بس بمحلات"]},
-    {"id": "slow_fill", "label": "Products take too long to fill", "kind": "complaint",
-     "patterns": ["\\bslow\\b", "\\btakes? (so )?long\\b", "\\bnever (fills?|completes?)\\b", "بطيء", "بطيئ", "بياخذ وقت", "ما بيكتمل", "ما اكتمل", "طول", "استنيت", "مستني"]},
-    {"id": "delivery", "label": "Delivery of the won product", "kind": "complaint",
-     "patterns": ["\\bdeliver", "\\bshipping\\b", "\\bnever (arrived|received)\\b", "توصيل", "التوصيل", "ما وصل", "ما وصلني", "تأخير", "تاخير", "استلمت", "ما استلمت"]},
-    {"id": "support", "label": "Support doesn't answer", "kind": "complaint",
-     "patterns": ["\\bsupport\\b", "\\bcustomer service\\b", "\\bno (one )?(answer|reply|response)\\b", "خدمة العملاء", "الدعم", "ما حدا بيرد", "محدش بيرد", "ما ردوا", "ما بيردوا", "تواصلت"]},
-    {"id": "bugs", "label": "App crashes, login or payment errors", "kind": "complaint",
-     "patterns": ["\\bcrash", "\\bbug", "\\berror\\b", "\\bnot working\\b", "\\bcan'?t (log ?in|sign in|pay)\\b", "\\botp\\b", "بيعلق", "يعلق", "تعليق", "خطأ", "ما بيفتح", "مش شغال", "ما بيشتغل", "الكود ما وصل", "رمز التحقق", "الدفع ما زبط"]},
-    {"id": "payment_methods", "label": "Wants other ways to pay", "kind": "request",
-     "patterns": ["\\bcliq\\b", "\\bzain ?cash\\b", "\\bcash\\b", "\\borange money\\b", "\\befawateer", "كليك", "زين كاش", "كاش", "اورنج موني", "اي فواتيركم", "فواتيركم", "طرق دفع", "طريقة دفع"]},
-    {"id": "transparency", "label": "Wants to see who won / how", "kind": "request",
-     "patterns": ["\\bwho won\\b", "\\bwinners?\\b", "\\blive draw\\b", "\\bproof\\b", "\\btransparen", "مين ربح", "مين فاز", "الفائز", "الرابح", "بث مباشر", "شفافية", "دليل", "إثبات", "اثبات"]},
-    {"id": "products", "label": "Wants more / different products", "kind": "request",
-     "patterns": ["\\bmore products\\b", "\\bcars?\\b", "\\bgold\\b", "منتجات أكثر", "منتجات اكثر", "سيارة", "سيارات", "ذهب", "منتجات جديدة"]}
-  ]
+ "_about": "Themes for a community-ownership / prize-style shopping app in Jordan (Arabic + English). Arabic patterns are plain substrings (no \\b) because Arabic words take prefixes like ال، و، ب، ف. Edit freely once real reviews are in.",
+ "request_patterns": [
+  "\\bi wish\\b",
+  "\\bplease add\\b",
+  "\\bwould be (nice|great|good|helpful)\\b",
+  "\\bneeds? (a|an|more)\\b",
+  "ياريت",
+  "يا ريت",
+  "يا ليت",
+  "ياليت",
+  "بتمنى",
+  "أتمنى",
+  "اتمنى",
+  "نتمنى",
+  "ضيفوا",
+  "أضيفوا",
+  "اضيفوا",
+  "لازم يكون",
+  "بدنا",
+  "ممكن تضيفوا"
+ ],
+ "themes": [
+  {
+   "id": "fairness",
+   "label": "Doubts the draw is fair / nobody really wins",
+   "kind": "complaint",
+   "patterns": [
+    "\\bscam\\b",
+    "\\bfake\\b",
+    "\\brigged\\b",
+    "\\bfraud\\b",
+    "\\bnever win\\b",
+    "\\bno one wins\\b",
+    "نصب",
+    "نصاب",
+    "احتيال",
+    "حرامي",
+    "سرقة",
+    "مزور",
+    "وهمي",
+    "ما حدا بيربح",
+    "محدش بيربح",
+    "عمري ما ربحت",
+    "ما ربحت",
+    "مش عادل",
+    "مرتب",
+    "مضروب",
+    "غير واقعي",
+    "غير موثوق",
+    "المصداقي",
+    "مش منطق"
+   ]
+  },
+  {
+   "id": "gambling",
+   "label": "Feels like gambling / a lottery",
+   "kind": "complaint",
+   "patterns": [
+    "قمار",
+    "ورقة حظ",
+    "يانصيب",
+    "لوتو",
+    "\\bgambl",
+    "\\blottery\\b"
+   ]
+  },
+  {
+   "id": "refund",
+   "label": "Money / shopping balance not returned or hard to use",
+   "kind": "complaint",
+   "patterns": [
+    "\\brefund\\b",
+    "\\bmy money\\b",
+    "\\bbalance\\b",
+    "\\bwithdraw",
+    "فلوسي",
+    "مصاري",
+    "مصريات",
+    "رصيد",
+    "استرجاع",
+    "استرداد",
+    "ما رجع",
+    "ما رجعت",
+    "سحب الرصيد",
+    "رجعوا المبلغ"
+   ]
+  },
+  {
+   "id": "shopping_balance",
+   "label": "Shopping balance only usable at a few stores",
+   "kind": "complaint",
+   "patterns": [
+    "\\bpartner stores?\\b",
+    "\\bvoucher\\b",
+    "المتاجر",
+    "متاجر قليلة",
+    "محلات",
+    "قسيمة",
+    "كوبون",
+    "ما بقدر أصرف",
+    "ما بقدر اصرف",
+    "بس بمحلات",
+    "متاجر",
+    "بجبرك تشتري",
+    "ترجيع"
+   ]
+  },
+  {
+   "id": "slow_fill",
+   "label": "Products take too long to fill",
+   "kind": "complaint",
+   "patterns": [
+    "\\bslow\\b",
+    "\\btakes? (so )?long\\b",
+    "\\bnever (fills?|completes?)\\b",
+    "بطيء",
+    "بطيئ",
+    "بياخذ وقت",
+    "ما بيكتمل",
+    "ما اكتمل",
+    "طول",
+    "استنيت",
+    "مستني"
+   ]
+  },
+  {
+   "id": "delivery",
+   "label": "Delivery of the won product",
+   "kind": "complaint",
+   "patterns": [
+    "\\bdeliver",
+    "\\bshipping\\b",
+    "\\bnever (arrived|received)\\b",
+    "توصيل",
+    "التوصيل",
+    "ما وصل",
+    "ما وصلني",
+    "تأخير",
+    "تاخير",
+    "استلمت",
+    "ما استلمت"
+   ]
+  },
+  {
+   "id": "support",
+   "label": "Support doesn't answer",
+   "kind": "complaint",
+   "patterns": [
+    "\\bsupport\\b",
+    "\\bcustomer service\\b",
+    "\\bno (one )?(answer|reply|response)\\b",
+    "خدمة العملاء",
+    "الدعم",
+    "ما حدا بيرد",
+    "محدش بيرد",
+    "ما ردوا",
+    "ما بيردوا",
+    "تواصلت"
+   ]
+  },
+  {
+   "id": "bugs",
+   "label": "App crashes, login or payment errors",
+   "kind": "complaint",
+   "patterns": [
+    "\\bcrash",
+    "\\bbug",
+    "\\berror\\b",
+    "\\bnot working\\b",
+    "\\bcan'?t (log ?in|sign in|pay)\\b",
+    "\\botp\\b",
+    "بيعلق",
+    "يعلق",
+    "تعليق",
+    "خطأ",
+    "ما بيفتح",
+    "مش شغال",
+    "ما بيشتغل",
+    "الكود ما وصل",
+    "رمز التحقق",
+    "الدفع ما زبط",
+    "صيان",
+    "\\bmaintenance\\b",
+    "\\bdown\\b"
+   ]
+  },
+  {
+   "id": "payment_methods",
+   "label": "Wants other ways to pay",
+   "kind": "request",
+   "patterns": [
+    "\\bcliq\\b",
+    "\\bzain ?cash\\b",
+    "\\bcash\\b",
+    "\\borange money\\b",
+    "\\befawateer",
+    "كليك",
+    "زين كاش",
+    "كاش",
+    "اورنج موني",
+    "اي فواتيركم",
+    "فواتيركم",
+    "طرق دفع",
+    "طريقة دفع"
+   ]
+  },
+  {
+   "id": "transparency",
+   "label": "Wants to see who won / how",
+   "kind": "request",
+   "patterns": [
+    "\\bwho won\\b",
+    "\\bwinners?\\b",
+    "\\blive draw\\b",
+    "\\bproof\\b",
+    "\\btransparen",
+    "مين ربح",
+    "مين فاز",
+    "الفائز",
+    "الرابح",
+    "بث مباشر",
+    "شفافية",
+    "دليل",
+    "إثبات",
+    "اثبات"
+   ]
+  },
+  {
+   "id": "products",
+   "label": "Wants more / different products",
+   "kind": "request",
+   "patterns": [
+    "\\bmore products\\b",
+    "\\bcars?\\b",
+    "\\bgold\\b",
+    "منتجات أكثر",
+    "منتجات اكثر",
+    "سيارة",
+    "سيارات",
+    "ذهب",
+    "منتجات جديدة"
+   ]
+  }
+ ]
 }
