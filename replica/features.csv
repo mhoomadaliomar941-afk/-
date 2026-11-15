@@ -1,0 +1,70 @@
+feature,area,priority,original,clone,notes
+Welcome screen with language choice and honest explanation of how it works,onboarding,must,yes,no,S01
+Choose host device (where GFN runs) with per-device limits shown,onboarding,must,yes,no,S02
+Register phone as Bluetooth HID gamepad (BluetoothHidDevice API 28+),input engine,must,yes,no,S03 core path; needs OEM compatibility testing
+Composite HID descriptor: gamepad + keyboard,input engine,must,yes,no,keyboard keys for extra buttons beyond gamepad count
+Pairing and auto-reconnect to last host,input engine,must,yes,no,S03
+Zero report on disconnect or app background (no stuck pedal),input engine,must,yes,no,safety
+Live input test screen showing axes and buttons as sent,input engine,must,yes,no,S04 proves input is real
+Verify GFN recognises the HID gamepad on Windows/macOS/Android TV,input engine,must,yes,no,highest risk; device test matrix
+Input engine as a pure module separate from UI,architecture,must,yes,no,unit tested
+Realistic steering wheel with continuous touch rotation,steering,must,yes,no,S18
+Rotation range 90-1080 degrees,steering,must,yes,no,maps to full axis scale
+Steering sensitivity,steering,must,yes,no,
+Return-to-centre speed,steering,must,yes,no,
+Steering dead zone,steering,must,yes,no,
+Steering linearity curve,steering,must,yes,no,gamma curve with live preview
+Absolute and relative steering modes,steering,must,yes,no,
+Wheel size position and opacity,steering,must,yes,no,via studio
+Gas pedal 0-100% analog,pedals,must,yes,no,RT axis
+Brake pedal 0-100% analog with partial press,pedals,must,yes,no,LT axis
+Gearbox PRND,gearbox,must,yes,no,each gear bound to button/key
+Sequential +/- shifting and paddle shifters,gearbox,must,yes,no,
+Extra buttons (horn lights indicators hazard handbrake camera cruise engine menu pause),buttons,must,yes,no,user binds to what the game supports
+Binding editor (gamepad axis/button or keyboard key),input mapping,must,yes,no,S13
+Studio: add wheel pedals buttons joystick dpad,studio,must,yes,no,S10 S11
+Studio: drag and drop move resize rotate,studio,must,yes,no,
+Studio: colour opacity icon,studio,must,yes,no,
+Studio: delete duplicate reorder show/hide,studio,must,yes,no,
+Studio: snap grid and alignment guides,studio,must,yes,no,
+Studio: live preview,studio,must,yes,no,
+Profiles: unlimited create rename duplicate delete,profiles,must,yes,no,S17
+Profiles: autosave,profiles,must,yes,no,
+Profiles: versioned JSON schema with import/export,profiles,must,yes,no,schemaVersion field
+Gaming HUD full screen landscape with lock layout,hud,must,yes,no,S18
+Arabic and English with RTL/LTR,settings,must,yes,no,HUD layout itself not mirrored
+Clutch pedal optional,pedals,should,yes,no,no 3rd analog axis in XInput layout; maps to right stick Y or a button
+H-pattern manual gearbox,gearbox,should,yes,no,
+Multiple wheel skins,steering,should,yes,no,original artwork
+Tilt (gyro) steering source,steering,should,yes,no,not in brief but natural fit for two-device mode
+Profile restore defaults and built-in templates (Racing Truck Farming Open-world),profiles,should,yes,no,
+Profile linked to a game,profiles,should,yes,no,
+HUD quick menu: switch profile opacity show/hide orientation,hud,should,yes,no,S19
+Haptic feedback on press and at wheel limit,hud,should,yes,no,
+My Games: add game by pasting GFN game link (extract game-id),games,should,yes,no,S08 verification = link from GFN itself
+My Games: search categories favourites recently played,games,should,yes,no,
+Game detail: official GFN deep link as QR and share,games,should,yes,no,S09; deep link format from GFN SDK docs
+Open official GFN app (Android) / play.geforcenow.com in Safari (iOS),gfn,should,yes,no,S06
+Honest GFN status screen (not linked: not possible officially),gfn,should,yes,no,no fake link state
+Settings sections (general controller steering graphics audio theme privacy about),settings,should,yes,no,graphics = our HUD only
+Backup and restore all data as JSON,settings,should,yes,no,S21
+Help: pairing guide per host platform and compatibility table,help,should,yes,no,S22
+Tablet layout (nav rail and larger canvas),ui,should,yes,no,
+Mouse mapping via composite HID,input mapping,could,yes,no,
+Car radio panel element,studio,could,yes,no,from R01
+Rocker switch and 4x4 / diff-lock style buttons,studio,could,yes,no,from R01
+Thumbstick element,studio,could,yes,no,already in palette; polish
+Optional public GFN game list as a search aid,games,could,yes,no,undocumented source; label it unofficial; never mark a game available from it alone
+Game cover image chosen by user,games,could,yes,no,no NVIDIA/publisher art
+Wi-Fi controller mode to a desktop companion (iOS path),input engine,could,yes,no,needs a desktop app + virtual gamepad driver; later phase
+iOS app: studio + profiles + Wi-Fi mode,platform,could,yes,no,no Bluetooth HID on iOS
+Latency measurement overlay,hud,could,yes,no,
+Sign in with NVIDIA account / link GFN account,gfn,must,yes,skip,no public OAuth for third parties; SDK account linking is partner-as-IdP
+Read the user's GFN library or game ownership,gfn,should,yes,skip,no public API
+Start or embed a GFN stream inside the app,gfn,must,yes,skip,SDK is Windows/Linux for game developers; embedding modifies GFN client (ToS)
+Inject gamepad/keyboard input into GFN app on the same Android phone,input engine,must,yes,skip,INJECT_EVENTS is a system permission
+Overlay over GFN on the same phone that drives the game,hud,must,yes,skip,touches either eaten by overlay or blocked (Android 12 untrusted touch); would be buttons that do nothing
+Accessibility-service touch simulation,input engine,could,yes,skip,touch only; Play policy restricts AccessibilityService to accessibility tools
+Overlay over Safari/other apps on iOS,hud,must,yes,skip,not allowed by iOS
+iPhone as Bluetooth gamepad,input engine,must,yes,skip,no HID device API on iOS
+Change GFN streaming graphics settings,settings,could,yes,skip,controlled inside GFN only
