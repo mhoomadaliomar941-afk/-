@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spot primitives</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--font-sans); background: #888; }
+  .themes { display: flex; flex-wrap: wrap; gap: 0; }
+  .phone { width: 390px; background: var(--color-bg); color: var(--color-text); padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+  h2 { font-size: 13px; color: var(--color-text-muted); margin: 8px 0 0; font-weight: 600; letter-spacing: .02em; }
+  .num { font-variant-numeric: tabular-nums; unicode-bidi: isolate; direction: ltr; display: inline-block; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .btn { height: 44px; padding: 0 16px; border-radius: var(--radius-md); border: 0; font: 600 16px/24px var(--font-sans); cursor: pointer; }
+  .btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+  .btn.lg { height: 52px; width: 100%; }
+  .primary { background: var(--color-accent); color: var(--color-on-accent); }
+  .secondary { background: var(--color-accent-soft); color: var(--color-accent-strong); }
+  .ghost { background: transparent; color: var(--color-accent); }
+  .danger { background: var(--color-danger); color: var(--color-on-danger); }
+  .btn[disabled] { opacity: .4; }
+  .chip { height: 24px; padding: 0 10px; border-radius: 999px; font: 500 12px/24px var(--font-sans); display: inline-block; }
+  .c-warning { background: var(--color-warning-soft); color: var(--color-warning); }
+  .c-success { background: var(--color-success-soft); color: var(--color-success); }
+  .c-accent { background: var(--color-accent-soft); color: var(--color-accent-strong); }
+  .c-danger { background: var(--color-danger-soft); color: var(--color-danger); }
+  .card { background: var(--color-surface-raised); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 12px; display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--color-border); }
+  .img { aspect-ratio: 4/3; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--color-surface), var(--color-border)); display: grid; place-items: center; color: var(--color-text-muted); font-size: 13px; }
+  .title { font: 600 18px/26px var(--font-sans); margin: 0; }
+  .muted { color: var(--color-text-muted); font-size: 14px; }
+  .track { height: 6px; border-radius: 999px; background: var(--color-progress-track); overflow: hidden; }
+  .track.lg { height: 10px; }
+  .fill { height: 100%; background: var(--color-progress-fill); border-radius: 999px; }
+  .between { display: flex; justify-content: space-between; align-items: center; }
+  .wallet { background: var(--color-accent); color: var(--color-on-accent); border-radius: var(--radius-xl); padding: 20px; display: flex; gap: 16px; }
+  .wallet div { flex: 1; } .wallet b { font: 700 28px/36px var(--font-sans); display: block; }
+  .wallet small { opacity: .9; font-size: 14px; }
+  .stepper { display: flex; align-items: center; gap: 12px; }
+  .stepper button { width: 44px; height: 44px; border-radius: var(--radius-md); border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); font-size: 22px; }
+  .stepper b { font: 700 22px/30px var(--font-sans); min-width: 32px; text-align: center; }
+  .field label { display: block; font: 600 14px/20px var(--font-sans); margin-bottom: 6px; }
+  .input { height: 52px; border-radius: var(--radius-md); border: 1px solid var(--color-border-input); background: var(--color-bg); display: flex; align-items: center; padding: 0 12px; gap: 8px; color: var(--color-text); }
+  .input.err { border: 2px solid var(--color-danger); }
+  .err-msg { color: var(--color-danger); font-size: 14px; margin-top: 6px; }
+  .otp { display: flex; gap: 8px; direction: ltr; }
+  .otp span { width: 48px; height: 56px; border-radius: var(--radius-md); border: 1px solid var(--color-border-input); display: grid; place-items: center; font: 700 22px var(--font-sans); }
+  .otp span.on { border: 2px solid var(--color-accent); }
+  .banner { border-radius: var(--radius-lg); padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .banner.win { background: var(--color-success-soft); color: var(--color-text); }
+  .banner.cred { background: var(--color-accent-soft); color: var(--color-text); }
+  .banner strong { font: 700 18px/26px var(--font-sans); }
+  .tx { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--color-border); }
+  .tx .ic { width: 36px; height: 36px; border-radius: 999px; display: grid; place-items: center; font-weight: 700; }
+  .tx .grow { flex: 1; } .plus { color: var(--color-success); font-weight: 600; } .minus { font-weight: 600; }
+  .tabs { display: flex; border-top: 1px solid var(--color-border); background: var(--color-surface-raised); height: 64px; }
+  .tabs div { flex: 1; display: grid; place-items: center; font-size: 12px; color: var(--color-text-muted); }
+  .tabs .on { color: var(--color-accent); font-weight: 600; }
+  .dot { display: block; width: 18px; height: 18px; border-radius: 6px; border: 1.75px solid currentColor; margin: 0 auto 2px; }
+  .skel { height: 14px; border-radius: 6px; background: var(--color-surface); }
+</style>
+</head>
+<body>
+<div class="themes">
+  <section class="phone" data-theme="light" aria-label="Light">
+    <!-- filled in by the script below, once per theme -->
+  </section>
+  <section class="phone" data-theme="dark" aria-label="Dark"></section>
+</div>
+<template id="kit">
+  <h2>الأزرار</h2>
+  <div class="row">
+    <button class="btn primary">شارك الآن</button>
+    <button class="btn secondary">اشحن</button>
+    <button class="btn ghost">التفاصيل</button>
+    <button class="btn danger">إلغاء</button>
+    <button class="btn primary" disabled>مكتمل</button>
+  </div>
+
+  <h2>بطاقة المنتج</h2>
+  <div class="card">
+    <div class="img">صورة المنتج</div>
+    <div class="between"><p class="title">هاتف ذكي ٢٥٦ جيجا</p><span class="chip c-warning">باقي ٣ أماكن</span></div>
+    <div class="between"><span class="muted">سعر المكان</span><span style="font-weight:600"><span class="num">1.000</span> د.ا</span></div>
+    <div class="track"><div class="fill" style="width:94%"></div></div>
+    <div class="muted"><span class="num">47</span> من <span class="num">50</span> مكان محجوز</div>
+  </div>
+
+  <h2>الحالات</h2>
+  <div class="row">
+    <span class="chip c-accent">مفتوح</span><span class="chip c-warning">قارب على الاكتمال</span>
+    <span class="chip c-success">تم اختيار المالك</span><span class="chip c-danger">فشل الدفع</span>
+  </div>
+
+  <h2>عدد الأماكن</h2>
+  <div class="between">
+    <div class="stepper"><button aria-label="زيادة">+</button><b class="num">2</b><button aria-label="إنقاص">−</button></div>
+    <span class="muted">الإجمالي <span class="num" style="color:var(--color-text);font-weight:600">2.000 د.ا</span></span>
+  </div>
+  <div class="track lg"><div class="fill" style="width:40%"></div></div>
+
+  <h2>المحفظة</h2>
+  <div class="wallet">
+    <div><small>الرصيد</small><b class="num">4.000</b><small>دينار</small></div>
+    <div><small>رصيد التسوق</small><b class="num">2.000</b><small>دينار</small></div>
+  </div>
+  <div>
+    <div class="tx"><div class="ic c-success">+</div><div class="grow">شحن المحفظة<div class="muted">اليوم</div></div><span class="num plus">+5.000</span></div>
+    <div class="tx"><div class="ic c-accent">−</div><div class="grow">مشاركة: هاتف ذكي<div class="muted">اليوم</div></div><span class="num minus">−2.000</span></div>
+    <div class="tx"><div class="ic c-warning">…</div><div class="grow">شحن قيد المعالجة<div class="muted">أمس</div></div><span class="chip c-warning">قيد المعالجة</span></div>
+  </div>
+
+  <h2>الحقول</h2>
+  <div class="field"><label>رقم الهاتف</label><div class="input"><span class="num muted">+962</span><span class="num">7 9123 4567</span></div></div>
+  <div class="field"><label>المدينة</label><div class="input err"></div><div class="err-msg">هذا الحقل مطلوب</div></div>
+  <div class="otp"><span>4</span><span>8</span><span class="on">1</span><span></span><span></span><span></span></div>
+
+  <h2>النتيجة</h2>
+  <div class="banner win"><strong>مبروك! صار المنتج إلك</strong><span class="muted">رقم مكانك الفائز <span class="num">#2</span></span><button class="btn primary lg">أدخل عنوان التوصيل</button></div>
+  <div class="banner cred"><strong>رجعنالك <span class="num">2.000</span> د.ا رصيد تسوق</strong><span class="muted">استخدمه بأي متجر شريك</span><button class="btn secondary lg">تسوّق الآن</button></div>
+
+  <h2>تحميل</h2>
+  <div class="card"><div class="img" style="background:var(--color-surface)"></div><div class="skel" style="width:70%"></div><div class="skel" style="width:40%"></div></div>
+
+  <h2>شريط التنقل</h2>
+  <nav class="tabs">
+    <div class="on"><span><i class="dot"></i>الرئيسية</span></div>
+    <div><span><i class="dot"></i>مشاركاتي</span></div>
+    <div><span><i class="dot"></i>المحفظة</span></div>
+    <div><span><i class="dot"></i>المتاجر</span></div>
+    <div><span><i class="dot"></i>حسابي</span></div>
+  </nav>
+</template>
+<script>
+  const kit = document.getElementById('kit');
+  document.querySelectorAll('.phone').forEach(p => p.appendChild(kit.content.cloneNode(true)));
+</script>
+</body>
+</html>
