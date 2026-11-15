@@ -122,8 +122,16 @@ External services, all official SDKs with your own keys: Google Play Billing
 - **Translation.** Word-play does not translate. Each level lists the languages
   it works in; the index skips it elsewhere. Arabic needs right-to-left layout
   from day one, not as a retrofit.
-- **Children.** Puzzle games draw under-13s. Decide the Play target audience
-  early: it changes which ads are allowed and what consent screen is required.
+- **Children (decided: the game is for under-13s).** This is now a rule, not a
+  risk. Join Google Play's Families programme and declare the target age.
+  Ads: AdMob with child-directed treatment on, non-personalised only, content
+  rating capped at G; no ad on the level screen. No advertising ID is read.
+  Analytics: no third-party SDK that profiles the player; count level
+  funnel events without a device identifier, and configure Sentry to send no
+  personal data, or drop it if it cannot be certified for Families.
+  Purchases and every link out of the app sit behind a parent gate. Publish
+  a privacy policy that says all of this. Have the COPPA and GDPR-K position
+  checked by someone qualified before launch.
 - **Lost progress.** A local-only save dies with the phone. Turn on Android
   auto-backup for the database file; real cloud save is a later, optional step.
 - **Not applicable:** multi-tenancy, email, search, realtime, rate limits.
