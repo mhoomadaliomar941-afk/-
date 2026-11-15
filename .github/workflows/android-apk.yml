@@ -1,0 +1,68 @@
+# Builds an installable preview APK of the app (fake demo data, no backend keys).
+# Runs on pushes to the development branch that touch app/, or by hand.
+# Download: the run's page → Artifacts → nazih-preview-apk.
+name: Android preview APK
+
+on:
+  push:
+    branches: [ccr-f055e60d-6yj8ot]
+    paths: ['app/**', '.github/workflows/android-apk.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Generate the native Android project
+        run: npx expo prebuild --platform android --no-install
+        env:
+          CI: 1
+
+      - name: Build the APK (release, signed with the debug key: for testing only)
+        working-directory: app/android
+        run: ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a,armeabi-v7a --no-daemon
+
+      - name: Name the file
+        run: |
+          mkdir -p ../out
+          cp android/app/build/outputs/apk/release/app-release.apk "../out/nazih-preview-${GITHUB_SHA::7}.apk"
+          ls -la ../out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nazih-preview-apk
+          path: out/*.apk
+          retention-days: 14
+          if-no-files-found: error
