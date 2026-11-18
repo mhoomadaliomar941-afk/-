@@ -33,3 +33,10 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Web
+node_modules/
+dist/
+.DS_Store
+ios/App/Pods/
+*.tsbuildinfo
