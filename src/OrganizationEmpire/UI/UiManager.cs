@@ -47,6 +47,7 @@ namespace OrganizationEmpire.UI
         private string _bigTitle, _bigText;
         private int _bigUntil;
         private readonly Dictionary<string, int> _moodToday = new Dictionary<string, int>();
+        private int _lastInteractiveTick;
 
         public UiManager(ModContext mod)
         {
@@ -415,6 +416,15 @@ namespace OrganizationEmpire.UI
 
             bool captureText = _dialogs.Any(d => d.CapturesText) || Chat.IsOpen;
             bool interactive = IsOpen || _popup != null || _dialogs.Count > 0 || Chat.IsOpen;
+            if (interactive) _lastInteractiveTick = Environment.TickCount;
+            else if (Environment.TickCount - _lastInteractiveTick < 350)
+            {
+                // The key that closed the menu (Esc/Enter/click) must not reach the game on the same frames.
+                Nat.DisableControl(GTA.Control.FrontendPause);
+                Nat.DisableControl(GTA.Control.FrontendPauseAlternate);
+                Nat.DisableControl(GTA.Control.Attack);
+                Nat.DisableControl(GTA.Control.Jump);
+            }
             if (cutscene && !interactive) return;
             if (interactive) BlockControls(captureText || Mod.Config.General.BlockMovementWhileMenuOpen);
             Input.Poll(r, Mod.Config.General.EnableMouse, IsOpen || _popup != null || _dialogs.Count > 0 || Chat.IsOpen);

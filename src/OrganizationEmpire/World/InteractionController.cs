@@ -165,7 +165,9 @@ namespace OrganizationEmpire.World
         public void DrawPrompt(UI.Renderer r)
         {
             if (Target == null || _mod.Ui.IsOpen || !GtaUtil.Alive(Target)) return;
-            if (!_mod.Config.General.ShowHints) return;
+            if (!_mod.Config.General.ShowHints || !_mod.HasFaction) return;
+            // Don't flash prompts at every pedestrian while running through a crowd.
+            if (GtaUtil.Player.Speed > 3.5f && Game.Player.TargetedEntity == null) return;
             var head = Target.Position + new Vector3(0, 0, 1.05f);
             var screen = GTA.UI.Screen.WorldToScreen(head);
             if (screen.X <= 0 && screen.Y <= 0) return;
