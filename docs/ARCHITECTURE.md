@@ -11,6 +11,8 @@ OrganizationEmpire.sln
 │  ├─ Systems/       Factory, Rank, Squad, Member, Recruitment, Economy/Progression, Territory, War,
 │  │                 Suspicion, Events, Missions (catalog/board/rewards), Takeover, Government, Simulation
 │  ├─ Persistence/   SaveManager (atomic writes, .bak recovery, migration hook)
+│  ├─ Localization/  Loc + Translator (English-keyed, templates), ArabicText (shaping + bidi),
+│  │                 GlyphFont (glyph metrics/layout), ar.txt (embedded Arabic table)
 │  └─ AI/            providers (OpenAI-compatible, Anthropic, Gemini, Offline), prompting, parsing,
 │                    intent detection, memory store, DialogueService (async + main-thread pump)
 ├─ src/OrganizationEmpire           net48 ScriptHookVDotNet v3 script (Core sources compiled in -> one DLL)
@@ -20,10 +22,13 @@ OrganizationEmpire.sln
 │  ├─ World/            EntityTracker (caps), RelationshipManager, MemberManager, CommandSystem,
 │  │                    InteractionController, Headquarters, Vehicles, Territory, Rivals
 │  ├─ Missions/         MissionController, MissionRuntime base, templates
-│  └─ UI/               Renderer, UiInput, items/pages, dialogs, notifier, flag renderer, chat window,
+│  └─ UI/               Renderer (translation at draw time, RTL mirroring), SpriteText (Arabic glyph textures), UiInput, items/pages, dialogs, notifier, flag renderer, chat window,
 │                       UiManager, Pages/*
 ├─ tests/OrganizationEmpire.Core.Tests   xUnit on net8.0
-└─ tools/OrganizationEmpire.PackTool     generates default ini + sample flag PNGs for packaging
+├─ tools/OrganizationEmpire.PackTool     generates default ini + sample flag PNGs, copies Arabic assets
+├─ tools/glyphgen                        renders the Arabic/Latin glyph textures (Node + Playwright, Cairo font)
+├─ tools/loc                             extracts display strings for translation
+└─ assets/text                           generated glyph textures + metrics shipped as scripts/OrganizationEmpire/text
 ```
 
 ## Key design decisions

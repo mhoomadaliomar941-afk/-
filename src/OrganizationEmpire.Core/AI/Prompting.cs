@@ -313,7 +313,10 @@ namespace OrganizationEmpire.Core.AI
             sb.Append("7. Optional: end with ONE tag if appropriate - [[MOOD:+1]] or [[MOOD:-1]] if the player's words genuinely moved your feelings toward them");
             if (!c.IsMember) sb.Append(", or [[WILLING]] if the player has genuinely convinced you to consider joining");
             sb.Append(". Never explain tags.\n");
-            sb.Append("8. Reply in the language the player writes in. Plain text only, no markdown, no stage directions longer than a few words.\n");
+            if (Localization.Loc.IsArabic)
+                sb.Append("8. The player's game interface is in Arabic: reply in natural Arabic (Modern Standard Arabic, a light street tone is fine) unless the player clearly writes in another language. Keep names of people, places and factions as written above. Plain text only, no markdown, no diacritics, no stage directions longer than a few words.\n");
+            else
+                sb.Append("8. Reply in the language the player writes in. Plain text only, no markdown, no stage directions longer than a few words.\n");
             return sb.ToString();
         }
 
@@ -399,9 +402,49 @@ namespace OrganizationEmpire.Core.AI
     {
         private static bool Has(string t, params string[] words) => words.Any(w => Regex.IsMatch(t, @"\b" + Regex.Escape(w) + @"\b"));
 
+        // Arabic words take attached prefixes (و، ف، ب، ال), so Arabic phrases are matched as substrings
+        // of normalized text (no diacritics, unified alef/yeh/teh marbuta forms).
+        private static bool HasAr(string normalized, params string[] phrases) => phrases.Any(p => normalized.Contains(NormalizeArabic(p)));
+
+        public static string NormalizeArabic(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return "";
+            var sb = new System.Text.StringBuilder(s.Length);
+            foreach (char c in s)
+            {
+                if ((c >= '\u064B' && c <= '\u0652') || c == '\u0640') continue; // harakat, tatweel
+                switch (c)
+                {
+                    case '\u0623': case '\u0625': case '\u0622': sb.Append('\u0627'); break; // alef forms
+                    case '\u0649': sb.Append('\u064A'); break; // alef maksura -> yeh
+                    case '\u0629': sb.Append('\u0647'); break; // teh marbuta -> heh
+                    default: sb.Append(c); break;
+                }
+            }
+            return sb.ToString();
+        }
+
+        private static OrderType? DetectArabicOrder(string a)
+        {
+            if (HasAr(a, "انزل من السياره", "انزلوا", "انزل")) return OrderType.ExitVehicle;
+            if (HasAr(a, "اركب", "اطلع السياره", "اطلعوا")) return OrderType.EnterVehicle;
+            if (HasAr(a, "ارجع للمقر", "ارجع الي المقر", "عد الي المقر", "عد للمقر", "ارجعوا للمقر", "ارجع للقاعده", "روح البيت", "روحوا", "اذهب للمنزل")) return OrderType.ReturnToHQ;
+            if (HasAr(a, "احمني", "احميني", "غطني", "غطيني", "دافع عني", "دافعوا عني")) return OrderType.DefendPlayer;
+            if (HasAr(a, "احرس", "احرسوا", "راقب المكان", "حراسه")) return OrderType.Guard;
+            if (HasAr(a, "ابق هنا", "ابقي هنا", "ابقوا هنا", "انتظر هنا", "انتظروا هنا", "اثبت مكانك", "لا تتحرك", "خليك هنا", "خليكم هنا")) return OrderType.Stay;
+            if (HasAr(a, "اتبعني", "اتبعوني", "تعال معي", "تعالوا معي", "الحقني", "الحقوني", "امش معي", "هيا بنا", "يلا بنا")) return OrderType.Follow;
+            if (HasAr(a, "هاجم", "هاجموا", "اقتله", "اقتلهم", "اطلق النار", "اطلقوا النار", "اضربهم")) return OrderType.Attack;
+            return null;
+        }
+
         public static OrderType? DetectOrder(string text)
         {
             string t = (text ?? "").ToLowerInvariant();
+            if (Localization.ArabicText.ContainsArabic(t))
+            {
+                var ar = DetectArabicOrder(NormalizeArabic(t));
+                if (ar != null) return ar;
+            }
             if (Has(t, "follow me", "come with me", "with me", "let's go", "lets go", "on me", "fall in")) return OrderType.Follow;
             if (Has(t, "stay here", "wait here", "hold position", "stay put", "don't move", "hold here")) return OrderType.Stay;
             if (Has(t, "guard this", "guard here", "watch this place", "stand guard", "keep watch")) return OrderType.Guard;
@@ -425,6 +468,21 @@ namespace OrganizationEmpire.Core.AI
                 }
             }
             if (DetectOrder(t) != null) return DialogueTopic.Orders;
+            if (Localization.ArabicText.ContainsArabic(t))
+            {
+                string a = NormalizeArabic(t);
+                if (HasAr(a, "تقرير", "الوضع", "اخبار", "شو صار", "ماذا يحدث", "المستجدات")) return DialogueTopic.Report;
+                if (HasAr(a, "كيف حالك", "كيفك", "شلونك", "كيف الحال", "معنويات", "كيف الامور")) return DialogueTopic.Morale;
+                if (HasAr(a, "ولاء", "تثق", "خيانه", "خاين", "خائن", "مخلص", "واشي")) return DialogueTopic.Loyalty;
+                if (HasAr(a, "انضم", "تنضم", "اشتغل معي", "اعمل معي", "اشتغل معنا", "كن معنا", "صير معنا", "تجنيد")) return DialogueTopic.Join;
+                if (HasAr(a, "مهمه", "عمليه", "خطه", "شغلنا", "الخطوه التاليه")) return DialogueTopic.Mission;
+                if (HasAr(a, "منافس", "عدو", "اعداء", "حرب", "عصابه")) return DialogueTopic.Rivals;
+                if (HasAr(a, "فلوس", "مال", "نقود", "راتب", "مصاري", "دفع")) return DialogueTopic.Money;
+                if (HasAr(a, "ساقتلك", "راح اقتلك", "انتبه لنفسك", "تهديد", "والا")) return DialogueTopic.Threat;
+                if (HasAr(a, "شكرا", "احسنت", "عمل جيد", "فخور", "برافو", "يعطيك العافيه")) return DialogueTopic.Praise;
+                if (HasAr(a, "مع السلامه", "الي اللقاء", "باي", "خلص هذا كل شي")) return DialogueTopic.Farewell;
+                if (HasAr(a, "مرحبا", "السلام عليكم", "اهلا", "صباح الخير", "مساء الخير", "هلا")) return DialogueTopic.Greeting;
+            }
             if (Has(t, "report", "status", "sitrep", "update", "what's happening", "whats happening", "news")) return DialogueTopic.Report;
             if (Has(t, "morale", "how are you", "how you doing", "how's it going", "feeling", "you good", "you ok", "how are things")) return DialogueTopic.Morale;
             if (Has(t, "loyal", "trust", "betray", "rat", "snitch", "faithful")) return DialogueTopic.Loyalty;

@@ -244,3 +244,90 @@ namespace OrganizationEmpire.Core.Tests
         }
     }
 }
+
+namespace OrganizationEmpire.Core.Tests
+{
+    public class ArabicTableTests
+    {
+        private static readonly Translator T = Load();
+
+        private static Translator Load()
+        {
+            var t = new Translator();
+            t.Load(Loc.ReadBuiltIn());
+            return t;
+        }
+
+        [Theory]
+        [InlineData("Members", "الأعضاء")]
+        [InlineData("SETTINGS", "الإعدادات")]
+        [InlineData("Big Mike promoted to Capo.", "تمت ترقية Big Mike إلى كابو.")]
+        [InlineData("12 members (capacity 20), 3 deployed", "12 عضو (السعة 20)، 3 منتشر")]
+        [InlineData("Mission complete - Protection Racket", "اكتملت المهمة - ابتزاز الحماية")]
+        [InlineData("Grove Street  (contested)", "Grove Street  (متنازع عليها)")]
+        [InlineData("Ballas has declared WAR on The Families!", "أعلن Ballas الحرب على The Families!")]
+        [InlineData("DefendPlayer", "دافع عن اللاعب")]
+        [InlineData("Street Gang", "عصابة شوارع")]
+        [InlineData("Copy that, Boss.", "علم يا زعيم.")]
+        [InlineData("Understood. Executing on your confirmation. Right now I'm following the boss.", "مفهوم. سأنفذ بعد تأكيدك. الآن أنا أتبع الزعيم.")]
+        [InlineData("Sitrep, Commander: 8 members, 2 territories, cash $77,820; at war with The Lost MC.", "تقرير الوضع يا قائد: 8 أعضاء، 2 مناطق، النقد $77,820؛ في حرب مع The Lost MC.")]
+        [InlineData("Uh... Copy that, Boss.", "أمم... علم يا زعيم.")]
+        public void TranslatesRealInterfaceStrings(string english, string arabic)
+        {
+            Assert.Equal(arabic, T.Translate(english));
+        }
+
+        [Fact]
+        public void ProperNounsStayEnglish()
+        {
+            Assert.Equal("Vinewood", T.Translate("Vinewood"));
+            Assert.Equal("The Lost MC", T.Translate("The Lost MC"));
+        }
+
+        [Fact]
+        public void EveryEnumDisplayNameHasATranslation()
+        {
+            var skip = new HashSet<string> { "Bc", "Joining", "LogLevel", "ChatRole", "ConversationState", "AiErrorKind", "AiProviderKind" };
+            var missing = new List<string>();
+            foreach (var type in typeof(Translator).Assembly.GetTypes().Where(t => t.IsEnum && !skip.Contains(t.Name)))
+            {
+                foreach (string name in System.Enum.GetNames(type))
+                {
+                    string shown = Core.Util.TextUtil.Humanize(name);
+                    if (T.Translate(shown) == shown) missing.Add(type.Name + "." + name);
+                }
+            }
+            Assert.True(missing.Count == 0, "Untranslated: " + string.Join(", ", missing));
+        }
+    }
+}
+
+namespace OrganizationEmpire.Core.Tests
+{
+    public class ArabicIntentTests
+    {
+        [Theory]
+        [InlineData("اتبعني يا رجل", Model.OrderType.Follow)]
+        [InlineData("وابقَ هنا لا تتحرك", Model.OrderType.Stay)]
+        [InlineData("اركب السيارة بسرعة", Model.OrderType.EnterVehicle)]
+        [InlineData("انزل من السيارة", Model.OrderType.ExitVehicle)]
+        [InlineData("ارجع إلى المقر", Model.OrderType.ReturnToHQ)]
+        [InlineData("غطّني!", Model.OrderType.DefendPlayer)]
+        [InlineData("هاجم الهدف", Model.OrderType.Attack)]
+        public void DetectsArabicOrders(string text, Model.OrderType expected)
+        {
+            Assert.Equal(expected, AI.IntentDetector.DetectOrder(text));
+        }
+
+        [Theory]
+        [InlineData("كيف حالك اليوم؟", AI.DialogueTopic.Morale)]
+        [InlineData("أعطني تقريرًا", AI.DialogueTopic.Report)]
+        [InlineData("هل تريد أن تنضم إلينا؟", AI.DialogueTopic.Join)]
+        [InlineData("شكرًا على العمل", AI.DialogueTopic.Praise)]
+        [InlineData("السلام عليكم", AI.DialogueTopic.Greeting)]
+        public void DetectsArabicTopics(string text, AI.DialogueTopic expected)
+        {
+            Assert.Equal(expected, AI.IntentDetector.DetectTopic(text, out _));
+        }
+    }
+}

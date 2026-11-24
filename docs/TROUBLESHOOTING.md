@@ -28,6 +28,17 @@ Turn on **Settings > Debug > Log level: Debug** and the **debug overlay** (entit
 - **Menu too big/small**: *Interface scale* (0.75 - 1.25).
 - **Game keeps running while the menu is open**: by design. Choose *Slow motion* or *Pause* under *While the menu is open*.
 
+## Arabic interface
+
+- **"Arabic needs the scripts\OrganizationEmpire\text folder... Using English."** The `text` folder (glyph textures)
+  is missing or incomplete. Copy it again from the package.
+- **Arabic letters look too big/small.** Settings > General & interface > *Arabic text size* (or `ArabicTextScale`).
+- **I prefer the menu on the left.** Turn off *Right-to-left layout* (`MirrorLayoutForArabic = false`).
+- **Can't type Arabic.** Switch Windows to the Arabic keyboard layout and keep *Text input = Inline*; GTA's
+  on-screen keyboard cannot type Arabic.
+- **A phrase is still English or reads wrong.** Add a corrected line to `text\ar.txt` (see `text\README.txt`).
+  Place names and rival faction names are intentionally kept in English.
+
 ## Members
 
 | Symptom | Cause / fix |

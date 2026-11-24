@@ -7,11 +7,23 @@ practical alternative, and what has not been verified.
 
 - The engine-independent core (simulation, economy, ranks, squads, recruitment math, territory, wars, suspicion,
   events, missions catalog and rewards, takeover, government, persistence, JSON/INI, AI providers, prompts, memory,
-  async dialogue pipeline) is covered by **98 automated tests** run on .NET 8.
+  async dialogue pipeline) is covered by **148 automated tests** run on .NET 8.
 - The in-game layer (spawning, tasks, UI drawing, missions) compiles with zero warnings against the real
   ScriptHookVDotNet **3.6.0** API, with every native name checked against that release. It was **not** run inside
   GTA V during development (no game available in the build environment). Behavior that depends on the game's AI and
   rendering - task details, text metrics, spawn spots, mission pacing - may need tuning after real play testing.
+
+## Arabic interface
+
+- GTA V's fonts contain no Arabic letters and its text engine cannot join letters or lay text out right-to-left.
+  The mod therefore draws Arabic from its own glyph textures (`scripts\OrganizationEmpire\text`). Text that the
+  game draws itself - map blip names, the pause menu, GTA's native notifications and the on-screen keyboard - stays
+  English/Latin.
+- Arabic diacritics (harakat) are dropped when drawing; the text remains readable.
+- Arabic glyph rendering was not verified inside a running game (no GTA V in the build environment). Shaping, bidi
+  ordering and translation are unit-tested; size can be tuned with *Arabic text size* if it looks off.
+- Glyph textures always draw above GTA's own UI; the mod hides glyphs under its own opaque panels, but a GTA overlay
+  (e.g. the phone) can appear under Arabic menu text if both are open at once.
 
 ## Flags and visuals
 

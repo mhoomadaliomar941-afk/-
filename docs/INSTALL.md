@@ -31,11 +31,14 @@ Grand Theft Auto V/
    └─ OrganizationEmpire/
       ├─ OrganizationEmpire.ini      settings (also editable in-game)
       ├─ flags/                      custom flag images (PNG/JPG/DDS/BMP)
+      ├─ text/                       Arabic letter textures + translations (needed for the Arabic interface)
       ├─ saves/                      save slots (created as you play)
       └─ logs/                       OrganizationEmpire.log
 ```
 
-5. **Play.** Start Story Mode. After loading you'll see *"Organization Empire ready. Press F7..."*. Press **F7** and
+5. **Language (optional).** To use the Arabic interface choose *Language / اللغة* in the first row of the creation
+   wizard or in Settings - see [ARABIC.md](ARABIC.md).
+6. **Play.** Start Story Mode. After loading you'll see *"Organization Empire ready. Press F7..."*. Press **F7** and
    found your faction in the creation wizard.
 
 ## Optional: AI dialogue

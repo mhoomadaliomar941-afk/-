@@ -1,4 +1,2271 @@
-# Arabic interface strings for Organization Empire.
-# Format: English text<TAB>Arabic text. "{0}" placeholders carry names/numbers. Lines starting with # are comments.
-Members	الأعضاء
+# Arabic interface strings for Organization Empire (English<TAB>Arabic).
+# English is the key; "{0}", "{1}"... carry names and numbers and may be reordered in the Arabic text.
+# To fix or add a translation without recompiling, put the line in scripts\OrganizationEmpire\text\ar.txt:
+# entries in that file are loaded after this built-in table and replace it.
+# Proper nouns (districts, rival factions, people, brands) are intentionally left in English.
+# --- DialogueService.cs
+Type something first.	اكتب شيئًا أولًا.
+Still waiting for a reply.	ما زلنا ننتظر الرد.
+Slow down a little.	تمهّل قليلًا.
+Too many conversations at once.	محادثات كثيرة في وقت واحد.
+Unknown error.	خطأ غير معروف.
+[AI unavailable - offline reply] {0}	[الذكاء الاصطناعي غير متاح - رد بدون اتصال] {0}
+Crew	الطاقم
+Test	اختبار
+environment variable	متغير بيئة
+encrypted (DPAPI)	مشفّر (DPAPI)
+Talked about: {0}	تحدثنا عن: {0}
+# --- OfflineDialogueProvider.cs
+I don't really know {0} that well.	لا أعرف {0} جيدًا في الحقيقة.
+{0}? That's family. I'd trust them with my life.	{0}؟ هذا من العائلة. أأتمنه على حياتي.
+{0} is solid. Does the work, no complaints.	{0} شخص متين. يقوم بعمله بدون شكوى.
+Don't get me started on {0}. One day that's gonna end badly.	لا تفتح معي موضوع {0}. يومًا ما ستنتهي الأمور بشكل سيئ.
+With respect, {0}, keep {1} away from me. That's all I'll say.	مع احترامي يا {0}، أبعد {1} عني. هذا كل ما سأقوله.
+{0} gets on my nerves, but I keep it professional.	{0} يثير أعصابي، لكنني أبقى محترفًا.
+{0}? We're cool, I guess. Haven't had much to do with them.	{0}؟ لا مشاكل بيننا على ما أظن. لم أتعامل معه كثيرًا.
+Current op: {0}. Unit is ready.	العملية الحالية: {0}. الوحدة جاهزة.
+We're on it: {0}.	نحن نعمل عليها: {0}.
+No active operation, {0}. Check the mission board - the unit is ready.	لا توجد عملية نشطة يا {0}. راجع لوحة المهام - الوحدة جاهزة.
+Standing by for tasking.	بانتظار التكليف.
+Nothing on the table right now. But there's always business, if you know where to look.	لا شيء على الطاولة الآن. لكن هناك دائمًا عمل لمن يعرف أين يبحث.
+Say the word and I'll take care of it.	قل الكلمة وأنا أتولى الأمر.
+Ain't nothing moving right now. Find us a play and we're there.	لا شيء يتحرك الآن. جد لنا فرصة ونحن حاضرون.
+Point me at something, {0}. I'm bored.	وجّهني نحو شيء يا {0}. أنا أشعر بالملل.
+Are you trying to recruit a cop? You've got some nerve.	هل تحاول تجنيد شرطي؟ لديك جرأة.
+I'm {0} till I die. Get lost.	أنا مع {0} حتى أموت. انصرف.
+Leave {0}? ...Maybe. Show me you're the bigger player.	أترك {0}؟ ...ربما. أثبت لي أنك اللاعب الأكبر.
+Honestly? I've been looking for something like this. Tell me more.	بصراحة؟ كنت أبحث عن شيء كهذا. أخبرني المزيد.
+You might be speaking my language. What's in it for me?	ربما نتكلم نفس اللغة. ما الذي سأستفيده؟
+I don't know... it's a big step. Convince me.	لا أعرف... إنها خطوة كبيرة. أقنعني.
+Maybe. Depends what you're offering.	ربما. يعتمد على ما تعرضه.
+No thanks, I've got enough problems.	لا شكرًا، لدي ما يكفي من المشاكل.
+That sounds like a quick way to get killed. Pass.	هذه طريقة سريعة للموت. لا شكرًا.
+No active hostilities. We should use the time to prepare.	لا توجد أعمال عدائية. لنستغل الوقت للاستعداد.
+We are {0}. Recommend we keep pressure on their weak points.	نحن {0}. أنصح بإبقاء الضغط على نقاط ضعفهم.
+Things are quiet with the other families. Quiet is good. Quiet makes money.	الأمور هادئة مع العائلات الأخرى. الهدوء جيد. الهدوء يجلب المال.
+We are {0}. Bad for business. Let's end it - one way or another.	نحن {0}. هذا سيئ للعمل. لننهِ الأمر - بطريقة أو بأخرى.
+Ain't no beef right now. Won't last, though.	لا خلافات الآن. لكنها لن تدوم.
+We {0} right now. Say the word and we ride.	نحن {0} الآن. قل الكلمة وننطلق.
+Oh. It's you.	أوه. هذا أنت.
+Yeah? What do you want.	نعم؟ ماذا تريد.
+Ready for orders, {0}.	جاهز للأوامر يا {0}.
+Sir. Unit is ready.	سيدي. الوحدة جاهزة.
+{0}. Standing by.	{0}. في وضع الاستعداد.
+Good to see you, {0}. What can I do for you?	سعيد برؤيتك يا {0}. بماذا أخدمك؟
+{0}. Always a pleasure.	{0}. دائمًا من دواعي سروري.
+{0}. You need something taken care of?	{0}. تحتاج أن نتولى أمرًا ما؟
+Good day, {0}. The state is in good hands.	يومك سعيد يا {0}. الدولة في أيدٍ أمينة.
+{0}. At your service.	{0}. في خدمتك.
+Can I help you?	هل أستطيع مساعدتك؟
+Do I know you?	هل أعرفك؟
+Hey. What's up?	مرحبًا. ما الأخبار؟
+Uh, hi?	أمم، مرحبًا؟
+Ayy, what's the word?	هيه، ما الأخبار؟
+What's good, {0}?	كيف الحال يا {0}؟
+Yo! {0} in the building.	هيه! {0} وصل.
+Honestly, {0}, morale is low. The unit needs a win.	بصراحة يا {0}، المعنويات منخفضة. الوحدة تحتاج إلى نصر.
+Tired. Losses are weighing on everyone.	متعبون. الخسائر تثقل على الجميع.
+I'll be honest with you, the boys are on edge.	سأكون صريحًا معك، الشباب متوترون.
+These are hard times for the family. People are worried.	إنها أوقات صعبة على العائلة. الناس قلقون.
+Everybody's stressed, {0}. We need a W.	الجميع تحت الضغط يا {0}. نحتاج إلى فوز.
+Man, I ain't gonna lie, things feel rough right now.	يا رجل، لن أكذب عليك، الأمور صعبة الآن.
+Fit and ready. The unit's spirits are high.	لائق وجاهز. معنويات الوحدة عالية.
+Morale is good, {0}. We believe in what we're doing.	المعنويات جيدة يا {0}. نؤمن بما نفعله.
+Business is good, the family is strong. Can't complain.	العمل جيد والعائلة قوية. لا أشتكي.
+Never better, {0}. Things are running smooth.	لم أكن أفضل من قبل يا {0}. الأمور تسير بسلاسة.
+Could be better, could be worse.	يمكن أن تكون أفضل، ويمكن أن تكون أسوأ.
+I'm fine, thanks. Long day.	أنا بخير، شكرًا. يوم طويل.
+Feeling good, we on top right now.	أشعر بشعور رائع، نحن في القمة الآن.
+I'm straight, {0}. We eating good.	أنا تمام يا {0}. أمورنا ممتازة.
+I'm here, ain't I? For now.	أنا هنا، أليس كذلك؟ حتى الآن.
+Let's just say I've had better bosses.	لنقل فقط إنني عملت مع زعماء أفضل.
+Loyalty goes both ways, {0}. Remember that.	الولاء يسري في الاتجاهين يا {0}. تذكّر ذلك.
+I swore an oath. I keep my oaths.	أقسمت يمينًا. وأنا أفي بأيماني.
+My loyalty is to you and the cause, {0}. Without question.	ولائي لك وللقضية يا {0}. بلا أي شك.
+Loyalty is everything. You have mine.	الولاء هو كل شيء. ولائي لك.
+On my mother, {0}, I'd never betray this family.	وحياة أمي يا {0}، لن أخون هذه العائلة أبدًا.
+I'm ride or die, {0}. You know that.	أنا معك للنهاية يا {0}. أنت تعرف ذلك.
+{0} for life. Never switching up.	{0} مدى الحياة. لن أغيّر جهتي أبدًا.
+Fine. Whatever you say.	حسنًا. كما تقول.
+Yeah, yeah. I heard you.	نعم، نعم. سمعتك.
+Copy that, {0}.	علم يا {0}.
+Roger. Ready when you give the signal.	تمام. جاهز عندما تعطي الإشارة.
+Understood. Executing on your confirmation.	مفهوم. سأنفذ بعد تأكيدك.
+Consider it done, {0}.	اعتبره منتهيًا يا {0}.
+Say no more.	لا داعي لقول المزيد.
+Whatever you need.	كل ما تحتاجه.
+Aight, on it.	تمام، أنا عليها.
+Bet. Say less.	أكيد. لا تقل المزيد.
+I got you, {0}.	أنا معك يا {0}.
+Okay, okay! I hear you!	حسنًا، حسنًا! سمعتك!
+Whoa, whoa! No need for that!	مهلًا، مهلًا! لا داعي لذلك!
+Careful. I bite back.	احذر. أنا أعضّ أيضًا.
+You threatening me? Try it.	أتهددني؟ جرّب.
+Alright, message received.	حسنًا، وصلت الرسالة.
+Easy. We're on the same side.	على مهلك. نحن في نفس الصف.
+There's no need for that kind of talk between us, {0}.	لا داعي لهذا النوع من الكلام بيننا يا {0}.
+Sure. Thanks, I guess.	حسنًا. شكرًا على ما أظن.
+Words are cheap.	الكلام رخيص.
+Appreciated. The unit earned it.	مقدَّر. الوحدة استحقت ذلك.
+Thank you, {0}. Just doing my duty.	شكرًا يا {0}. أقوم بواجبي فقط.
+Grazie. It's a privilege to serve the family.	شكرًا. إنه لشرف أن أخدم العائلة.
+You honor me, {0}.	أنت تشرّفني يا {0}.
+Appreciate you, {0}! That's love.	أقدّرك يا {0}! هذه محبة.
+That's what I do, feel me?	هذا ما أفعله، فاهمني؟
+Understood. Standing by.	مفهوم. في وضع الاستعداد.
+{0}. Out.	{0}. انتهى.
+Take care of yourself, {0}.	اعتنِ بنفسك يا {0}.
+Until next time.	إلى اللقاء.
+See you around, I guess.	أراك لاحقًا، على ما أظن.
+Uh, okay. Bye.	أمم، حسنًا. وداعًا.
+Aight, peace.	تمام، سلام.
+One love, {0}.	محبتي يا {0}.
+Stranger	غريب
+the crew	الطاقم
+Everybody needs money in this city.	الجميع يحتاج المال في هذه المدينة.
+Money talks. What are we talking about?	المال يتكلم. عن ماذا نتحدث؟
+Pay's been rough lately, {0}. People notice.	الرواتب كانت سيئة مؤخرًا يا {0}. الناس يلاحظون.
+The money ain't matching the risk right now.	المال لا يوازي المخاطرة الآن.
+Pay is fair. Supplies matter more.	الأجر عادل. الإمدادات أهم.
+We don't do this for money, {0}. But it helps.	نحن لا نفعل هذا من أجل المال يا {0}. لكنه يساعد.
+The envelopes have been generous. The family appreciates it.	الأظرف كانت سخية. العائلة تقدّر ذلك.
+Bread's been coming in, can't complain.	المال يدخل، لا أشتكي.
+We getting paid, that's what matters.	نحن نقبض، وهذا ما يهم.
+Hm.	همم.
+If you say so.	إن كنت تقول ذلك.
+Is that all?	هل هذا كل شيء؟
+I'll pass it down the line.	سأمرّرها عبر التسلسل.
+Noted. Anything else?	سُجّل. شيء آخر؟
+Understood, {0}.	مفهوم يا {0}.
+I hear you, {0}.	أسمعك يا {0}.
+That's interesting. Very interesting.	هذا مثير للاهتمام. مثير جدًا.
+You know best.	أنت أعلم.
+I'll see that it's handled through the proper channels.	سأحرص على معالجتها عبر القنوات المناسبة.
+Of course, {0}.	بالطبع يا {0}.
+I don't really know what to tell you.	لا أعرف حقًا ماذا أقول لك.
+Okay...?	حسنًا...؟
+Sure, whatever you say.	أكيد، كما تقول.
+Facts.	حقيقة.
+I feel you, {0}.	فاهمك يا {0}.
+Real talk.	كلام جد.
+Say less.	لا تقل المزيد.
+Right now I'm {0}.	الآن أنا {0}.
+I don't take orders from you.	أنا لا آخذ أوامر منك.
+Not happening, pal.	لن يحدث يا صاحبي.
+Who do you think you are?	من تظن نفسك؟
+I'm already in, {0}. Where else would I be?	أنا معكم أصلًا يا {0}. أين سأكون غير ذلك؟
+You already got me. Use me.	أنا معك بالفعل. استخدمني.
+Okay, okay. {0}	حسنًا، حسنًا. {0}
+Uh... {0}	أمم... {0}
+{0} I-I mean, if that's okay.	{0} أ-أقصد، إن كان ذلك مناسبًا.
+Oh, great question. {0}	أوه، سؤال رائع. {0}
+{0} Living the dream, right?	{0} نعيش الحلم، صح؟
+{0} Shocking, I know.	{0} مفاجأة، أعرف.
+{0} Just point me at 'em.	{0} فقط وجّهني نحوهم.
+{0} Somebody's gonna bleed for it, watch.	{0} أحدهم سينزف بسببها، سترى.
+{0} Just... let's not do anything crazy.	{0} فقط... لا نفعل شيئًا متهورًا.
+{0} Maybe we lay low a bit?	{0} ربما نختفي عن الأنظار قليلًا؟
+{0} And I'm ready for more responsibility.	{0} وأنا جاهز لمسؤولية أكبر.
+{0} Give me more to handle and I'll prove it.	{0} أعطني المزيد وسأثبت نفسي.
+{0} I've been thinking about our angles.	{0} كنت أفكر في خياراتنا.
+{0} The numbers back that up, by the way.	{0} والأرقام تؤكد ذلك بالمناسبة.
+{0} For what it's worth.	{0} إن كان لرأيي قيمة.
+{0} Not that anyone asks my opinion.	{0} ليس وكأن أحدًا يسألني رأيي.
+Easy. {0}	على مهلك. {0}
+Report? I'm not one of your people.	تقرير؟ لست من رجالك.
+You want news, read the Daily Globe.	تريد أخبارًا؟ اقرأ الجريدة.
+Latest: {0}	آخر الأخبار: {0}
+Sitrep, {0}: {1}.{2}	تقرير الوضع يا {0}: {1}.{2}
+And you should know - {0}	ويجب أن تعرف - {0}
+Here's how things stand, {0}. {1}.{2}	هكذا هي الأمور يا {0}. {1}.{2}
+Briefing for the {0}: {1}.	إحاطة لـ{0}: {1}.
+Real talk, {0}: {1}.{2}	بصراحة يا {0}: {1}.{2}
+Word on the street: {0}	كلام الشارع: {0}
+# --- Catalogs.cs
+Woodland Fatigues	تمويه الغابات
+State Forces	قوات الدولة
+Don	الدون
+Underboss	نائب الزعيم
+Borgata	بورغاتا
+Syndicate	نقابة
+Cell	خلية
+Front	جبهة
+Liberation Army	جيش التحرير
+Movement	حركة
+National Force	القوة الوطنية
+Gang	عصابة
+Set	مجموعة
+Street Crew	طاقم الشارع
+Street Empire	إمبراطورية الشارع
+Consigliere	المستشار
+Capo	كابو
+Mafia Family	عائلة مافيا
+Organization / Militia	منظمة / ميليشيا
+Street Gang	عصابة شوارع
+Soldier	جندي
+A hierarchical crime family. Earn through businesses and protection, build Influence, negotiate with rival families and manage internal politics. Takeover path: become the shadow power behind the state.	عائلة إجرامية هرمية. اكسب من الأعمال والحماية، ابنِ النفوذ، فاوض العائلات المنافسة وأدِر السياسة الداخلية. مسار السيطرة: أن تصبح القوة الخفية خلف الدولة.
+A structured organization with units and a command chain. Grow in secret, manage Suspicion, win public support and seize strategic sites. Has the strongest path to take over the state.	منظمة منضبطة بوحدات وتسلسل قيادي. انمُ في السر، تحكّم بالشبهات، اكسب الدعم الشعبي واستولِ على المواقع الاستراتيجية. تملك أقوى مسار للسيطرة على الدولة.
+A street gang built on territory and reputation. Fight rival sets block by block, run side activities, keep the crew loyal. Taking over the state is possible but slow and hard.	عصابة شوارع قائمة على الأرض والسمعة. قاتل المجموعات المنافسة شارعًا بشارع، أدِر الأنشطة الجانبية، وحافظ على ولاء الطاقم. السيطرة على الدولة ممكنة لكنها بطيئة وصعبة.
+Associate	شريك
+Heat	الحرارة
+Commander	القائد
+Deputy Commander	نائب القائد
+Corner Bodega	بقالة الزاوية
+Barber Shop	صالون حلاقة
+Laundromat	مغسلة ملابس
+Italian Restaurant	مطعم إيطالي
+Towing Company	شركة سحب سيارات
+Construction Firm	شركة إنشاءات
+Nightclub	ملهى ليلي
+Unit Commander	قائد الوحدة
+Car Dealership	معرض سيارات
+Shipping Company	شركة شحن
+Card Room & Casino	صالة ورق وكازينو
+Officer	ضابط
+Member	عضو
++Arms storage, cheaper loadouts, +guard weapons	+تخزين السلاح، تجهيزات أرخص، +أسلحة الحراس
+Armory	مستودع الأسلحة
++6 roster capacity per level, +morale	+6 سعة للقائمة لكل مستوى، +معنويات
+Barracks	الثكنات
++2 faction vehicles per level, faster repairs	+2 مركبة لكل مستوى، إصلاح أسرع
+Garage	المرآب
++Intel per day, earlier attack warnings	+معلومات استخباراتية يوميًا، إنذار مبكر بالهجمات
+Comms Room	غرفة الاتصالات
++Defense vs attacks and raids	+دفاع ضد الهجمات والمداهمات
+Fortifications	التحصينات
+Infirmary	العيادة
+Wounded recover faster, fewer deaths	المصابون يتعافون أسرع، وفيات أقل
+Recruit	مجنَّد
+Ministry of Defense	وزارة الدفاع
+Raises force readiness and defends state territory.	ترفع جاهزية القوات وتدافع عن أراضي الدولة.
+Keeps order; raises stability.	تحفظ النظام؛ ترفع الاستقرار.
+Ministry of the Interior	وزارة الداخلية
+Improves tax collection.	تحسّن جباية الضرائب.
+Treasury	الخزانة
+State Intelligence	استخبارات الدولة
+Suppresses insurgency, gathers intel.	تقمع التمرد وتجمع المعلومات.
+Builds legitimacy.	تبني الشرعية.
+Ministry of Justice	وزارة العدل
+Improves public support.	تحسّن الدعم الشعبي.
+Ministry of Information	وزارة الإعلام
+Public Works	الأشغال العامة
+Raises support at a treasury cost.	ترفع الدعم مقابل كلفة على الخزانة.
+Calms remaining factions' hostility.	تهدّئ عداء الفصائل المتبقية.
+Foreign Relations	العلاقات الخارجية
++Stability, +Readiness, -Support, -Legitimacy	+استقرار، +جاهزية، -دعم، -شرعية
+Martial Law	الأحكام العرفية
+-Insurgency, -Support	-تمرد، -دعم
+Curfew	حظر التجول
++Support, +Legitimacy, +Insurgency	+دعم، +شرعية، +تمرد
+General Amnesty	عفو عام
++Support, -Treasury	+دعم، -خزانة
+Public Works Program	برنامج الأشغال العامة
++Treasury, +Insurgency	+خزانة، +تمرد
+Open Trade Zones	مناطق تجارة حرة
++Support, -Legitimacy	+دعم، -شرعية
+State Media	إعلام الدولة
++Readiness, -Support	+جاهزية، -دعم
+Conscription	التجنيد الإلزامي
+Chairman	الرئيس
+Supreme Commander	القائد الأعلى
+Boss	الزعيم
+United States	الولايات المتحدة
+United Kingdom	المملكة المتحدة
+European Union	الاتحاد الأوروبي
+LS Fire Dept.	إطفاء لوس سانتوس
+LS Services	خدمات لوس سانتوس
+Senior Member	عضو كبير
+SA Police	شرطة سان أندرياس
+Germany	ألمانيا
+Colombia	كولومبيا
+Puerto Rico	بورتوريكو
+South Africa	جنوب أفريقيا
+Head of State	رئيس الدولة
+Minister	وزير
+General	جنرال
+Colonel	عقيد
+Trooper	جندي ميداني
+Street Casual	شارع كاجوال
+Southside Hustlers	محتالو الجنوب
+Sharp Suits	بدلات أنيقة
+Old Money	الثراء القديم
+Tactical Black	الأسود التكتيكي
+# --- WorldFactory.cs
+Korean street syndicate controlling Little Seoul.	نقابة شوارع كورية تسيطر على ليتل سيول.
+Disciplined triad with business interests across downtown.	ثالوث منضبط له مصالح تجارية في وسط المدينة.
+Car dealerships, repo rackets and favors in Burton.	معارض سيارات، عمليات استرداد وخدمات مشبوهة في بيرتون.
+Wealthy cartel operating from the desert ranches.	كارتل ثري يعمل من مزارع الصحراء.
+Paranoid backwoods clan farming Grapeseed.	عشيرة ريفية مرتابة تزرع في غرايبسيد.
+Private military contractor guarding the docks for the highest bidder.	متعاقد عسكري خاص يحرس الموانئ لمن يدفع أكثر.
+Port of Los Santos	ميناء لوس سانتوس
+Los Santos International	مطار لوس سانتوس الدولي
+Purple-clad street set entrenched in Davis.	مجموعة شوارع ترتدي البنفسجي، متمركزة في ديفيس.
+Old-school green set holding Forum Drive and Chamberlain Hills.	مجموعة خضراء عريقة تسيطر على فوروم درايف وتشامبرلين هيلز.
+Yellow-flagged crew running Rancho and Cypress Flats.	طاقم بالرايات الصفراء يدير رانشو وسايبرس فلاتس.
+Blue-ink gang along the river in El Burro and Murrieta.	عصابة الوشم الأزرق على ضفاف النهر في إل بورو وموريتا.
+Small but fierce set holding pieces of Vespucci.	مجموعة صغيرة لكنها شرسة تسيطر على أجزاء من فيسبوتشي.
+Outlaw biker club with chapters in East Vinewood and Blaine County.	نادي دراجات خارج عن القانون له فروع في إيست فاينوود ومقاطعة بلين.
+# --- World.cs
+You	أنت
+Provisional Council	المجلس المؤقت
+President	الرئيس
+Government of San Andreas	حكومة سان أندرياس
+# --- SaveManager.cs
+Save '{0}' was damaged; restored the previous copy.	الحفظ '{0}' كان تالفًا؛ تمت استعادة النسخة السابقة.
+{0} / backup: {1}	{0} / النسخة الاحتياطية: {1}
+Could not load '{0}': {1}	تعذّر تحميل '{0}': {1}
+Loaded '{0}'.	تم تحميل '{0}'.
+file not found	الملف غير موجود
+Version	الإصدار
+invalid content	محتوى غير صالح
+(no faction)	(بدون فصيل)
+Type	النوع
+(damaged)	(تالف)
+Slot not found.	خانة الحفظ غير موجودة.
+Deleted '{0}'.	تم حذف '{0}'.
+Delete failed: {0}	فشل الحذف: {0}
+Saved to '{0}'.	تم الحفظ في '{0}'.
+Save failed: {0}	فشل الحفظ: {0}
+# --- EconomySystem.cs
+Vehicles ({0})	المركبات ({0})
+Economy	الاقتصاد
+The treasury is empty - members are not getting paid. Morale and loyalty are falling.	الخزانة فارغة - الأعضاء لا يتقاضون رواتبهم. المعنويات والولاء في انخفاض.
+Invalid amount.	مبلغ غير صالح.
+Not enough cash for {0} ({1} needed).	لا يوجد نقد كافٍ لـ{0} (المطلوب {1}).
+Bought {0} supplies.	تم شراء {0} من الإمدادات.
+Bought {0} arms.	تم شراء {0} من الأسلحة.
+No product to move.	لا توجد بضاعة لنقلها.
+Moved {0} product for {1}.	تم نقل {0} من البضاعة مقابل {1}.
+Your faction can run at most {0} businesses.	يمكن لفصيلك إدارة {0} أعمال كحد أقصى.
+Acquired {0}.	تم الاستحواذ على {0}.
+Business	الأعمال
+Already fully upgraded.	تمت ترقيته بالكامل مسبقًا.
+{0} upgraded to level {1}.	تمت ترقية {0} إلى المستوى {1}.
+Establish a headquarters first.	أسّس مقرًا أولًا.
+{0} is fully upgraded.	{0} مُرقّى بالكامل.
+{0} upgraded.	تمت ترقية {0}.
+Progression	التقدّم
+You are now a {0}.	أصبحت الآن {0}.
+{0} reached level {1}!{2}	وصل {0} إلى المستوى {1}!{2}
+Territory ({0})	الأراضي ({0})
+Businesses ({0})	الأعمال ({0})
+Earners ({0})	المحصّلون ({0})
+Product sales ({0})	مبيعات البضاعة ({0})
+Arms trade ({0})	تجارة السلاح ({0})
+Salaries	الرواتب
+# --- EventSystem.cs
+The family gathered to bury one of their own. Grief, and a renewed sense of loyalty.	اجتمعت العائلة لدفن أحد أبنائها. حزن، وشعور متجدد بالولاء.
+{0} made his bones and was formally inducted. {1}	أثبت {0} نفسه وتم قبوله رسميًا. {1}
+{0} broke omertà and vanished. Heat rises.	كسر {0} قانون الصمت واختفى. الحرارة ترتفع.
+Rumors of betrayal around {0} turned out false. He's grateful you trusted him.	شائعات الخيانة حول {0} تبيّن أنها كاذبة. إنه ممتن لثقتك به.
+A city official asked the family for a quiet favor. Influence gained.	طلب مسؤول في المدينة خدمة هادئة من العائلة. تم كسب النفوذ.
+{0} sent an envoy with gifts. Relations improve.	أرسل {0} مبعوثًا بالهدايا. العلاقات تتحسن.
+Field exercise in the hills. Skill and discipline improved.	تدريب ميداني في التلال. تحسّنت المهارة والانضباط.
+Training	التدريب
+A disillusioned state employee leaked documents to your network. +6 Intel.	موظف حكومي محبط سرّب وثائق إلى شبكتك. +6 معلومات.
+Support	الدعم
+Your message is spreading. Public support rises (and so does attention).	رسالتك تنتشر. الدعم الشعبي يرتفع (ومعه الانتباه).
+Logistics	اللوجستيات
+Sympathizers delivered {0} supplies.	أوصل المتعاطفون {0} من الإمدادات.
+An ideological split is brewing among the hardliners. Discipline suffers.	انقسام أيديولوجي يتشكّل بين المتشددين. الانضباط يتأثر.
+An unmarked van has been parked near your safehouse for days.	شاحنة بلا علامات متوقفة قرب مخبئك منذ أيام.
+Protesters filled Legion Square demanding reforms.	ملأ المحتجون ساحة ليجن مطالبين بالإصلاحات.
+Outside investors signed a deal with the new government (+{0} treasury).	وقّع مستثمرون أجانب صفقة مع الحكومة الجديدة (+{0} للخزانة).
+Corruption scandal at the {0}.	فضيحة فساد في {0}.
+involving {0}	تورط فيها {0}
+Loyal forces uncovered and crushed a coup plot.	كشفت القوات الموالية مؤامرة انقلاب وسحقتها.
+{0} attempted a coup and fled when it failed. Stability shaken.	حاول {0} القيام بانقلاب وهرب عندما فشل. الاستقرار اهتز.
+A lucky score: one of your crews brought in an unexpected {0}.	ضربة حظ: أحد طواقمك جلب {0} غير متوقعة.
+Event	حدث
+Internal	داخلي
+{0} and {1} got into a heated dispute. Tension in the ranks.	دخل {0} و{1} في خلاف حاد. توتر في الصفوف.
+{0} earned respect handling a dangerous situation alone.	كسب {0} الاحترام بتعامله مع موقف خطير وحده.
+Someone has been skimming from the stockpile: {0} Arms missing.	هناك من يختلس من المخزون: {0} أسلحة مفقودة.
+{0} and {1} have become close friends.	أصبح {0} و{1} صديقين مقرّبين.
+You threw a block party for the neighborhood. Reputation and support up.	أقمت حفلة للحي. السمعة والدعم في ارتفاع.
+A diss track about {0} went viral. They are not happy.	أغنية هجاء عن {0} انتشرت بسرعة. إنهم غير سعداء.
+Kids on the block want in. Hiring through your network got cheaper.	شباب الحي يريدون الانضمام. أصبح التوظيف عبر شبكتك أرخص.
+{0} got caught in a drive-by and is recovering.	أُصيب {0} في هجوم من سيارة مسرعة ويتعافى الآن.
+A family wedding: envelopes, toasts and new friendships. Loyalty rises across the family.	حفل زفاف عائلي: أظرف وأنخاب وصداقات جديدة. الولاء يرتفع في أنحاء العائلة.
+Family	العائلة
+# --- FactionFactory.cs
+Founding	التأسيس
+{0} was founded as a {1}.	تأسس {0} بوصفه {1}.
+Fifth Crew	الطاقم الخامس
+First Crew	الطاقم الأول
+Fourth Crew	الطاقم الرابع
+Second Crew	الطاقم الثاني
+Sixth Crew	الطاقم السادس
+Third Crew	الطاقم الثالث
+Alpha Unit	الوحدة ألفا
+Bravo Unit	الوحدة برافو
+Charlie Unit	الوحدة تشارلي
+Delta Unit	الوحدة دلتا
+Echo Unit	الوحدة إيكو
+Foxtrot Unit	الوحدة فوكستروت
+Corner Boys	شباب الزاوية
+Hustlers	المحتالون
+Main Crew	الطاقم الرئيسي
+Night Shift	الوردية الليلية
+Wrecking Crew	طاقم التخريب
+Young Guns	المسلحون الشباب
+Squad {0}	الفرقة {0}
+Unnamed Faction	فصيل بلا اسم
+Original	أصلي
+# --- GovernmentSystem.cs
+No government established.	لم تُؤسَّس حكومة.
+No ministry selected.	لم يتم اختيار وزارة.
+{0} is now vacant.	{0} أصبح شاغرًا.
+{0} is not available.	{0} غير متاح.
+{0} is not trusted enough (loyalty 40+ needed).	{0} ليس موثوقًا بما يكفي (يحتاج ولاء 40+).
+{0} appointed to head the {1}.	تم تعيين {0} لرئاسة {1}.
+{0} appointed.	تم تعيين {0}.
+Policy repealed.	تم إلغاء السياسة.
+At most 4 active policies.	4 سياسات نشطة كحد أقصى.
+Policy enacted.	تم إقرار السياسة.
+# --- MemberSystem.cs
+{0} has deserted the {1}.	انشق {0} عن {1}.
+Word is {0} might be talking to the wrong people. {1} increased.	يقال إن {0} ربما يتحدث مع الأشخاص الخطأ. ارتفع {1}.
+{0} loadouts unlock at level {1}.	تجهيزات {0} تُفتح عند المستوى {1}.
+Not enough Arms ({0} needed, {1} in stock).	لا توجد أسلحة كافية (المطلوب {0}، في المخزون {1}).
+(-{0} Arms).	(-{0} أسلحة).
+{0} equipped with {1}	تم تجهيز {0} بـ{1}
+{0} was badly wounded and will be out for a while.	أُصيب {0} بجروح بالغة وسيغيب لفترة.
+{0} was killed in action.	قُتل {0} أثناء المهمة.
+{0} was expelled.	تم طرد {0}.
+{0} expelled.	تم طرد {0}.
+You can appoint at most 3 deputies.	يمكنك تعيين 3 نواب كحد أقصى.
+appointed as a deputy.	عُيّن نائبًا.
+is no longer a deputy.	لم يعد نائبًا.
+has recovered and is back on duty.	تعافى وعاد إلى الخدمة.
+was released and is back on duty.	أُطلق سراحه وعاد إلى الخدمة.
+# --- Missions.cs
+Requires 5 supplies	يتطلب 5 إمدادات
+Protection Racket	ابتزاز الحماية
+The family's businesses pay for protection.	أعمال العائلة تدفع مقابل الحماية.
+Visit each business and collect the family's envelope.	زُر كل محل واجمع ظرف العائلة.
+The Sit-Down	الجلسة
+A rival boss wants to talk.	زعيم منافس يريد التحدث.
+Meet the rival boss at the marked location. Choose how the conversation goes.	قابل الزعيم المنافس في الموقع المحدد. اختر مسار الحديث.
+Make an Example	اجعله عبرة
+Find the target and deal with him. Leave no doubt about who did it.	اعثر على الهدف وتعامل معه. لا تترك شكًّا في من فعلها.
+Someone disrespected the family.	أحدهم أساء احترام العائلة.
+Escort the Shipment	رافق الشحنة
+Escort the family's car to its destination. Protect it from ambushes.	رافق سيارة العائلة إلى وجهتها. احمها من الكمائن.
+Valuable cargo must reach the family.	شحنة ثمينة يجب أن تصل إلى العائلة.
+Hostile Acquisition	استحواذ عدائي
+A rival's business district is ripe for the taking.	منطقة أعمال منافسة جاهزة للأخذ.
+Clear out the rival's people and claim their streets for the family.	أزح رجال المنافس واستولِ على شوارعهم لصالح العائلة.
+A councilman needs a problem to go away.	عضو في مجلس المدينة يحتاج إلى التخلص من مشكلة.
+Meet the councilman's people and make the arrangement. Friends in high places matter.	قابل رجال عضو المجلس واعقد الاتفاق. الأصدقاء في المناصب العليا مهمون.
+Recon Patrol	دورية استطلاع
+Map enemy positions.	ارسم خريطة لمواقع العدو.
+Visit each observation point. Stay off the police radar: a wanted level fails the mission.	زُر كل نقطة مراقبة. ابقَ بعيدًا عن رادار الشرطة: مستوى المطاردة يُفشل المهمة.
+Supply Cache	مخبأ الإمدادات
+Retrieve the supply truck and bring it to HQ.	استعِد شاحنة الإمدادات وأحضرها إلى المقر.
+Sympathizers left supplies for the unit.	ترك المتعاطفون إمدادات للوحدة.
+Strike on Outpost	هجوم على موقع متقدم
+An enemy outpost threatens the unit.	موقع متقدم للعدو يهدد الوحدة.
+Assault the enemy position, neutralize all hostiles and secure the area.	اقتحم موقع العدو، حيّد جميع المعادين وأمّن المنطقة.
+Hold the Line	اصمد في الخط
+Dig in and hold the position through every wave.	تحصّن وأمسك الموقع عبر كل موجة.
+Enemy forces are probing your area.	قوات العدو تستطلع منطقتك.
+Convoy Escort	مرافقة القافلة
+A supply convoy needs protection.	قافلة إمدادات تحتاج إلى حماية.
+Escort the convoy vehicle to its destination.	رافق مركبة القافلة إلى وجهتها.
+Hearts and Minds	القلوب والعقول
+Deliver aid and win the people over.	وزّع المساعدات واكسب الناس.
+Deliver relief supplies to each marked community point. Public support is the movement's lifeblood.	أوصل مواد الإغاثة إلى كل نقطة مجتمعية محددة. الدعم الشعبي شريان حياة الحركة.
+Requires 10 supplies	يتطلب 10 إمدادات
+Seize the Relay	السيطرة على محطة الترحيل
+Assault the state security detail at the strategic site and hold it.	اقتحم حراسة أمن الدولة في الموقع الاستراتيجي وأمسكه.
+Take a state-held strategic site.	استولِ على موقع استراتيجي تسيطر عليه الدولة.
+Take It to the System	واجه النظام
+Hit a state-held site to show the city who runs it.	اضرب موقعًا للدولة لتُري المدينة من يحكمها.
+Push the state security out of the strategic site and hold it.	اطرد أمن الدولة من الموقع الاستراتيجي وأمسكه.
+March on the Capitol	الزحف نحو مقر الحكم
+Lead your forces to the seat of government. Break the state's last defenders, then hold the plaza until they surrender.	قُد قواتك إلى مقر الحكومة. حطّم آخر المدافعين عن الدولة، ثم أمسك الساحة حتى يستسلموا.
+The decisive battle for San Andreas.	المعركة الحاسمة على سان أندرياس.
+Complete the campaign stages	أكمل مراحل الحملة
+The Last Sit-Down	الجلسة الأخيرة
+Go to the financial district. The state's loyal enforcers are protecting the old order. When they fall, the city is yours.	اذهب إلى الحي المالي. منفذو الدولة الموالون يحمون النظام القديم. عندما يسقطون، تصبح المدينة لك.
+Remove the last loyalists standing between the family and the state.	أزح آخر الموالين الواقفين بين العائلة والدولة.
+Uprising	الانتفاضة
+Rally at Legion Square and hold it against the full weight of state forces. If you survive, the city belongs to the streets.	احتشد في ساحة ليجن وأمسكها في وجه كامل ثقل قوات الدولة. إن نجوت، تصبح المدينة ملكًا للشوارع.
+The streets rise up.	الشوارع تنتفض.
+Crush the Insurgents	اسحق المتمردين
+Lead state forces against the insurgent cell and secure the area.	قُد قوات الدولة ضد خلية المتمردين وأمّن المنطقة.
+Remaining factions are resisting the new order.	الفصائل المتبقية تقاوم النظام الجديد.
+Government only	للحكومة فقط
+Not available for your faction type.	غير متاح لنوع فصيلك.
+Requires faction level {0}.	يتطلب مستوى الفصيل {0}.
+Already in power.	في السلطة بالفعل.
+Not available to the government.	غير متاح للحكومة.
+Already completed.	مكتملة بالفعل.
+Requirements not met.	المتطلبات غير مستوفاة.
+Not part of the current campaign stage.	ليست ضمن مرحلة الحملة الحالية.
++{0} XP	+{0} خبرة
+{0} control: {1}%	سيطرة {0}: {1}%
+{0} weakened	تم إضعاف {0}
+State stability {0}%	استقرار الدولة {0}%
+Raid repelled	تم صد المداهمة
+Attack repelled	تم صد الهجوم
+Mission complete: {0}.	اكتملت المهمة: {0}.
+Reputation -2	السمعة -2
+Your garrison had to fight alone	اضطرت حاميتك للقتال وحدها
+The state regains some footing (stability +6)	الدولة تستعيد بعض توازنها (الاستقرار +6)
+Mission failed: {0}	فشلت المهمة: {0}
+Recruitment Drive	حملة تجنيد
+Bring new blood into the faction.	أدخل دماء جديدة إلى الفصيل.
+Recruit 2 people from the streets (aim at someone and press Interact) before time runs out.	جنّد شخصين من الشوارع (صوّب على شخص واضغط زر التفاعل) قبل نفاد الوقت.
+Defend the Headquarters	الدفاع عن المقر
+Get to the headquarters and hold it against incoming attackers.	اذهب إلى المقر وأمسكه في وجه المهاجمين.
+Hostiles are coming for your base.	المعادون قادمون إلى قاعدتك.
+Requires a headquarters	يتطلب مقرًا
+Corner Takeover	السيطرة على الزاوية
+Push a rival set off their corner.	اطرد مجموعة منافسة من زاويتها.
+Roll up on the rival corner, take out their crew and hold the block until it's yours.	اقتحم زاوية المنافس، تخلّص من طاقمه وأمسك الشارع حتى يصبح لك.
+Hold the Block	أمسك الشارع
+Get to the block and hold it through the attack waves.	اذهب إلى الشارع وأمسكه خلال موجات الهجوم.
+Rivals are rolling up on your turf.	المنافسون قادمون إلى منطقتك.
+Stash Run	نقل من المخبأ
+Move a package from the stash house.	انقل طردًا من بيت المخبأ.
+Pick up the van at the stash and drive it back to your HQ (or a safe drop). Don't lose the vehicle.	خذ الشاحنة من المخبأ وقُدها عائدًا إلى مقرك (أو إلى نقطة تسليم آمنة). لا تخسر المركبة.
+Requires the Narcotics activity	يتطلب نشاط البضاعة
+Arms Pickup	استلام الأسلحة
+A connect has hardware waiting.	لدى أحد المورّدين معدات بانتظارك.
+Collect the arms shipment vehicle and bring it home. Expect company.	استلم مركبة شحنة الأسلحة وأحضرها إلى الديار. توقّع رفقة غير مرغوبة.
+Requires the Arms activity	يتطلب نشاط الأسلحة
+Supply Run	جولة الإمدادات
+Grab the supply van and drive it back.	خذ شاحنة الإمدادات وقُدها عائدًا.
+Restock the crew.	أعِد تموين الطاقم.
+Payback	الثأر
+A rival shot-caller crossed the line.	أحد قادة المنافسين تجاوز الحد.
+Find the rival shot-caller and take him out. His crew will protect him.	اعثر على قائد المنافسين وتخلّص منه. طاقمه سيحميه.
+Protection Rounds	جولات الحماية
+Collect what local shops owe the crew.	اجمع ما تدين به المحلات المحلية للطاقم.
+Visit each marked shop and collect. Some owners may get brave.	زُر كل محل محدد واجمع المستحقات. بعض أصحاب المحلات قد يتشجعون.
+Give Back to the Block	ردّ الجميل للحي
+Drop off food and supplies at each marked spot. The people remember who looked out for them.	وزّع الطعام والإمدادات على كل نقطة محددة. الناس يتذكرون من وقف معهم.
+Win the neighborhood over.	اكسب الحي إلى صفك.
+# --- RankSystem.cs
+Invalid selection.	اختيار غير صالح.
+{0} is reserved for you.	{0} محجوزة لك.
+{0} already holds that rank.	{0} يحمل تلك الرتبة بالفعل.
+demoted to	خُفّض إلى
+promoted to	رُقّي إلى
+{0} already holds the highest rank available.	{0} يحمل أعلى رتبة متاحة بالفعل.
+{0} is already at the lowest rank.	{0} في أدنى رتبة بالفعل.
+Rank structure replaced.	تم استبدال هيكل الرتب.
+Rank name cannot be empty.	اسم الرتبة لا يمكن أن يكون فارغًا.
+Maximum of {0} ranks reached.	تم بلوغ الحد الأقصى وهو {0} رتب.
+A rank with that name already exists.	توجد رتبة بهذا الاسم بالفعل.
+Rank '{0}' created.	تم إنشاء الرتبة '{0}'.
+No rank selected.	لم يتم اختيار رتبة.
+Renamed '{0}' to '{1}'.	تمت إعادة تسمية '{0}' إلى '{1}'.
+The top rank belongs to you and cannot be deleted.	الرتبة العليا لك ولا يمكن حذفها.
+A faction needs at least two ranks.	الفصيل يحتاج إلى رتبتين على الأقل.
+Cannot delete: no rank available to move members into.	لا يمكن الحذف: لا توجد رتبة لنقل الأعضاء إليها.
+Deleted rank '{0}'.{1}	تم حذف الرتبة '{0}'.{1}
+{0} member(s) moved to {1}.	تم نقل {0} عضو إلى {1}.
+The top rank is fixed.	الرتبة العليا ثابتة.
+Cannot move further.	لا يمكن النقل أكثر.
+{0} moved {1}	{0} نُقلت {1}
+# --- RecruitmentSystem.cs
+Joining the state	الانضمام إلى الدولة
+Member of {0}	عضو في {0}
+another crew	طاقم آخر
+Law enforcement	سلطات إنفاذ القانون
+Cash offer ({0})	عرض نقدي ({0})
+Not enough cash for the offer.	لا يوجد نقد كافٍ للعرض.
+Intimidation	الترهيب
+Ideology / public support	الأيديولوجيا / الدعم الشعبي
+Rapport from conversation	الألفة من المحادثة
+recruitment offer	عرض التجنيد
+{0} turned you down.	رفضك {0}.
+{0} joined {1}.	انضم {0} إلى {1}.
+{0} is in.	{0} معنا.
+Roster full ({0}).	القائمة ممتلئة ({0}).
+{0} was hired through your network.	تم توظيف {0} عبر شبكتك.
+Hired {0} for {1}.	تم توظيف {0} مقابل {1}.
+Runs with a local crew and knows how to handle trouble.	يتنقّل مع طاقم محلي ويعرف كيف يتعامل مع المشاكل.
+Sworn officer with a steady paycheck and a pension to protect.	ضابط محلّف براتب ثابت ومعاش تقاعدي يحرص عليه.
+Recruitment is disabled in settings.	التجنيد معطّل في الإعدادات.
+Recruitment is closed (Recruitment page).	التجنيد مغلق (صفحة التجنيد).
+Roster full ({0}). Level up or upgrade the Barracks.	القائمة ممتلئة ({0}). ارفع المستوى أو طوّر الثكنات.
+Law enforcement cannot be recruited (Settings).	لا يمكن تجنيد رجال إنفاذ القانون (الإعدادات).
+Your recruitment policy excludes this candidate.	سياسة التجنيد لديك تستبعد هذا المرشح.
+Below your minimum willingness standard.	أقل من الحد الأدنى للاستعداد الذي حددته.
+Base ({0})	الأساس ({0})
+Faction level	مستوى الفصيل
+Willingness	الاستعداد
+# --- Simulation.cs
+{0} has been repaired and is available again.	تم إصلاح {0} وأصبحت متاحة من جديد.
+World was missing; recreated.	العالم كان مفقودًا؛ تمت إعادة إنشائه.
+Territories recreated.	تمت إعادة إنشاء الأراضي.
+Rivals recreated.	تمت إعادة إنشاء المنافسين.
+Ranks recreated.	تمت إعادة إنشاء الرتب.
+Member id assigned.	تم تعيين معرّف العضو.
+# --- SquadSystem.cs
+Maximum of {0} squads.	الحد الأقصى {0} فرق.
+Created {0}.	تم إنشاء {0}.
+Name cannot be empty.	الاسم لا يمكن أن يكون فارغًا.
+Squad renamed to {0}.	تمت إعادة تسمية الفرقة إلى {0}.
+{0} disbanded.	تم حل {0}.
+{0} is already in {1}.	{0} موجود في {1} بالفعل.
+{0} is full ({1}).	{0} ممتلئة ({1}).
+{0} assigned to {1}.	تم تعيين {0} في {1}.
+{0} is not in {1}.	{0} ليس في {1}.
+{0} removed from {1}.	تمت إزالة {0} من {1}.
+{0}'s rank ({1}) lacks the 'Lead squad' permission.	رتبة {0} ({1}) تفتقر إلى صلاحية 'قيادة الفرقة'.
+{0} now leads {1}.	{0} يقود {1} الآن.
+# --- SuspicionSystem.cs
+Imminent raid	مداهمة وشيكة
+Under investigation	قيد التحقيق
+Being watched	تحت المراقبة
+Noticed	ملحوظ
+Low profile	بعيد عن الأنظار
+Investigators are digging into your operation. Legal costs and lost contacts: {0}.	المحققون ينبشون في عملياتك. تكاليف قانونية وخسارة علاقات: {0}.
+Suspicion	الشبهة
+Rumors say {0} has been seen talking to detectives.	تقول الشائعات إن {0} شوهد يتحدث مع المحققين.
+# --- TakeoverSystem.cs
+Morale 55+	المعنويات 55+
+State stability at most 35	استقرار الدولة 35 كحد أقصى
+Campaign	الحملة
+The decisive moment has come. The final campaign mission is available in Missions.	حانت اللحظة الحاسمة. مهمة الحملة الأخيرة متاحة في المهام.
+Campaign stage complete: {0}. Next: {1}.	اكتملت مرحلة الحملة: {0}. التالي: {1}.
+The old government has fallen. {0} controls San Andreas. Open the Government page to form your government.	سقطت الحكومة القديمة. {0} يسيطر على سان أندرياس. افتح صفحة الحكومة لتشكيل حكومتك.
+The takeover campaign is not complete.	حملة السيطرة لم تكتمل.
+A government is already established.	هناك حكومة قائمة بالفعل.
+The {0} of the {1} is established. {2} - the state is yours.	تم تأسيس {0} لـ{1}. {2} - الدولة لك.
+Government established.	تم تأسيس الحكومة.
+Build a disciplined core with a base of operations and a foothold in the county.	ابنِ نواة منضبطة مع قاعدة عمليات وموطئ قدم في المقاطعة.
+Establish the Movement	تأسيس الحركة
+8 members	8 أعضاء
+Faction level 3	مستوى الفصيل 3
+Control 2 territories	السيطرة على منطقتين
+Establish a headquarters	تأسيس مقر
+Turn the population in your favor while staying under the radar.	اكسب السكان إلى صفك مع البقاء بعيدًا عن الرادار.
+Win Hearts and Minds	اكسب القلوب والعقول
+Public support 45%	الدعم الشعبي 45%
+Suspicion at most 60	الشبهة 60 كحد أقصى
+30 Influence	30 نفوذ
+Complete 'Hearts and Minds'	أكمل 'القلوب والعقول'
+Seize Strategic Assets	السيطرة على الأصول الاستراتيجية
+Take key infrastructure from the state and weaken its grip.	انتزع البنية التحتية الأساسية من الدولة وأضعف قبضتها.
+Control 2 strategic sites	السيطرة على موقعين استراتيجيين
+State stability at most 60	استقرار الدولة 60 كحد أقصى
+18 members	18 عضوًا
+60 Arms stockpiled	60 سلاحًا في المخزون
+The Final Campaign	الحملة الأخيرة
+The state is on its knees. March on the capitol.	الدولة جاثية على ركبتيها. ازحف نحو مقر الحكم.
+Morale 50+	المعنويات 50+
+State stability at most 40	استقرار الدولة 40 كحد أقصى
+Establish legitimate fronts and a name that opens doors.	أسّس واجهات شرعية واسمًا يفتح الأبواب.
+Made in Los Santos	صُنع في لوس سانتوس
+Faction level 4	مستوى الفصيل 4
+Own 2 businesses	امتلاك عملين تجاريين
+Reputation 35	السمعة 35
+Cultivate officials and accumulate leverage.	استمِل المسؤولين واجمع أوراق الضغط.
+Friends in High Places	أصدقاء في المناصب العليا
+80 Influence	80 نفوذ
+Complete 'The Councilman's Favor'	أكمل 'خدمة عضو المجلس'
+Heat at most 50	الحرارة 50 كحد أقصى
+Bring the other crime families to heel: eliminate them or bind them by treaty.	أخضِع عائلات الجريمة الأخرى: أزلها أو اربطها بمعاهدة.
+The Commission	اللجنة
+2 crime families eliminated or at peace	إزالة عائلتين إجراميتين أو مسالمتهما
+Control 6 territories	السيطرة على 6 مناطق
+Own 4 businesses	امتلاك 4 أعمال تجارية
+State stability at most 65	استقرار الدولة 65 كحد أقصى
+Hostile Takeover	الاستحواذ العدائي
+Only the state's loyal enforcers remain. Remove them.	لم يبقَ سوى منفذي الدولة الموالين. أزِلهم.
+150 Influence	150 نفوذ
+State stability at most 45	استقرار الدولة 45 كحد أقصى
+Become the set everybody knows.	كن المجموعة التي يعرفها الجميع.
+Run the Streets	احكم الشوارع
+12 members	12 عضوًا
+Control 4 territories	السيطرة على 4 مناطق
+Reputation 40	السمعة 40
+Dominate Los Santos and break rival sets.	هيمن على لوس سانتوس وحطّم المجموعات المنافسة.
+Kings of the City	ملوك المدينة
+Control 40% of city neighborhoods	السيطرة على 40% من أحياء المدينة
+Eliminate 2 rival factions	إزالة فصيلين منافسين
+Faction level 8	مستوى الفصيل 8
+The People's Champions	أبطال الشعب
+Turn the city's frustration into loyalty.	حوّل إحباط المدينة إلى ولاء.
+Public support 50%	الدعم الشعبي 50%
+Reputation 75	السمعة 75
+Break the System	حطّم النظام
+Show the state it can't hold the city.	أرِ الدولة أنها لا تستطيع الإمساك بالمدينة.
+Control a strategic site	السيطرة على موقع استراتيجي
+State stability at most 50	استقرار الدولة 50 كحد أقصى
+25 members	25 عضوًا
+The final confrontation.	المواجهة الأخيرة.
+# --- TerritorySystem.cs
+{0} now controls {1}.	{0} يسيطر الآن على {1}.
+{0} lost control of {1} to {2}.	خسر {0} السيطرة على {1} لصالح {2}.
+# --- WarSystem.cs
+{0} accepted your {1} proposal.	قبل {0} اقتراح {1} الذي قدمته.
+{0} accepted ({1} chance).	قبل {0} (فرصة {1}).
+{0} rejected your {1} proposal.	رفض {0} اقتراح {1} الذي قدمته.
+{0} refused ({1} chance).	رفض {0} (فرصة {1}).
+Tribute accepted. {0} agreed to a ceasefire.	تم قبول الجزية. وافق {0} على وقف إطلاق النار.
+Paid tribute to {0}.	تم دفع جزية إلى {0}.
+Paid {0} to {1}.	تم دفع {0} إلى {1}.
+Requires {0} Intel.	يتطلب {0} معلومات.
+Covert operation against {0} succeeded (strength -{1}).	نجحت العملية السرية ضد {0} (القوة -{1}).
+Operation succeeded.	نجحت العملية.
+Covert operation against {0} was exposed.	انكشفت العملية السرية ضد {0}.
+Operation failed and was exposed.	فشلت العملية وانكشفت.
+Faction unavailable.	الفصيل غير متاح.
+Break the alliance first.	افسخ التحالف أولًا.
+{0} now considers {1} a rival.	{0} يعتبر {1} منافسًا الآن.
+{0} has declared WAR on {1}!	أعلن {0} الحرب على {1}!
+The ceasefire with {0} collapsed.	انهار وقف إطلاق النار مع {0}.
+The ceasefire with {0} ended peacefully.	انتهى وقف إطلاق النار مع {0} بسلام.
+{0} declared a rivalry with {1}.	أعلن {0} التنافس مع {1}.
+Rivalry declared with {0}.	تم إعلان التنافس مع {0}.
+{0} sent a gift of {1} to honor your alliance.	أرسل {0} هدية قيمتها {1} تكريمًا لتحالفكما.
+Intel warns of an imminent state raid on your headquarters in {0}! Defend it (Missions) within {1} hours.	تحذّر المعلومات من مداهمة وشيكة للدولة على مقرك في {0}! دافع عنه (المهام) خلال {1} ساعات.
+Raid	مداهمة
+{0} is moving on {1}! Defend it within {2} hours or rely on your garrison.	{0} يتقدم نحو {1}! دافع عنها خلال {2} ساعات أو اعتمد على حاميتك.
+Your people repelled {0} in {1}.	صدّ رجالك {0} في {1}.
+{0} overran your defenses in {1}.	اجتاح {0} دفاعاتك في {1}.
+State forces raided your headquarters: {0} seized, half your arms confiscated, {1} member(s) detained.	داهمت قوات الدولة مقرك: تمت مصادرة {0}، وصودر نصف أسلحتك، واحتُجز {1} عضو.
+{0} has been ELIMINATED. Their remaining crews scatter.	تمت إزالة {0}. طواقمهم المتبقية تتشتت.
+{0} is now at WAR with {1}.	{0} في حالة حرب الآن مع {1}.
+War declared on {0}.	تم إعلان الحرب على {0}.
+A ceasefire requires an active war.	وقف إطلاق النار يتطلب حربًا قائمة.
+Negotiate a ceasefire first.	تفاوض على وقف إطلاق النار أولًا.
+Already at peace.	في سلام بالفعل.
+An alliance requires a peace treaty first.	التحالف يتطلب معاهدة سلام أولًا.
+Your reputation ({0}) is too low; 35 needed.	سمعتك ({0}) منخفضة جدًا؛ المطلوب 35.
+Alliances cost 15 Influence.	التحالفات تكلّف 15 نفوذ.
+Invalid proposal.	اقتراح غير صالح.
+{0} will not discuss terms again so soon.	لن يناقش {0} الشروط مرة أخرى بهذه السرعة.
+# --- EmpireScript.cs
+Organization Empire: the '{0}' system hit repeated errors and was paused. See the log.	إمبراطورية المنظمة: نظام '{0}' واجه أخطاء متكررة وتم إيقافه مؤقتًا. راجع السجل.
+Autosaved.	تم الحفظ التلقائي.
+Organization Empire	إمبراطورية المنظمة
+{0} loaded. Press {1} for the command menu.	تم تحميل {0}. اضغط {1} لفتح قائمة القيادة.
+Organization Empire ready. Press {0} to found your faction.	إمبراطورية المنظمة جاهزة. اضغط {0} لتأسيس فصيلك.
+ScriptHookVDotNet {0} detected; 3.6.0 or newer is recommended.	تم اكتشاف ScriptHookVDotNet {0}؛ يُنصح بالإصدار 3.6.0 أو أحدث.
+Invalid OpenMenu key '{0}' in the ini; using F7.	مفتاح OpenMenu غير صالح '{0}' في ملف ini؛ سيتم استخدام F7.
+Cannot write to the scripts folder. Saves will fail - check folder permissions / run outside Program Files.	لا يمكن الكتابة في مجلد scripts. الحفظ سيفشل - تحقق من صلاحيات المجلد / شغّل اللعبة خارج Program Files.
+# --- MissionController.cs
+No faction	لا يوجد فصيل
+You were wasted	لقد قُتلت
+You were busted	لقد تم القبض عليك
+A story mission started	بدأت مهمة قصة
+Took part in a successful operation:	شارك في عملية ناجحة:
+Was part of a failed operation:	كان جزءًا من عملية فاشلة:
+{0} hostile(s) neutralized	تم تحييد {0} معادٍ
+{0} member(s) down	سقط {0} عضو
+Finish or abort the current mission first.	أنهِ المهمة الحالية أو ألغِها أولًا.
+Finish the story mission first.	أنهِ مهمة القصة أولًا.
+You can't start a mission right now.	لا يمكنك بدء مهمة الآن.
+Unknown mission.	مهمة غير معروفة.
+This mission type is not supported.	نوع المهمة هذا غير مدعوم.
+Mission failed to start	فشل بدء المهمة
+Mission failed to start (see log).	فشل بدء المهمة (راجع السجل).
+Mission started: {0}	بدأت المهمة: {0}
+# --- MissionRuntime.cs
+Hostile	معادٍ
+Elysian Island docks	أرصفة جزيرة إليزيان
+Cypress Flats warehouse	مستودع سايبرس فلاتس
+La Mesa rail yard	ساحة قطارات لا ميسا
+Murrieta oil fields	حقول نفط موريتا
+Banning lots	ساحات بانينغ
+Sandy Shores airfield	مطار ساندي شورز
+Senora junkyard	ساحة خردة سينورا
+Paleto sawmill	منشرة باليتو
+City Hall, Rockford Hills	مبنى البلدية، روكفورد هيلز
+Maze Bank plaza, Pillbox Hill	ساحة ميز بنك، بيلبوكس هيل
+Legion Square	ساحة ليجن
+# --- Templates.cs
+Get to the position before the attack begins.	اذهب إلى الموقع قبل بدء الهجوم.
+Prepare your defenses. Attack incoming.	جهّز دفاعاتك. هجوم قادم.
+Defend	دافع
+You didn't arrive in time	لم تصل في الوقت المناسب
+Hold the position - wave {0}/{1}.	أمسك الموقع - الموجة {0}/{1}.
+Next wave in {0} s	الموجة التالية خلال {0} ث
+{0} attacker(s)	{0} مهاجم
+Hold the area until the enemy surrenders.	أمسك المنطقة حتى يستسلم العدو.
+You abandoned the position	لقد تخليت عن الموقع
+Return to the position!	عُد إلى الموقع!
+The position was overrun	تم اجتياح الموقع
+Wave {0} incoming!	الموجة {0} قادمة!
+Could not prepare the vehicle	تعذّر تجهيز المركبة
+Cargo	الحمولة
+Collect the vehicle at {0}.	استلم المركبة عند {0}.
+The cargo was destroyed	تم تدمير الحمولة
+Drop-off	نقطة التسليم
+Deliver the cargo to {0}.	أوصل الحمولة إلى {0}.
+the drop-off	نقطة التسليم
+Get back in the vehicle!	عُد إلى المركبة!
+You're being followed!	هناك من يتبعك!
+Go to {0}.	اذهب إلى {0}.
+the target area	المنطقة المستهدفة
+Collect:	التحصيل:
+Delivery:	التسليم:
+Collect from	التحصيل من
+Deliver aid to	إيصال المساعدات إلى
+{0} locations.	{0} مواقع.
+Deal with the trouble first!	تعامل مع المشكلة أولًا!
+{0}/{1} done - nearest {2} m	تم {0}/{1} - الأقرب على بعد {2} م
+Collecting	جارٍ التحصيل
+Handing out supplies	جارٍ توزيع الإمدادات
+Someone decided to resist!	أحدهم قرر المقاومة!
+Could not prepare the convoy	تعذّر تجهيز القافلة
+No driver available	لا يوجد سائق متاح
+Convoy	القافلة
+Convoy destination	وجهة القافلة
+Escort the convoy to its destination. Get in your own vehicle and stay close.	رافق القافلة إلى وجهتها. اركب مركبتك وابقَ قريبًا.
+The convoy was destroyed	تم تدمير القافلة
+The driver was killed	قُتل السائق
+{0} m to go	متبقٍ {0} م
+You left the convoy unprotected	تركت القافلة بلا حماية
+Eliminate the {0} defenders.	تخلّص من المدافعين التابعين لـ{0}.
+Ambush ahead of the convoy!	كمين أمام القافلة!
+Recruit {0} new members (look at someone and press {1}).	جنّد {0} أعضاء جدد (انظر إلى شخص واضغط {1}).
+Recruits: {0}/{1}	المجنَّدون: {0}/{1}
+{0}/{1} recruited	تم تجنيد {0}/{1}
+Observation point {0}	نقطة المراقبة {0}
+Observe from point {0}/{1}. Avoid police attention.	راقب من النقطة {0}/{1}. تجنّب لفت انتباه الشرطة.
+Compromised - the police are onto you	انكشف أمرك - الشرطة تلاحقك
+{0} hostile(s) left	تبقّى {0} معادٍ
+Observing...	جارٍ المراقبة...
+The meeting fell through	فشل الاجتماع
+Meeting	الاجتماع
+Meet {0}.	قابل {0}.
+the councilman's representative	ممثل عضو المجلس
+the {0} boss	زعيم {0}
+Enemy reinforcements incoming!	تعزيزات العدو قادمة!
+{0} hostile(s)	{0} معادٍ
+You missed the meeting	فاتك الاجتماع
+Offer the family's help	اعرض مساعدة العائلة
+The councilman owes the family a favor. +Influence, weakens the state.	عضو المجلس مدين للعائلة بخدمة. +نفوذ، ويضعف الدولة.
+Make a cash contribution ({0})	قدّم مساهمة نقدية ({0})
+Money talks. Guaranteed, but costs cash.	المال يتكلم. مضمون، لكنه يكلّف نقدًا.
+Intimidation works, but raises heat.	الترهيب ينجح، لكنه يرفع الحرارة.
+Lean on him	اضغط عليه
+Negotiate ({0})	فاوض ({0})
+Propose an end to hostilities. Uses your reputation and power.	اقترح إنهاء الأعمال العدائية. يعتمد على سمعتك وقوتك.
+Demand tribute	اطلب الجزية
+Show strength and demand a cut. Chance based on relative power.	أظهر القوة واطلب حصة. الفرصة تعتمد على القوة النسبية.
+Ambush them	انصب لهم كمينًا
+End this the old-fashioned way. Kill the boss and his guards.	أنهِ الأمر على الطريقة القديمة. اقتل الزعيم وحراسه.
+Sit-down with {0}	جلسة مع {0}
+The Councilman's Favor	خدمة عضو المجلس
+You walked out	لقد انسحبت
+the rival	المنافس
+Hold the area.	أمسك المنطقة.
+{0} They're reaching for their guns!	{0} إنهم يمدّون أيديهم إلى أسلحتهم!
+Hold here	ابقَ هنا
+They paid {0} to keep the peace.	دفعوا {0} للحفاظ على السلام.
+They laughed in your face - and reached for their guns.	ضحكوا في وجهك - ومدّوا أيديهم إلى أسلحتهم.
+Eliminate the boss and his guards.	تخلّص من الزعيم وحراسه.
+The target was nowhere to be found	لم يُعثر على الهدف
+Target	الهدف
+Target area	منطقة الهدف
+Find and eliminate the {0} target.	اعثر على هدف {0} وتخلّص منه.
+Get back in the area!	عُد إلى المنطقة!
+The target disappeared	اختفى الهدف
+Target down. Get out of there.	سقط الهدف. اخرج من هناك.
+{0} guard(s) remaining	تبقّى {0} حارس
+The target is running!	الهدف يهرب!
+The target escaped	هرب الهدف
+Out of time	انتهى الوقت
+You abandoned the operation	لقد تخليت عن العملية
+Return to the area!	عُد إلى المنطقة!
+# --- ModContext.cs
+Arabic needs the scripts\\OrganizationEmpire\\text folder from the mod package ({0}). Using English.	العربية تحتاج إلى مجلد scripts\OrganizationEmpire\text من حزمة المود ({0}). سيتم استخدام الإنجليزية.
+Could not save settings: {0}	تعذّر حفظ الإعدادات: {0}
+Nothing to save yet - create a faction first.	لا يوجد ما يُحفظ بعد - أنشئ فصيلًا أولًا.
+Game state changed	تغيّرت حالة اللعبة
+# --- ChatWindow.cs
+(radio)	(لاسلكي)
+{0} - not a member	{0} - ليس عضوًا
+LOYALTY	الولاء
+Offline	بدون اتصال
+{0} is typing{1}	{0} يكتب{1}
+Order detected: {0}  -  [Ctrl+Enter] or click to execute	تم رصد أمر: {0}  -  [Ctrl+Enter] أو انقر للتنفيذ
+Press Enter to type...	اضغط Enter للكتابة...
+Say something...	قل شيئًا...
+Enter: send   Esc: close   PgUp/PgDn: scroll   Ctrl+V: paste	Enter: إرسال   Esc: إغلاق   PgUp/PgDn: تمرير   Ctrl+V: لصق
+{0} is not nearby (radio chat is disabled in settings).	{0} ليس قريبًا (المحادثة اللاسلكية معطّلة في الإعدادات).
+Conversations with non-members are disabled in settings.	المحادثات مع غير الأعضاء معطّلة في الإعدادات.
+# --- Dialogs.cs
+Continue	متابعة
+Enter: confirm   Esc: cancel   Ctrl+V: paste	Enter: تأكيد   Esc: إلغاء   Ctrl+V: لصق
+Rebind: {0}	إعادة تعيين: {0}
+Press the new key now. Esc cancels.	اضغط المفتاح الجديد الآن. Esc للإلغاء.
+Avoid keys GTA already uses (W A S D, F, Space, Tab...).	تجنّب المفاتيح التي تستخدمها GTA أصلًا (W A S D، F، Space، Tab...).
+# --- Items.cs
+Unavailable: {0}	غير متاح: {0}
+# --- CorePages.cs
+Faction Management	إدارة الفصيل
+State Overview	نظرة عامة على الدولة
+Faction name	اسم الفصيل
+Name	الاسم
+Too short.	قصير جدًا.
+Also used as lore for AI dialogue.	يُستخدم أيضًا كخلفية قصصية لحوار الذكاء الاصطناعي.
+Description	الوصف
+Changes diplomacy odds, heat decay and dialogue tone.	يغيّر فرص الدبلوماسية وتلاشي الحرارة ونبرة الحوار.
+Faction personality	شخصية الفصيل
+Aggressive / Defensive / Expansionist / Covert / Balanced.	عدواني / دفاعي / توسّعي / سرّي / متوازن.
+Behavior	السلوك
+Side activities	الأنشطة الجانبية
+Arms trade	تجارة السلاح
+Product + Arms	البضاعة + السلاح
+Abstract resource systems that generate income and unlock related missions (and raise heat).	أنظمة موارد مجرّدة تولّد الدخل وتفتح مهامًا مرتبطة بها (وترفع الحرارة).
+Deputy: {0}	النائب: {0}
+Appoint a deputy	تعيين نائب
+Appoint deputy	تعيين نائب
+Deputies get a loyalty boost and lead when you're away (max 3).	النواب يحصلون على دفعة ولاء ويقودون في غيابك (3 كحد أقصى).
+You already have 3 deputies.	لديك 3 نواب بالفعل.
+Disband faction	حل الفصيل
+Disband {0}?	حل {0}؟
+All members are released and the faction is removed from this session. Your save files are NOT deleted - you can reload them from Save / Load.	يتم تسريح جميع الأعضاء وإزالة الفصيل من هذه الجلسة. ملفات الحفظ لن تُحذف - يمكنك تحميلها من الحفظ / التحميل.
+The faction was disbanded.	تم حل الفصيل.
+Disband	حل
+Ends this faction (save files remain).	ينهي هذا الفصيل (تبقى ملفات الحفظ).
+An attack is underway. {0} hours left before your garrison has to fight alone.	هجوم جارٍ. تبقّى {0} ساعات قبل أن تضطر حاميتك للقتال وحدها.
+Finish the current mission first.	أنهِ المهمة الحالية أولًا.
+Summons up to {0} available members (deployment limit, Settings > Spawning).	يستدعي حتى {0} من الأعضاء المتاحين (حد النشر، الإعدادات > الظهور).
+Everyone stand down	الجميع ينسحب
+Deployed members go home and despawn when out of sight.	الأعضاء المنتشرون يعودون إلى منازلهم ويختفون عند الابتعاد عن النظر.
+Mission board	لوحة المهام
+{0} available	{0} متاحة
+Quick save	حفظ سريع
+Level {0} - {1}	المستوى {0} - {1}
+{0} / {1} XP	{0} / {1} خبرة
+Reputation	السمعة
+Morale	المعنويات
+Discipline	الانضباط
+Heat from police and public attention. High heat brings investigations and raids.	الحرارة من الشرطة واهتمام العامة. الحرارة العالية تجلب التحقيقات والمداهمات.
+Suspicion is central to the organization: keep it low to unlock covert opportunities; high values bring investigations and raids.	الشبهة محورية للمنظمة: أبقِها منخفضة لفتح الفرص السرية؛ القيم العالية تجلب التحقيقات والمداهمات.
+Public support	الدعم الشعبي
+See the Government tab for stages and requirements.	راجع تبويب الحكومة لمعرفة المراحل والمتطلبات.
+State takeover campaign	حملة السيطرة على الدولة
+State stability	استقرار الدولة
+OVERVIEW	نظرة عامة
+Cash	النقد
+Net / hour	الصافي / ساعة
+Deployed	المنتشرون
+{0} active / {1}	{0} نشط / {1}
+Territories	الأراضي
+Arms	الأسلحة
+Supplies	الإمدادات
+Influence	النفوذ
+Intel	المعلومات
+Product	البضاعة
+Enemies down	أعداء سقطوا
+Missions done	مهام منجزة
+Members lost	أعضاء خسرناهم
+Rivals eliminated	منافسون أُزيلوا
+CONFLICTS	النزاعات
+No active rivalries.	لا توجد منافسات نشطة.
+# --- CreationWizardPage.cs
+Create a {0} with {1} starting member(s) on {2} difficulty?	إنشاء {0} مع {1} عضو مؤسس على صعوبة {2}؟
+Create {0}?	إنشاء {0}؟
+Saved to slot '{0}'.	تم الحفظ في الخانة '{0}'.
+{0} is born. {1}	وُلد {0}. {1}
+PREVIEW	معاينة
+UNNAMED	بلا اسم
+{0} | {1} | {2} members	{0} | {1} | {2} أعضاء
+Found Your Faction	أسّس فصيلك
+Configure every aspect, then create. Everything except the type can be changed later.	اضبط كل جانب ثم أنشئ. كل شيء عدا النوع يمكن تغييره لاحقًا.
+Faction type	نوع الفصيل
+At least 2 characters.	حرفان على الأقل.
+(required)	(مطلوب)
+The name your members and rivals will use.	الاسم الذي سيستخدمه أعضاؤك ومنافسوك.
+Tag	الرمز
+Tag / abbreviation	الرمز / الاختصار
+Used on plates, blips and the flag monogram. Leave empty to use initials.	يُستخدم على اللوحات والعلامات على الخريطة وحروف العلم. اتركه فارغًا لاستخدام الأحرف الأولى.
+Optional. Fed to AI dialogue as faction lore.	اختياري. يُمرَّر إلى حوار الذكاء الاصطناعي كخلفية للفصيل.
+Motto	الشعار
+Optional.	اختياري.
+Blips, UI accent, vehicles.	العلامات على الخريطة، لون الواجهة، المركبات.
+Flag pattern	نمط العلم
+Refine everything later in the Flag Designer (including custom images).	عدّل كل شيء لاحقًا في مصمم العلم (بما في ذلك الصور المخصصة).
+Emblem	الرمز التعبيري
+Uniform	الزي
+Model set used for hired members and reinforcements. Recruited NPCs keep their own look unless the option below is on.	مجموعة الشخصيات المستخدمة للأعضاء المستأجرين والتعزيزات. الشخصيات المجنّدة تحتفظ بمظهرها إلا إذا كان الخيار أدناه مفعّلًا.
+When on, recruited NPCs are swapped to a uniform model (keeping their name and personality).	عند تفعيله، يتم تبديل الشخصيات المجنّدة إلى نموذج الزي (مع الاحتفاظ بالاسم والشخصية).
+Ruthless / Honorable / Pragmatic / Flamboyant / Secretive / Zealous. Affects diplomacy, heat decay and dialogue tone.	قاسٍ / شريف / براغماتي / استعراضي / كتوم / متعصب. يؤثر على الدبلوماسية وتلاشي الحرارة ونبرة الحوار.
+Aggressive raises rival hostility; Expansionist gains territory faster; Covert keeps suspicion down; Defensive and Balanced are steady.	العدواني يرفع عداء المنافسين؛ التوسعي يكسب الأراضي أسرع؛ السري يبقي الشبهة منخفضة؛ الدفاعي والمتوازن ثابتان.
+Fictional resource systems: 'Product' converts supplies into income and unlocks Stash Run missions; 'Arms trade' stockpiles and sells Arms and unlocks Arms Pickup missions. Both raise heat.	أنظمة موارد خيالية: 'البضاعة' تحوّل الإمدادات إلى دخل وتفتح مهام نقل المخبأ؛ 'تجارة السلاح' تخزّن الأسلحة وتبيعها وتفتح مهام استلام الأسلحة. كلاهما يرفع الحرارة.
+Difficulty	الصعوبة
+Scales income, upkeep, rival aggression, recruitment and suspicion.	تؤثر على الدخل والنفقات وعدوانية المنافسين والتجنيد والشبهة.
+Starting progression	التقدّم الابتدائي
+Humble: level 1, little cash. Established: level 4 with a foothold. Powerful: level 8, rich, several territories.	متواضع: المستوى 1، نقد قليل. راسخ: المستوى 4 مع موطئ قدم. قوي: المستوى 8، ثري، عدة مناطق.
+Initial members	الأعضاء الأوائل
+Generated members who join immediately (in uniform). You can recruit more from the streets.	أعضاء يتم توليدهم وينضمون فورًا (بالزي). يمكنك تجنيد المزيد من الشوارع.
+Headquarters at my current location	المقر في موقعي الحالي
+Uses where you're standing now. You can move it any time from the Headquarters page.	يستخدم المكان الذي تقف فيه الآن. يمكنك نقله في أي وقت من صفحة المقر.
+CREATE FACTION	إنشاء الفصيل
+Founds the faction with these settings.	يؤسس الفصيل بهذه الإعدادات.
+Give your faction a name first.	أعطِ فصيلك اسمًا أولًا.
+Step out of the vehicle to set the headquarters here (or turn the HQ option off).	انزل من المركبة لتحديد المقر هنا (أو أوقف خيار المقر).
+{0} HQ	مقر {0}
+# --- GovernmentPages.cs
+Former faction: {0}	الفصيل السابق: {0}
+Proclaim	إعلان
+Below 35 the risk of coup plots rises.	تحت 35 يرتفع خطر مؤامرات الانقلاب.
+Stability	الاستقرار
+Legitimacy	الشرعية
+Forces readiness	جاهزية القوات
+Insurgency	التمرد
+Remaining factions resist the new order; high insurgency brings attacks on state territory.	الفصائل المتبقية تقاوم النظام الجديد؛ التمرد المرتفع يجلب هجمات على أراضي الدولة.
+Higher taxes fill the treasury but erode stability and support above ~15-20%.	الضرائب المرتفعة تملأ الخزانة لكنها تُضعف الاستقرار والدعم فوق ~15-20%.
+Tax rate	نسبة الضريبة
+Rename state	إعادة تسمية الدولة
+Rename government	إعادة تسمية الحكومة
+{0}\nEffectiveness: {1}	{0}\nالفعالية: {1}
+Manage forces (Members)	إدارة القوات (الأعضاء)
+State territory	أراضي الدولة
+Load '{0}' - the save made right before the final assault. Unsaved progress is lost.	تحميل '{0}' - الحفظ الذي تم قبل الهجوم الأخير مباشرة. التقدم غير المحفوظ سيُفقد.
+Restore backup?	استعادة النسخة الاحتياطية؟
+Restore pre-takeover backup	استعادة نسخة ما قبل السيطرة
+Form Your Government	شكّل حكومتك
+State Campaign	حملة الدولة
+No pre-takeover backup exists.	لا توجد نسخة احتياطية لما قبل السيطرة.
+Restore	استعادة
+Reverts to your faction as it was before the takeover.	يعيد فصيلك كما كان قبل السيطرة.
+Fictional, abstract campaign progression toward controlling San Andreas.	تقدّم حملة خيالي ومجرّد نحو السيطرة على سان أندرياس.
+{0} of the {1}	{0} {1}
+Appoint official	تعيين مسؤول
+Appoint to {0}	تعيين في {0}
+{0} | skill {1} | discipline {2} | loyalty {3}	{0} | المهارة {1} | الانضباط {2} | الولاء {3}
+| currently {0}	| حاليًا {0}
+Only members with loyalty 40+ can hold office.	فقط الأعضاء بولاء 40+ يمكنهم تولي منصب.
+Dismiss official	إقالة مسؤول
+Nobody to dismiss.	لا يوجد من تتم إقالته.
+Daily budget	الميزانية اليومية
+Paid from the treasury.	تُدفع من الخزانة.
+Campaign progress	تقدّم الحملة
+The family rises through influence, fronts and the subjugation of rival families.	العائلة تصعد عبر النفوذ والواجهات وإخضاع العائلات المنافسة.
+The organization has the most direct path to power.	المنظمة لديها أقصر طريق إلى السلطة.
+The streets can rise - but the path is long and hard.	الشوارع قد تنتفض - لكن الطريق طويل وصعب.
+Drops as you hold strategic sites, win campaign operations, grow public support and (mafia) influence. Recovers slowly on its own and after failed final assaults.	ينخفض عندما تمسك المواقع الاستراتيجية، وتنجح في عمليات الحملة، ويزداد الدعم الشعبي و(للمافيا) النفوذ. يتعافى ببطء من تلقاء نفسه وبعد فشل الهجمات الأخيرة.
+State force strength	قوة قوات الدولة
+LAUNCH: {0}	انطلاق: {0}
+The operation isn't ready yet.	العملية ليست جاهزة بعد.
+{0}\n\nA backup save ('{1}') is created before the assault.	{0}\n\nيتم إنشاء حفظ احتياطي ('{1}') قبل الهجوم.
+{0} Location: {1}.	{0} الموقع: {1}.
+Free State of San Andreas	دولة سان أندرياس الحرة
+National Command Council	مجلس القيادة الوطنية
+People's Council	مجلس الشعب
+The Directorate	المديرية
+The old government has fallen. Decide what comes next. Members become the state's forces and ranks become government ranks (your old ranks are archived).	سقطت الحكومة القديمة. قرّر ما سيأتي بعد ذلك. يصبح الأعضاء قوات الدولة وتصبح الرتب رتبًا حكومية (يتم أرشفة رتبك القديمة).
+State name	اسم الدولة
+Government name	اسم الحكومة
+Ruler title	لقب الحاكم
+Your title	لقبك
+Form of government	شكل الحكم
+Keep the faction flag as the state flag	الإبقاء على علم الفصيل كعلم للدولة
+Turn off to start from a fresh state flag you can design in the Flag Designer.	أوقفه لتبدأ بعلم دولة جديد يمكنك تصميمه في مصمم العلم.
+Establish the {0} of the {1} with you as {2}?	تأسيس {0} {1} وأنت {2}؟
+PROCLAIM THE {0}	إعلان {0}
+Proclaim the new state?	إعلان الدولة الجديدة؟
+# --- IdentityPages.cs
+Pattern, colors, emblem, custom image and the in-world flag model.	النمط والألوان والرمز والصورة المخصصة ونموذج العلم في العالم.
+Pattern	النمط
+Color 1	اللون 1
+Color 2	اللون 2
+Color 3	اللون 3
+Star, crown and card suits use game textures where available; anything missing falls back to the monogram.	النجمة والتاج ورموز أوراق اللعب تستخدم صور اللعبة إن توفرت؛ وما ينقص يُستبدل بالحروف.
+Faction Identity	هوية الفصيل
+Emblem color	لون الرمز
+Monogram (max 3)	الحروف (3 كحد أقصى)
+Monogram text	نص الحروف
+Custom flag image	صورة علم مخصصة
+None (use pattern)	لا شيء (استخدم النمط)
+Put PNG/JPG/DDS files in scripts\\OrganizationEmpire\\flags (about 512x320). Shown in all menus. In the 3D world GTA can only display its own flag models - see FLAG_ASSET_PIPELINE.md to replace a flag prop texture.	ضع ملفات PNG/JPG/DDS في scripts\OrganizationEmpire\flags (بحجم 512x320 تقريبًا). تظهر في كل القوائم. في العالم ثلاثي الأبعاد لا تستطيع GTA عرض إلا نماذج أعلامها الخاصة - راجع FLAG_ASSET_PIPELINE.md لاستبدال نسيج علم.
+Rescan flags folder	إعادة فحص مجلد الأعلام
+{0} image(s) found in {1}	تم العثور على {0} صورة في {1}
+Colors, tag, motto, uniforms and saved identity presets.	الألوان والرمز والشعار والأزياء وإعدادات الهوية المحفوظة.
+Flag pole model	نموذج سارية العلم
+The physical flag pole placed at your HQ. Models missing from your game version are skipped automatically.	سارية العلم الفعلية في مقرك. النماذج غير الموجودة في إصدار لعبتك يتم تخطيها تلقائيًا.
+Reset flag?	إعادة تعيين العلم؟
+Reset to type default	إعادة إلى الافتراضي للنوع
+Restore the default flag for your faction type?	استعادة العلم الافتراضي لنوع فصيلك؟
+LIVE PREVIEW	معاينة مباشرة
+Small:	صغير:
+World flag model: {0}	نموذج العلم في العالم: {0}
+Editing the identity of the {0}. The former faction identity is kept in presets.	تعديل هوية {0}. هوية الفصيل السابقة محفوظة في الإعدادات المسبقة.
+Map blips, interface accent and vehicle paint.	العلامات على الخريطة، لون الواجهة وطلاء المركبات.
+Tag (max 5)	الرمز (5 كحد أقصى)
+Uniform preset	زي جاهز
+Ped models used for hired members, drivers and reinforcements. GTA can't recolor random NPC clothing, so 'uniform' means a consistent model set.	نماذج الشخصيات المستخدمة للأعضاء المستأجرين والسائقين والتعزيزات. لا تستطيع GTA تلوين ملابس الشخصيات العشوائية، لذا 'الزي' يعني مجموعة نماذج موحّدة.
+Change appearance?	تغيير المظهر؟
+Deployed members will be re-spawned with the uniform model (names and stats are kept).	سيُعاد إظهار الأعضاء المنتشرين بنموذج الزي (مع الاحتفاظ بالأسماء والإحصاءات).
+Put every deployed member in uniform	ألبس كل الأعضاء المنتشرين الزي
+{0} member(s) changed into uniform.	تم تغيير زي {0} عضو.
+Preset name	اسم الإعداد
+Preset {0}	إعداد {0}
+Save current identity as preset	حفظ الهوية الحالية كإعداد مسبق
+Preset saved.	تم حفظ الإعداد.
+Apply '{0}'?	تطبيق '{0}'؟
+Load preset: {0}	تحميل إعداد: {0}
+Replace the current colors, flag and tag?	استبدال الألوان والعلم والرمز الحالية؟
+Hold Delete... use the entry below to remove.	لحذف إعداد استخدم الخيار أدناه.
+Delete a preset	حذف إعداد مسبق
+Delete preset	حذف الإعداد
+Preset deleted.	تم حذف الإعداد.
+Primary	أساسي
+Secondary	ثانوي
+# --- MemberPages.cs
+Demote	تخفيض الرتبة
+Earners add income, Scouts gather intel, Medics help recovery, Guards suit the HQ, Drivers can be assigned to vehicles.	المحصّلون يضيفون الدخل، الكشافة يجمعون المعلومات، المسعفون يساعدون على التعافي، الحراس مناسبون للمقر، والسائقون يمكن تعيينهم للمركبات.
+Better weapons cost Arms and unlock with faction level. Armory upgrades reduce the cost.	الأسلحة الأفضل تكلّف أسلحة وتُفتح مع مستوى الفصيل. ترقيات مستودع الأسلحة تقلل الكلفة.
+Deputy	نائب
+Headquarters guard	حارس المقر
+No headquarters.	لا يوجد مقر.
+Guards stand watch at the HQ and appear whenever you're nearby.	الحراس يقفون في المقر ويظهرون كلما كنت قريبًا.
+First name	الاسم الأول
+Rename	إعادة التسمية
+Nickname	اللقب
+Set nickname	تعيين لقب
+Clear AI memory	مسح ذاكرة الذكاء الاصطناعي
+Clear memory?	مسح الذاكرة؟
+Forget all conversations and memories of {0}?	نسيان كل المحادثات والذكريات الخاصة بـ{0}؟
+Memory cleared.	تم مسح الذاكرة.
+Memories: {0}	الذكريات: {0}
+{0} entries, {1} dialogue lines	{0} مدخلات، {1} سطر حوار
+Expel from the faction	طرد من الفصيل
+They leave the faction for good. Disloyal ex-members may talk.	يغادرون الفصيل نهائيًا. الأعضاء السابقون غير الموالين قد يتكلمون.
+Join you in the field. Up to 7 use the game's group AI (they follow, fight and ride with you); extras follow in formation.	ينضمون إليك في الميدان. حتى 7 يستخدمون ذكاء المجموعة في اللعبة (يتبعونك ويقاتلون ويركبون معك)؛ والبقية يتبعون في تشكيل.
+Follow and actively engage anyone fighting you.	اتبعني واشتبك بفعالية مع كل من يقاتلني.
+Hold position where they stand.	الثبات في مكانهم الحالي.
+Guard your current position and react to threats.	حراسة موقعك الحالي والرد على التهديدات.
+Defend the area around your current position aggressively.	الدفاع بشراسة عن المنطقة حول موقعك الحالي.
+Move to your map waypoint and hold there.	التحرك إلى نقطة الطريق على خريطتك والثبات هناك.
+Get into your current (or last) vehicle.	ركوب مركبتك الحالية (أو الأخيرة).
+Head back to the headquarters.	العودة إلى المقر.
+Go home / off duty (despawns when out of sight).	العودة إلى المنزل / خارج الخدمة (يختفون عند الابتعاد عن النظر).
+(Deputy)	(نائب)
+Female	أنثى
+Male	ذكر
+{0}, {1}, from {2}	{0}، {1}، من {2}
+Personality: {0}	الشخصية: {0}
+SKILL	المهارة
+Off-map	خارج الخريطة
+Status: {0}   Orders: {1}	الحالة: {0}   الأوامر: {1}
+Squad: {0}   Loadout: {1}	الفرقة: {0}   التجهيز: {1}
+Kills: {0}   Missions: {1}   Joined: day {2}	القتلى: {0}   المهام: {1}   انضم: اليوم {2}
+Relationships: {0}	العلاقات: {0}
+Look at an NPC and press {0} to approach them. Hire through your network below.	انظر إلى شخصية واضغط {0} للاقتراب منها. وظّف عبر شبكتك أدناه.
+Roster	القائمة
+Capacity grows with faction level and HQ Barracks, up to the MaxRosterSize setting.	السعة تزداد مع مستوى الفصيل وثكنات المقر، حتى قيمة MaxRosterSize.
+Hire a new recruit	توظيف مجنَّد جديد
+A fresh recruit in faction uniform arrives at your position. Cost scales with level.	يصل مجنَّد جديد بزي الفصيل إلى موقعك. الكلفة تزداد مع المستوى.
+Close recruitment to stop accepting new members.	أغلق التجنيد لتتوقف عن قبول أعضاء جدد.
+Recruitment open	التجنيد مفتوح
+Accept female recruits	قبول المجنَّدات من النساء
+Minimum willingness	الحد الأدنى للاستعداد
+Skip candidates who are less willing than this.	تخطَّ المرشحين الأقل استعدادًا من هذا.
+Default role for recruits	الدور الافتراضي للمجنَّدين
+Recruits wear the uniform	المجنَّدون يرتدون الزي
+Swap recruited NPCs to your uniform model (keeps their identity).	تبديل الشخصيات المجنّدة إلى نموذج الزي (مع الحفاظ على هويتهم).
+World recruitment enabled (global)	التجنيد في العالم مفعّل (عام)
+Allow recruiting law enforcement	السماح بتجنيد رجال الأمن
+Not recommended: may interfere with police behavior.	غير مُستحسن: قد يتعارض مع سلوك الشرطة.
+Look at a nearby person (outside the menu) to see their recruitment odds here.	انظر إلى شخص قريب (خارج القائمة) لترى فرص تجنيده هنا.
+{0} members (capacity {1}), {2} deployed	{0} عضو (السعة {1})، {2} منتشر
+day {0}	اليوم {0}
+Filter	تصفية
+Sort by	ترتيب حسب
+Nobody here. Recruit people from the street (look at someone and press {0}) or hire through your network on the Recruitment page.	لا أحد هنا. جنّد أشخاصًا من الشارع (انظر إلى شخص واضغط {0}) أو وظّف عبر شبكتك في صفحة التجنيد.
+In the field	في الميدان
+This member is no longer part of the faction.	هذا العضو لم يعد جزءًا من الفصيل.
+{0} is {1}.	{0} {1}.
+Attack my current target	هاجم هدفي الحالي
+Aim at an enemy within the last few seconds, then use this.	صوّب على عدو خلال الثواني الأخيرة، ثم استخدم هذا.
+Member must be with you.	يجب أن يكون العضو معك.
+Open a conversation. Works over the radio if they're far away.	افتح محادثة. تعمل عبر اللاسلكي إذا كانوا بعيدين.
+Talk (AI dialogue)	تحدّث (حوار الذكاء الاصطناعي)
+Rank changed to {0}.	تغيّرت الرتبة إلى {0}.
+Promotion raises loyalty and morale; demotion hurts them (especially ambitious and rebellious members).	الترقية ترفع الولاء والمعنويات؛ التخفيض يضرّهما (خاصة للأعضاء الطموحين والمتمردين).
+Promote	ترقية
+# --- OpsPages.cs
+Opposition: {0} (strength {1}, {2})	المعارضة: {0} (القوة {1}، {2})
+Opposition: state security forces	المعارضة: قوات أمن الدولة
+Location: {0} ({1})	الموقع: {0} ({1})
+Expires in {0} hours	تنتهي خلال {0} ساعات
+Respond within {0} hours or your garrison fights alone	استجب خلال {0} ساعات وإلا ستقاتل حاميتك وحدها
+REWARDS	المكافآت
+{0} XP	{0} خبرة
++Reputation	+السمعة
++{0} Influence	+{0} نفوذ
++{0} Supplies	+{0} إمدادات
++{0} Product	+{0} بضاعة
++{0} Arms	+{0} أسلحة
++{0} Intel	+{0} معلومات
++Public support	+الدعم الشعبي
++Territory control	+السيطرة على الأرض
+Weakens the state	يُضعف الدولة
+{0} of {1} territories controlled	{0} من {1} منطقة تحت السيطرة
+Show only my territories	عرض مناطقي فقط
+Map overlay	طبقة الخريطة
+You are in: {0}	أنت في: {0}
+(contested)	(متنازع عليها)
+{0} | you {1}%	{0} | أنت {1}%
+Set waypoint	تعيين نقطة طريق
+Waypoint set to {0}.	تم تعيين نقطة الطريق إلى {0}.
+A mission is already active.	هناك مهمة نشطة بالفعل.
+Mission: {0}	المهمة: {0}
+Plan an operation here	خطط لعملية هنا
+No suitable operation is available.	لا توجد عملية مناسبة متاحة.
+Strategic sites can only be attacked once your campaign allows it (Government tab).	لا يمكن مهاجمة المواقع الاستراتيجية إلا عندما تسمح حملتك بذلك (تبويب الحكومة).
+{0} added to the mission board.	تمت إضافة {0} إلى لوحة المهام.
+Adds an assault mission targeting this territory to the board.	يضيف مهمة هجوم تستهدف هذه المنطقة إلى اللوحة.
+Garrison a squad here	ضع فرقة حامية هنا
+Currently garrisoning {0}	تحرس حاليًا {0}
+Garrison {0}	حامية {0}
+{0} now garrisons {1}.	{0} تحرس {1} الآن.
+Garrisons raise control over time and defend against attacks.	الحاميات ترفع السيطرة مع الوقت وتدافع ضد الهجمات.
+Fortify ({0})	تحصين ({0})
+{0} fortified.	تم تحصين {0}.
+Fully fortified.	محصّنة بالكامل.
+Permanent defense bonus against attacks.	مكافأة دفاع دائمة ضد الهجمات.
+- CONTESTED	- متنازع عليها
+Type: {0}   Value: {1}/day	النوع: {0}   القيمة: {1}/يوم
+(map position approximate until visited)	(موقع الخريطة تقريبي حتى تزورها)
+GTA zones: {0}	مناطق GTA: {0}
+Unrest: {0}   Fortification: {1}	الاضطراب: {0}   التحصين: {1}
+Your control	سيطرتك
+UNDER ATTACK by {0} - {1}h left	تحت هجوم {0} - تبقّى {1} ساعة
+Control comes from missions, fighting rivals here, your presence with members, garrisons and the HQ. Above 50% (and the highest share) you own it and collect its income.	السيطرة تأتي من المهام، وقتال المنافسين هنا، ووجودك مع الأعضاء، والحاميات والمقر. فوق 50% (وبأعلى حصة) تملكها وتجمع دخلها.
+{0} / {1} in the garage, {2} out	{0} / {1} في المرآب، {2} في الخارج
+Adds the vehicle you're in to the faction garage with your colors and plate.	يضيف المركبة التي تركبها إلى مرآب الفصيل بألوانك ولوحتك.
+Register my current vehicle	تسجيل مركبتي الحالية
+Paint my current vehicle in faction colors	طلاء مركبتي الحالية بألوان الفصيل
+repairing {0}h	قيد الإصلاح {0} ساعة
+No faction vehicles yet. Get in a car and register it.	لا توجد مركبات للفصيل بعد. اركب سيارة وسجّلها.
+Offline (AI disabled)	بدون اتصال (الذكاء الاصطناعي معطّل)
+Provider: {0}	المزوّد: {0}
+| model {0}	| النموذج {0}
+Removed.	تمت الإزالة.
+Appears on the nearest road.	تظهر على أقرب طريق.
+The assigned driver (or a faction driver) brings it to you.	السائق المعيَّن (أو سائق من الفصيل) يحضرها إليك.
+Already in the garage.	موجودة في المرآب بالفعل.
+Return to garage	إعادة إلى المرآب
+Vehicle name	اسم المركبة
+License plate	لوحة الترخيص
+Plate (max 8)	اللوحة (8 كحد أقصى)
+Use faction colors	استخدام ألوان الفصيل
+Primary color	اللون الأساسي
+Secondary color	اللون الثانوي
+Assigned squad	الفرقة المعيَّنة
+Assign driver	تعيين سائق
+Driver	السائق
+{0} drives the {1}.	{0} يقود {1}.
+The driver brings the vehicle when you call it.	السائق يحضر المركبة عندما تطلبها.
+Apply identity now	تطبيق الهوية الآن
+Updated.	تم التحديث.
+The vehicle isn't out.	المركبة ليست في الخارج.
+Remove from garage	إزالة من المرآب
+Remove {0}?	إزالة {0}؟
+The vehicle is removed from the faction.	تتم إزالة المركبة من الفصيل.
+No headquarters yet.	لا يوجد مقر بعد.
+Establish HQ here?	تأسيس المقر هنا؟
+Establish headquarters here	تأسيس المقر هنا
+Move HQ here?	نقل المقر إلى هنا؟
+Move headquarters here	نقل المقر إلى هنا
+Moving costs a little morale; upgrades are kept.	النقل يكلّف قليلًا من المعنويات؛ الترقيات تبقى.
+Uses your exact current position. {0}	يستخدم موقعك الحالي بالضبط. {0}
+HQ name	اسم المقر
+Set waypoint to HQ	تعيين نقطة طريق إلى المقر
+Waypoint set.	تم تعيين نقطة الطريق.
+Call everyone to HQ	استدعاء الجميع إلى المقر
+Deployed members head back to the HQ.	الأعضاء المنتشرون يعودون إلى المقر.
+Add a guard ({0}/{1})	إضافة حارس ({0}/{1})
+Assign guards	تعيين الحراس
+Guards appear when you're near the HQ.	الحراس يظهرون عندما تكون قرب المقر.
+Enter: relieve this guard.	Enter: إعفاء هذا الحارس.
+Guard: {0}	الحارس: {0}
+{0} relieved.	تم إعفاء {0}.
+Guard behavior	سلوك الحراس
+Static posts, patrols around the HQ, or alert (engages threats in a wider radius).	نقاط ثابتة، دوريات حول المقر، أو حالة تأهب (يشتبكون مع التهديدات في نطاق أوسع).
+Flag pole at HQ	سارية العلم في المقر
+Places the in-game flag model chosen in the Flag Designer. Custom images are shown in menus only (see docs).	يضع نموذج العلم داخل اللعبة الذي اخترته في مصمم العلم. الصور المخصصة تظهر في القوائم فقط (راجع الدليل).
+Fully upgraded.	مُرقّى بالكامل.
+Type in the chat panel on the right. Enter sends, Esc closes, Ctrl+Enter confirms a detected order.	اكتب في لوحة المحادثة على الجانب. Enter يرسل، Esc يغلق، Ctrl+Enter يؤكد أمرًا مرصودًا.
+Faction Relations	علاقات الفصائل
+Diplomacy, wars and alliances with the other factions of San Andreas.	الدبلوماسية والحروب والتحالفات مع فصائل سان أندرياس الأخرى.
+Eliminated	تمت إزالته
+Close conversation	إغلاق المحادثة
+hostility {0} | strength {1}	العداء {0} | القوة {1}
+This faction has been eliminated.	تمت إزالة هذا الفصيل.
+This faction is disabled.	هذا الفصيل معطّل.
+Declare rivalry	إعلان التنافس
+Not possible in the current state.	غير ممكن في الوضع الحالي.
+Open hostility without full war.	عداء علني بدون حرب شاملة.
+Declare WAR	إعلان الحرب
+Declare war on {0}?	إعلان الحرب على {0}؟
+Their crews will attack your territory and their members become hostile on sight.	طواقمهم ستهاجم أراضيك وأعضاؤهم يصبحون معادين عند الرؤية.
+Already at war.	في حرب بالفعل.
+Propose ceasefire ({0})	اقتراح وقف إطلاق النار ({0})
+Better odds when you're winning (war score).	فرص أفضل عندما تكون منتصرًا (نقاط الحرب).
+Only during a war.	فقط أثناء الحرب.
+Propose peace ({0})	اقتراح السلام ({0})
+Not possible now.	غير ممكن الآن.
+Propose alliance ({0})	اقتراح تحالف ({0})
+Requires a peace treaty.	يتطلب معاهدة سلام.
+Requires peace, 35 reputation and 15 Influence. Allies help defend and send gifts.	يتطلب السلام و35 سمعة و15 نفوذ. الحلفاء يساعدون في الدفاع ويرسلون الهدايا.
+Pay tribute ({0})	دفع جزية ({0})
+Reduces hostility; may end a war.	يقلل العداء؛ وقد ينهي الحرب.
+Covert operation ({0} Intel)	عملية سرية ({0} معلومات)
+Weakens their strength. Raises suspicion and hostility.	تُضعف قوتهم. ترفع الشبهة والعداء.
+Hostility	العداء
+(radio chat is disabled in Settings > AI).	(المحادثة اللاسلكية معطّلة في الإعدادات > الذكاء الاصطناعي).
+Members nearby talk face to face; others answer over the radio{0}	الأعضاء القريبون يتحدثون وجهًا لوجه؛ والآخرون يجيبون عبر اللاسلكي{0}
+Strength	القوة
+Wealth	الثروة
+Holds: {0}	يمسك: {0}
+Territories held: {0}   Aggression: {1}%	المناطق المملوكة: {0}   العدوانية: {1}%
+Buy 10 supplies	شراء 10 إمدادات
+Buy 5 arms	شراء 5 أسلحة
+Raises heat a little.	يرفع الحرارة قليلًا.
+Move 10 product in bulk	نقل 10 من البضاعة دفعة واحدة
+No product.	لا توجد بضاعة.
+Quick cash at a discount; raises heat.	نقد سريع بخصم؛ يرفع الحرارة.
+| {0} exchanges	| {0} تبادلات
+Income {0}/day. Enter: upgrade for {1}.	الدخل {0}/يوم. Enter: ترقية مقابل {1}.
+Max level.	أعلى مستوى.
+Acquire a business	الاستحواذ على عمل تجاري
+Front businesses unlock at level 3.	الأعمال الواجهة تُفتح عند المستوى 3.
+Fronts are the family's backbone: steady income and Influence.	الواجهات هي العمود الفقري للعائلة: دخل ثابت ونفوذ.
+Buy {0}?	شراء {0}؟
+Price {0}, income {1}/day.	السعر {0}، الدخل {1}/يوم.
+Income {0}/day (mafia +25%). Heat +{1}/day.	الدخل {0}/يوم (المافيا +25%). الحرارة +{1}/يوم.
+Not enough cash.	لا يوجد نقد كافٍ.
+Clear all conversation history	مسح كل سجل المحادثات
+Clear history?	مسح السجل؟
+Dialogue history cleared.	تم مسح سجل الحوار.
+Remove all dialogue history (long-term memories are kept)?	حذف كل سجل الحوار (الذكريات طويلة الأمد تبقى)؟
+All memories cleared.	تم مسح كل الذكريات.
+Clear ALL memories	مسح كل الذكريات
+Clear all memories?	مسح كل الذكريات؟
+Every NPC forgets everything (conversations and memories).	كل الشخصيات تنسى كل شيء (المحادثات والذكريات).
+AI settings	إعدادات الذكاء الاصطناعي
+Active: {0}	النشطة: {0}
+{0} operation(s) available	{0} عملية متاحة
+Abort mission	إلغاء المهمة
+No operations available right now. The board refreshes every few hours.	لا توجد عمليات متاحة الآن. يتم تحديث اللوحة كل بضع ساعات.
+Start {0}?	بدء {0}؟
+[URGENT]	[عاجل]
+Another mission is active.	هناك مهمة أخرى نشطة.
+Find new opportunities.	ابحث عن فرص جديدة.
+Refresh the board	تحديث اللوحة
+{0} | {1} | difficulty {2}/5	{0} | {1} | الصعوبة {2}/5
+# --- PageUtil.cs
+No eligible members.	لا يوجد أعضاء مؤهلون.
+{0}, skill {1}, loyalty {2}, morale {3}	{0}، المهارة {1}، الولاء {2}، المعنويات {3}
+(current)	(الحالي)
+Custom hex code...	رمز لون مخصص...
+Type any #RRGGBB color.	اكتب أي لون #RRGGBB.
+{0} (hex)	{0} (رمز)
+Format: #RRGGBB, e.g. #B01E23	الصيغة: #RRGGBB، مثل #B01E23
+Not a valid #RRGGBB color.	ليس لونًا صالحًا بصيغة #RRGGBB.
+{0} Left/Right cycles the palette, Enter opens the full picker.	{0} يمين/يسار للتنقل بين الألوان، Enter يفتح المنتقي الكامل.
+English	الإنجليزية
+# --- PopupPages.cs
+{0} | {1} | loyalty {2}	{0} | {1} | الولاء {2}
+Close	إغلاق
+They're gone.	لقد ذهبوا.
+They're too far away now.	إنهم بعيدون جدًا الآن.
+Chat with them (AI dialogue). A good conversation can make them more willing to join.	تحدّث معهم (حوار الذكاء الاصطناعي). المحادثة الجيدة قد تجعلهم أكثر استعدادًا للانضمام.
+Disabled in settings.	معطّل في الإعدادات.
+Talk	تحدّث
+({0} chance)	(فرصة {0})
+Make an offer	قدّم عرضًا
+Pay them	ادفع لهم
+An offer they can't refuse	عرض لا يمكن رفضه
+Intimidate	ترهيب
+Appeal to the cause	الدعوة إلى القضية
+Invite them in	ادعُهم للانضمام
+Put them on	ضمّهم إلى الطاقم
+Recruit for the movement	جنّد للحركة
+Open member file	فتح ملف العضو
+Attack my target	هاجم هدفي
+Rank	الرتبة
+Role	الدور
+None	لا شيء
+Loadout	التجهيز
+{0} ({1} Arms)	{0} ({1} أسلحة)
+Expel	طرد
+Expel {0}?	طرد {0}؟
+They leave the faction for good.	يغادرون الفصيل نهائيًا.
+Field Orders	الأوامر الميدانية
+{0} member(s) deployed	{0} عضو منتشر
+An attack on your territory needs you.	هجوم على أراضيك يحتاجك.
+RESPOND: {0}	استجب: {0}
+Aim at an enemy first (the last target is remembered for a few seconds).	صوّب على عدو أولًا (يُحفظ الهدف الأخير لبضع ثوانٍ).
+Target locked.	تم تثبيت الهدف.
+Moves to your waypoint.	يتحرك إلى نقطة الطريق الخاصة بك.
+Set a map waypoint first.	عيّن نقطة طريق على الخريطة أولًا.
+Call everyone to me	استدعِ الجميع إليّ
+Formation	التشكيل
+Squad	الفرقة
+Order	الأمر
+Execute squad order	تنفيذ أمر الفرقة
+(out)	(في الخارج)
+(repairing)	(قيد الإصلاح)
+Vehicle	المركبة
+Being repaired.	قيد الإصلاح.
+Call with driver	اطلبها مع سائق
+Spawn here	أظهرها هنا
+Unavailable.	غير متاح.
+Abort	إلغاء
+Abort current mission	إلغاء المهمة الحالية
+Abort the mission? It counts as a failure.	إلغاء المهمة؟ تُحتسب فشلًا.
+Abort?	إلغاء؟
+Aborted by the player	ألغاها اللاعب
+Open faction menu	فتح قائمة الفصيل
+Gone	ذهب
+# --- StructurePages.cs
+Leader: {0}\nMembers: {1}	القائد: {0}\nالأعضاء: {1}
+Create squad	إنشاء فرقة
+Maximum reached.	تم بلوغ الحد الأقصى.
+Squad name	اسم الفرقة
+Auto-assign squadless members	تعيين الأعضاء بلا فرقة تلقائيًا
+{0} member(s) assigned.	تم تعيين {0} عضو.
+This squad no longer exists.	هذه الفرقة لم تعد موجودة.
+Choose an order, then execute it for the whole squad.	اختر أمرًا ثم نفّذه للفرقة كلها.
+Execute order	تنفيذ الأمر
+Summon squad to me	استدعِ الفرقة إليّ
+Applied to everyone following you in the field.	يُطبَّق على كل من يتبعك في الميدان.
+Choose leader	اختيار القائد
+Leader	القائد
+Leaders need the 'Lead squad' rank permission.	القادة يحتاجون صلاحية الرتبة 'قيادة الفرقة'.
+Assigned vehicle	المركبة المعيَّنة
+'Get in the vehicle' orders use this vehicle when it's spawned.	أوامر 'اركب المركبة' تستخدم هذه المركبة عند ظهورها.
+Ranks & Hierarchy	الرتب والتسلسل
+Garrison territory	حراسة منطقة
+A garrison raises influence over time and defends the territory against attacks while you're elsewhere.	الحامية ترفع النفوذ مع الوقت وتدافع عن المنطقة ضد الهجمات أثناء غيابك.
+Guards headquarters	تحرس المقر
+Posts this squad's members as HQ guards (up to the HQ guard limit).	يضع أعضاء هذه الفرقة كحراس للمقر (حتى حد حراس المقر).
+Fully customizable. The top rank is always yours.	قابلة للتخصيص بالكامل. الرتبة العليا لك دائمًا.
+Remove from {0}?	إزالة من {0}؟
+[Leader]	[القائد]
+Enter: remove from squad	Enter: إزالة من الفرقة
+Add member	إضافة عضو
+Add to {0}	إضافة إلى {0}
+Squad is full.	الفرقة ممتلئة.
+Disband squad	حل الفرقة
+Members stay in the faction without a squad.	يبقى الأعضاء في الفصيل بدون فرقة.
+{0} member(s), {1}/day	{0} عضو، {1}/يوم
+Create rank	إنشاء رتبة
+New rank name	اسم الرتبة الجديدة
+Maximum of {0} ranks.	الحد الأقصى {0} رتب.
+New ranks are inserted just above the lowest rank; reorder them afterwards.	تُضاف الرتب الجديدة فوق أدنى رتبة مباشرة؛ أعد ترتيبها بعد ذلك.
+Replace ranks?	استبدال الرتب؟
+Replace the current ranks with the default template? Members are mapped to similar positions.	استبدال الرتب الحالية بالقالب الافتراضي؟ يتم نقل الأعضاء إلى مواقع مشابهة.
+Reset to {0} template	إعادة إلى قالب {0}
+Rank: {0}	الرتبة: {0}
+This rank no longer exists.	هذه الرتبة لم تعد موجودة.
+Rank name	اسم الرتبة
+This is your rank. You can rename it; it cannot be moved, deleted or assigned.	هذه رتبتك. يمكنك إعادة تسميتها؛ لا يمكن نقلها أو حذفها أو تعيينها.
+Already directly below your rank.	تحت رتبتك مباشرة بالفعل.
+Move up	تحريك لأعلى
+Already the lowest rank.	أدنى رتبة بالفعل.
+Move down	تحريك لأسفل
+Daily salary	الراتب اليومي
+Paid per member per day. Unpaid members lose morale and loyalty.	يُدفع لكل عضو يوميًا. الأعضاء غير المدفوعين يفقدون المعنويات والولاء.
+Assign a member to this rank	تعيين عضو في هذه الرتبة
+Assign to {0}	تعيين في {0}
+Delete rank	حذف الرتبة
+Delete {0}?	حذف {0}؟
+Members holding it move to the next rank.	حاملوها ينتقلون إلى الرتبة التالية.
+Required to be appointed squad leader.	مطلوبة للتعيين كقائد فرقة.
+Marks leadership ranks (used in AI dialogue context and government appointments).	تميّز رتب القيادة (تُستخدم في سياق حوار الذكاء الاصطناعي والتعيينات الحكومية).
+Allowed to draw heavier loadouts.	مسموح لها بحمل تجهيزات أثقل.
+Can speak for the faction in sit-downs (flavor for dialogue).	يمكنها التحدث باسم الفصيل في الجلسات (نكهة للحوار).
+Rank permission flag.	علامة صلاحية الرتبة.
+Independent groups with leaders, roles, vehicles, formations and orders.	مجموعات مستقلة بقادة وأدوار ومركبات وتشكيلات وأوامر.
+# --- SystemPages.cs
+How fast the strategic simulation runs (income, loyalty, rivals...).	سرعة تشغيل المحاكاة الاستراتيجية (الدخل، الولاء، المنافسون...).
+Seconds per faction hour	ثوانٍ لكل ساعة فصيل
+Income multiplier	مضاعف الدخل
+Progression multiplier	مضاعف التقدّم
+Off: fallen members are always wounded instead of killed.	معطّل: الأعضاء الساقطون يُصابون دائمًا بدلًا من أن يُقتلوا.
+Permanent death	الموت الدائم
+Recruitment from the world	التجنيد من العالم
+Retry after refusal (seconds)	إعادة المحاولة بعد الرفض (ثوانٍ)
+Max roster size	الحد الأقصى لحجم القائمة
+Suspicion / heat system	نظام الشبهة / الحرارة
+Rival attacks on your territory	هجمات المنافسين على أراضيك
+Random faction events	أحداث عشوائية للفصيل
+Spawning & Performance	الظهور والأداء
+Max deployed members	الحد الأقصى للأعضاء المنتشرين
+Members physically present at once. Lower this if you see stutter.	الأعضاء الحاضرون فعليًا في وقت واحد. قلّل هذا إذا لاحظت تقطعًا.
+Max mission hostiles	الحد الأقصى للمعادين في المهام
+Max faction vehicles out	الحد الأقصى لمركبات الفصيل في الخارج
+Max HQ guards	الحد الأقصى لحراس المقر
+Max rival patrol NPCs	الحد الأقصى لدوريات المنافسين
+Global entity cap	الحد الأعلى العام للكيانات
+Safety net for everything this mod spawns.	شبكة أمان لكل ما يُظهره هذا المود.
+World & Factions	العالم والفصائل
+Removing a faction affects this mod's simulation; GTA's own files are never modified.	إزالة فصيل تؤثر على محاكاة هذا المود؛ ملفات GTA نفسها لا تُعدَّل أبدًا.
+Territory map overlay	طبقة خريطة الأراضي
+Member blips	علامات الأعضاء على الخريطة
+HQ flag pole	سارية علم المقر
+0 = passive rivals (no expansion or attacks).	0 = منافسون سلبيون (لا توسع ولا هجمات).
+Rival activity	نشاط المنافسين
+Rival hostility growth	نمو عداء المنافسين
+Rival patrols in enemy territory	دوريات المنافسين في أراضي العدو
+Suppress GTA gang NPCs of removed factions	منع ظهور شخصيات عصابات GTA للفصائل المُزالة
+Runtime only and fully reversible: stops GTA from spawning that gang's ambient models while the faction is removed. Nothing is deleted from game files.	أثناء التشغيل فقط وقابل للتراجع بالكامل: يمنع GTA من إظهار نماذج تلك العصابة أثناء إزالة الفصيل. لا يُحذف شيء من ملفات اللعبة.
+Create or load a faction to customize the factions in your world.	أنشئ فصيلًا أو حمّله لتخصيص الفصائل في عالمك.
+(eliminated)	(تمت إزالته)
+Every rival faction is removed from this world's simulation (reversible with 'Restore default factions').	تتم إزالة كل فصيل منافس من محاكاة هذا العالم (قابل للتراجع عبر 'استعادة الفصائل الافتراضية').
+Remove ALL rival factions	إزالة كل الفصائل المنافسة
+Remove all rivals?	إزالة كل المنافسين؟
+All rival factions removed.	تمت إزالة كل الفصائل المنافسة.
+Restore default factions	استعادة الفصائل الافتراضية
+Default factions restored.	تمت استعادة الفصائل الافتراضية.
+Re-enables every default faction and revives eliminated ones in weakened form.	يعيد تفعيل كل فصيل افتراضي ويعيد الفصائل المُزالة بشكل أضعف.
+AI Dialogue Settings	إعدادات حوار الذكاء الاصطناعي
+Key source: {0} | {1}	مصدر المفتاح: {0} | {1}
+no key	لا يوجد مفتاح
+OK ({0} ms{1}): {2}	تم ({0} مللي ثانية{1}): {2}
+AI test: {0}	اختبار الذكاء الاصطناعي: {0}
+AI dialogue enabled	حوار الذكاء الاصطناعي مفعّل
+Disabled = the built-in offline dialogue engine is always used.	معطّل = يُستخدم محرك الحوار المدمج بدون اتصال دائمًا.
+Apply a provider preset...	تطبيق إعداد مزوّد جاهز...
+Endpoint: {0}	نقطة الاتصال: {0}
+Provider preset	إعداد مزوّد جاهز
+Enter a model name.	أدخل اسم النموذج.
+Set your API key next.	عيّن مفتاح API بعد ذلك.
+{0} selected.{1}	تم اختيار {0}.{1}
+OpenAI, Anthropic, Gemini, OpenRouter, Groq, Ollama, LM Studio... Endpoint and model stay editable.	OpenAI، Anthropic، Gemini، OpenRouter، Groq، Ollama، LM Studio... نقطة الاتصال والنموذج يبقيان قابلين للتعديل.
+Provider type	نوع المزوّد
+(default)	(افتراضي)
+Base URL of the API.	العنوان الأساسي لواجهة API.
+Endpoint URL	عنوان نقطة الاتصال
+(not set)	(غير معيَّن)
+Exactly as your provider names it.	تمامًا كما يسمّيه مزوّدك.
+Model	النموذج
+Model name	اسم النموذج
+API key	مفتاح API
+API key saved.	تم حفظ مفتاح API.
+Set API key (plain text)	تعيين مفتاح API (نص عادي)
+Keys stored on your PC can't be fully secured. Prefer an environment variable or encryption, and use a key with a spending limit.	المفاتيح المخزنة على جهازك لا يمكن تأمينها بالكامل. فضّل متغير بيئة أو التشفير، واستخدم مفتاحًا بحد إنفاق.
+not set	غير معيَّن
+Environment variable name	اسم متغير البيئة
+Key read from environment.	تمت قراءة المفتاح من البيئة.
+Use environment variable...	استخدام متغير بيئة...
+Variable is empty or not set.	المتغير فارغ أو غير معيَّن.
+Encrypt stored key (Windows DPAPI)	تشفير المفتاح المخزن (Windows DPAPI)
+Set a key first.	عيّن مفتاحًا أولًا.
+Encryption is only available on Windows.	التشفير متاح على Windows فقط.
+General & interface	عام والواجهة
+Key encrypted for your Windows user account.	تم تشفير المفتاح لحساب مستخدم Windows الخاص بك.
+Encryption failed: {0}	فشل التشفير: {0}
+Key is already protected or from the environment.	المفتاح محمي بالفعل أو مأخوذ من البيئة.
+Remove API key	إزالة مفتاح API
+Test connection	اختبار الاتصال
+Testing...	جارٍ الاختبار...
+Hotkeys	مفاتيح الاختصار
+Sends a tiny request in the background (the game never freezes).	يرسل طلبًا صغيرًا في الخلفية (اللعبة لا تتجمد أبدًا).
+Test in progress...	الاختبار جارٍ...
+Not sent to Anthropic.	لا يُرسل إلى Anthropic.
+Temperature (-1 = don't send)	درجة الحرارة (-1 = لا ترسل)
+Max response tokens	الحد الأقصى لرموز الرد
+Max reply words	الحد الأقصى لكلمات الرد
+Timeout (seconds)	المهلة (ثوانٍ)
+Min seconds between requests	أقل عدد ثوانٍ بين الطلبات
+Gameplay	أسلوب اللعب
+Anthropic effort	جهد Anthropic
+Low is fastest and cheapest for short dialogue.	المنخفض هو الأسرع والأرخص للحوار القصير.
+Anthropic server-side fallbacks	البدائل من جهة خادم Anthropic
+If the model declines, the API retries on a fallback model.	إذا رفض النموذج، تعيد الواجهة المحاولة على نموذج بديل.
+Authorization	التفويض
+'api-key' for Azure OpenAI; 'Authorization' (Bearer) for everything else.	'api-key' لـ Azure OpenAI؛ 'Authorization' (Bearer) لكل ما عداه.
+Auth header	ترويسة المصادقة
+Dialogue turns sent per request	أدوار الحوار المرسلة لكل طلب
+More turns = more context and more tokens.	أدوار أكثر = سياق أكبر ورموز أكثر.
+Long-term memories per NPC	الذكريات طويلة الأمد لكل شخصية
+Memories included per request	الذكريات المرفقة بكل طلب
+Persistent memory (saved with the game)	ذاكرة دائمة (تُحفظ مع اللعبة)
+Radio conversations with distant members	محادثات لاسلكية مع الأعضاء البعيدين
+Conversations with non-members	محادثات مع غير الأعضاء
+Never recruits automatically; only improves the next roll.	لا يجنّد تلقائيًا أبدًا؛ يحسّن فقط المحاولة التالية.
+Persuasion improves recruitment odds	الإقناع يحسّن فرص التجنيد
+Random	عشوائي
+Default personality (new NPCs)	الشخصية الافتراضية (للشخصيات الجديدة)
+Cleared.	تم المسح.
+All NPCs forget everything.	كل الشخصيات تنسى كل شيء.
+Clear all NPC memories	مسح ذاكرة كل الشخصيات
+Clear everything?	مسح كل شيء؟
+AI dialogue	حوار الذكاء الاصطناعي
+Log level	مستوى السجل
+Debug overlay	طبقة التصحيح
+Debug	التصحيح
+(none)	(لا شيء)
+Current slot: {0}	الخانة الحالية: {0}
+Save to '{0}'	حفظ في '{0}'
+Save to a new slot...	حفظ في خانة جديدة...
+Slot name	اسم الخانة
+Reload settings from file	إعادة تحميل الإعدادات من الملف
+Overwrite	استبدال
+Overwrite?	استبدال؟
+Slot '{0}' exists. Overwrite it?	الخانة '{0}' موجودة. استبدالها؟
+Create a faction first to save.	أنشئ فصيلًا أولًا لتتمكن من الحفظ.
+Note: missions in progress are not saved; their entities are rebuilt only for completed results.	ملاحظة: المهام الجارية لا تُحفظ؛ يتم حفظ النتائج المكتملة فقط.
+No saves yet.	لا توجد ملفات حفظ بعد.
+[backup]	[احتياطي]
+(gov)	(حكومة)
+{0} | day {1}	{0} | اليوم {1}
+{0}, {1} members. Saved {2}	{0}، {1} عضو. حُفظ {2}
+GTA's own save system is separate: this mod stores its data in its own files and never touches your story saves.	نظام الحفظ في GTA منفصل: هذا المود يخزن بياناته في ملفاته الخاصة ولا يلمس ملفات حفظ القصة أبدًا.
+Slot: {0}	الخانة: {0}
+Load	تحميل
+Load '{0}'?	تحميل '{0}'؟
+Unsaved progress in the current session will be lost.	التقدم غير المحفوظ في هذه الجلسة سيُفقد.
+Overwrite with current game	استبدال باللعبة الحالية
+Replace '{0}' with the current game?	استبدال '{0}' باللعبة الحالية؟
+Delete	حذف
+Delete '{0}'?	حذف '{0}'؟
+This can't be undone.	لا يمكن التراجع عن هذا.
+({0} warning(s), see log)	({0} تحذير، راجع السجل)
+Settings reloaded{0}.	تمت إعادة تحميل الإعدادات{0}.
+Mirror the menu so the sidebar is on the right.	اعكس القائمة لتصبح القائمة الجانبية على اليمين.
+Right-to-left layout	تخطيط من اليمين إلى اليسار
+Arabic text size	حجم النص العربي
+None keeps the world running (default). Slow motion or a full pause are optional.	"لا شيء" يُبقي العالم يعمل (افتراضي). التصوير البطيء أو الإيقاف الكامل اختياريان.
+While the menu is open	أثناء فتح القائمة
+Block movement while menu is open	منع الحركة أثناء فتح القائمة
+Mouse support	دعم الفأرة
+Interface scale	حجم الواجهة
+Show hints	عرض التلميحات
+Inline typing follows your keyboard layout. Use the native keyboard if typing misbehaves.	الكتابة المباشرة تتبع تخطيط لوحة مفاتيحك. استخدم لوحة اللعبة إذا واجهت مشاكل في الكتابة.
+Text input	إدخال النص
+Autosave every (minutes, 0 = off)	حفظ تلقائي كل (دقائق، 0 = إيقاف)
+Load last save on startup	تحميل آخر حفظ عند البدء
+Stand down during story missions	الانسحاب أثناء مهام القصة
+Temporarily removes deployed members while a story mission runs so they can't break it.	يزيل الأعضاء المنتشرين مؤقتًا أثناء مهمة القصة حتى لا يفسدوها.
+Open / close menu	فتح / إغلاق القائمة
+Quick squad orders	أوامر الفرقة السريعة
+Interact with NPC	التفاعل مع الشخصية
+Talk to NPC	التحدث مع الشخصية
+Menu navigation keys are fixed: arrows, Enter, Backspace, Tab, PgUp/PgDn, Esc. Mouse is optional.	مفاتيح التنقل في القائمة ثابتة: الأسهم، Enter، Backspace، Tab، PgUp/PgDn، Esc. الفأرة اختيارية.
+{0} is already used by another hotkey.	{0} مستخدم بالفعل لاختصار آخر.
+Enter, then press the new key.	Enter، ثم اضغط المفتاح الجديد.
+# --- UiManager.cs
+Confirm	تأكيد
+Cancel	إلغاء
+Mission complete - {0}	اكتملت المهمة - {0}
+Mission failed - {0}	فشلت المهمة - {0}
+Good work.	عمل جيد.
+The operation failed.	فشلت العملية.
+A conversation with the boss lifted my spirits.	محادثة مع الزعيم رفعت معنوياتي.
+Something the boss said rubbed me the wrong way.	شيء قاله الزعيم أزعجني.
+{0} seems open to joining (+{1}% recruitment chance).	يبدو أن {0} منفتح على الانضمام (+{1}% فرصة تجنيد).
+Not available.	غير متاح.
+No faction yet - found one to begin.	لا يوجد فصيل بعد - أسّس واحدًا لتبدأ.
+MEMBERS	الأعضاء
+TERRITORY	الأراضي
+REP	السمعة
+LEVEL	المستوى
+DAY {0}  {1}:00	اليوم {0}  {1}:00
+Mouse: click, wheel, right-click back	الفأرة: نقر، عجلة، نقر يمين للرجوع
+Up/Down: select   Left/Right: change   Enter: confirm   Backspace: back   Tab / PgUp / PgDn: tabs   {0} / Esc: close{1}	أعلى/أسفل: اختيار   يمين/يسار: تغيير   Enter: تأكيد   Backspace: رجوع   Tab / PgUp / PgDn: التبويبات   {0} / Esc: إغلاق{1}
+Organization Empire {0}	إمبراطورية المنظمة {0}
+New Faction	فصيل جديد
+OFF	إيقاف
+ON	تشغيل
+Save / Load	حفظ / تحميل
+Settings	الإعدادات
+Enter: select   Left/Right: change   Backspace: back   Esc: close	Enter: اختيار   يمين/يسار: تغيير   Backspace: رجوع   Esc: إغلاق
+Dashboard	لوحة القيادة
+Faction	الفصيل
+State	الدولة
+Recruitment	التجنيد
+Ranks	الرتب
+Squads	الفرق
+Units	الوحدات
+Missions	المهام
+Vehicles	المركبات
+Headquarters	المقر
+Relations	العلاقات
+Resources	الموارد
+Identity	الهوية
+Flag Designer	مصمم العلم
+Government	الحكومة
+# --- CommandSystem.cs
+No usable vehicle nearby.	لا توجد مركبة صالحة قريبة.
+The vehicle is too far away.	المركبة بعيدة جدًا.
+{0} is not here.	{0} ليس هنا.
+{0} will join you when there is room (deployment limit).	سينضم {0} إليك عندما يتوفر مكان (حد النشر).
+The {0} ordered: {1}.	أمر {0}: {1}.
+Nobody could follow that order.	لم يستطع أحد تنفيذ ذلك الأمر.
+, {0} could not ({1})	، ولم يستطع {0} ({1})
+{0}: {1} member(s){2}.	{0}: {1} عضو{2}.
+No squad selected.	لم يتم اختيار فرقة.
+No members with you.	لا يوجد أعضاء معك.
+{0} guard(s) posted at {1}.	تم نشر {0} حارس عند {1}.
+Follow me	اتبعني
+Stay here	ابقَ هنا
+Guard this spot	احرس هذه النقطة
+Move to waypoint	تحرك إلى نقطة الطريق
+Return to HQ	العودة إلى المقر
+Get in the vehicle	اركب المركبة
+Get out of the vehicle	انزل من المركبة
+Defend me	دافع عني
+Defend this location	دافع عن هذا الموقع
+Stand down (go home)	انسحب (اذهب إلى المنزل)
+No member selected.	لم يتم اختيار عضو.
+That order is not allowed.	ذلك الأمر غير مسموح.
+You have no headquarters yet.	ليس لديك مقر بعد.
+No valid target. Aim at an enemy first.	لا يوجد هدف صالح. صوّب على عدو أولًا.
+You can't order an attack on your own people.	لا يمكنك الأمر بمهاجمة رجالك.
+That target belongs to an ally.	ذلك الهدف ينتمي إلى حليف.
+Target is too far away.	الهدف بعيد جدًا.
+# --- GtaUtil.cs
+the boss	الزعيم
+# --- HeadquartersController.cs
+No faction.	لا يوجد فصيل.
+Get out of the vehicle to set up the headquarters.	انزل من المركبة لإنشاء المقر.
+Headquarters established in	تم تأسيس المقر في
+Headquarters moved to	تم نقل المقر إلى
+Headquarters set.	تم تعيين المقر.
+# --- InteractionController.cs
+Joined {0} after the {1} approached me ({2}).	انضممت إلى {0} بعد أن اقترب مني {1} ({2}).
+Local	محلي
+Can be recruited	يمكن تجنيده
+[{0}] Interact   [{1}] Talk	[{0}] تفاعل   [{1}] تحدّث
+Create your faction first (menu).	أنشئ فصيلك أولًا (القائمة).
+Can't recruit that.	لا يمكن تجنيد ذلك.
+That's you.	هذا أنت.
+Not during a story mission.	ليس أثناء مهمة قصة.
+Busy.	مشغول.
+This person is involved in something important.	هذا الشخص متورط في أمر مهم.
+This person can't be recruited.	لا يمكن تجنيد هذا الشخص.
+They're driving.	إنهم يقودون.
+They're not in a talking mood.	ليسوا في مزاج للحديث.
+They already turned you down.	لقد رفضوك من قبل.
+# --- MemberManager.cs
+Your people are lying low while you handle personal business.	رجالك يختفون عن الأنظار بينما تتولى شؤونك الشخصية.
+# --- RivalController.cs
+{0} crew spotted nearby!	طاقم {0} شوهد قريبًا!
+# --- TerritoryController.cs
+Your territory - control {0}%	منطقتك - السيطرة {0}%
+Unclaimed	غير مُطالب بها
+{0} territory	منطقة {0}
+Territory: {0} ({1})	المنطقة: {0} ({1})
+# --- VehicleController.cs
+Faction: {0}	الفصيل: {0}
+Get in a vehicle first.	اركب مركبة أولًا.
+Painted in faction colors.	تم الطلاء بألوان الفصيل.
+No vehicle selected.	لم يتم اختيار مركبة.
+{0} is being repaired ({1}h).	{0} قيد الإصلاح ({1} ساعة).
+{0} is already out.	{0} في الخارج بالفعل.
+Too many faction vehicles out ({0}).	مركبات الفصيل في الخارج كثيرة جدًا ({0}).
+Could not spawn {0} (model unavailable or spawn limit reached).	تعذّر إظهار {0} (النموذج غير متاح أو تم بلوغ حد الظهور).
+{0} is ready.	{0} جاهزة.
+{0} is being repaired.	{0} قيد الإصلاح.
+Too many faction vehicles out.	مركبات الفصيل في الخارج كثيرة جدًا.
+No road found nearby.	لم يُعثر على طريق قريب.
+Could not spawn {0}.	تعذّر إظهار {0}.
+{0} spawned nearby, but no driver was available.	ظهرت {0} بالقرب، لكن لم يتوفر سائق.
+{0} has no driver.	{0} بلا سائق.
+{0} is on the way.	{0} في الطريق.
+{0} is already in the garage.	{0} في المرآب بالفعل.
+Get out of the vehicle first.	انزل من المركبة أولًا.
+{0} returned to the garage.	عادت {0} إلى المرآب.
+{0} removed from the garage.	تمت إزالة {0} من المرآب.
+{0} was destroyed. It will be repaired in about 12 hours.	تم تدمير {0}. سيتم إصلاحها خلال 12 ساعة تقريبًا.
+{0} has arrived.	وصلت {0}.
+Get in the vehicle you want to register.	اركب المركبة التي تريد تسجيلها.
+Garage full ({0}). Upgrade the HQ Garage or level up.	المرآب ممتلئ ({0}). طوّر مرآب المقر أو ارفع المستوى.
+That vehicle is wrecked.	تلك المركبة محطمة.
+{0} added to the faction garage.	تمت إضافة {0} إلى مرآب الفصيل.
+# --- enum DialogueTopic
+Greeting	تحية
+Report	تقرير
+Opinion	رأي
+Orders	أوامر
+Mission	مهمة
+Join	انضمام
+Threat	تهديد
+Praise	مدح
+Farewell	وداع
+Money	المال
+Rivals	المنافسون
+Generic	عام
+# --- enum AiProviderKind
+Open AICompatible	متوافق مع OpenAI
+# --- enum MenuPauseMode
+Slow Motion	تصوير بطيء
+Pause	إيقاف مؤقت
+# --- enum TextInputMode
+Inline	مباشر
+Native Keyboard	لوحة مفاتيح اللعبة
+# --- enum UiLanguage
+Arabic	العربية
+# --- enum BusinessKind
+Restaurant	مطعم
+Casino	كازينو
+Bodega	بقالة
+# --- enum Difficulty
+Easy	سهل
+Normal	عادي
+Hard	صعب
+Brutal	وحشي
+# --- enum EmblemType
+Monogram	حروف
+Star	نجمة
+Crown	تاج
+Spade	بستوني
+Club	سباتي
+Diamond	ديناري
+Heart	كبة
+Shield	درع
+Custom Image	صورة مخصصة
+# --- enum EventSeverity
+Info	معلومة
+Good	جيد
+Warning	تحذير
+Bad	سيئ
+Critical	حرج
+# --- enum FactionBehavior
+Balanced	متوازن
+Aggressive	عدواني
+Defensive	دفاعي
+Expansionist	توسّعي
+Covert	سرّي
+# --- enum FactionPersonality
+Ruthless	قاسٍ
+Honorable	شريف
+Pragmatic	براغماتي
+Flamboyant	استعراضي
+Secretive	كتوم
+Zealous	متعصب
+# --- enum FactionType
+Mafia	مافيا
+Militia	ميليشيا
+# --- enum FlagPattern
+Solid	لون واحد
+Horizontal Bicolor	لونان أفقيان
+Horizontal Tricolor	ثلاثة ألوان أفقية
+Vertical Bicolor	لونان عموديان
+Vertical Tricolor	ثلاثة ألوان عمودية
+Nordic Cross	صليب شمالي
+Center Cross	صليب في الوسط
+Bordered	بإطار
+Quartered	مربعات
+Canton	ركن علوي
+Five Stripes	خمسة خطوط
+Center Band	شريط أوسط
+# --- enum FormationType
+Default	افتراضي
+Loose	متفرّق
+Circle	دائرة
+Line Abreast	صف متجاور
+Single File	رتل واحد
+Surround	تطويق
+# --- enum GangActivities
+Narcotics	البضاعة
+Both	كلاهما
+# --- enum GovernmentType
+Republic	جمهورية
+Council	مجلس
+Junta	مجلس عسكري
+Directorate	مديرية
+People	شعبية
+# --- enum GuardBehavior
+Static	ثابت
+Patrol	دورية
+Alert	تأهب
+# --- enum HqUpgrade
+Comms	الاتصالات
+# --- enum LoadoutType
+Unarmed	بدون سلاح
+Melee	سلاح أبيض
+Sidearm	مسدس
+SMG	رشاش صغير
+Shotgun	بندقية خرطوش
+Rifle	بندقية هجومية
+Marksman	قناص
+Heavy	ثقيل
+# --- enum MemberRole
+Enforcer	منفّذ
+Bodyguard	حارس شخصي
+Scout	كشّاف
+Medic	مسعف
+Recruiter	مجنِّد
+Earner	محصّل
+Specialist	متخصص
+Guard	حارس
+# --- enum MemberStatus
+Active	نشط
+Wounded	مصاب
+Dead	ميت
+Deserted	منشق
+Jailed	مسجون
+# --- enum MemoryKind
+Interaction	تفاعل
+Promotion	ترقية
+Demotion	تخفيض
+Relationship	علاقة
+Background	خلفية
+Dialogue	حوار
+# --- enum MissionCategory
+Defense	دفاع
+Conflict	نزاع
+Resource	موارد
+Escort	مرافقة
+Special	خاصة
+# --- enum MissionTemplate
+Assault	هجوم
+Delivery	توصيل
+Collect	تحصيل
+Recon	استطلاع
+Assassination	اغتيال
+Final Campaign	الحملة الأخيرة
+# --- enum OrderType
+Follow	اتبع
+Stay	ابقَ
+Move To	تحرك إلى
+Enter Vehicle	اركب المركبة
+Exit Vehicle	انزل من المركبة
+Attack	هاجم
+Defend Player	دافع عن اللاعب
+Defend Location	دافع عن الموقع
+Standby	استعداد
+# --- enum Personality
+Loyal	مخلص
+Calm	هادئ
+Nervous	متوتر
+Ambitious	طموح
+Intelligent	ذكي
+Sarcastic	ساخر
+Cowardly	جبان
+Disciplined	منضبط
+Rebellious	متمرد
+# --- enum RankPermission
+Command Squads	قيادة الفرق
+Lead Squad	قيادة الفرقة
+Negotiate	التفاوض
+Manage Resources	إدارة الموارد
+Leadership	القيادة
+All	الكل
+# --- enum RelationStatus
+Neutral	محايد
+Rivalry	تنافس
+War	حرب
+Ceasefire	وقف إطلاق نار
+Peace	سلام
+Alliance	تحالف
+# --- enum RivalKind
+Cartel	كارتل
+Biker	دراجون
+Paramilitary	شبه عسكري
+# --- enum SquadRole
+Security	الأمن
+# --- enum StartingProgression
+Humble	متواضع
+Established	راسخ
+Powerful	قوي
+# --- enum TerritoryType
+Residential	سكني
+Commercial	تجاري
+Industrial	صناعي
+Strategic	استراتيجي
+Rural	ريفي
+# --- enum RecruitApproach
+Persuade	إقناع
+Pay	دفع
+Ideology	أيديولوجيا
+# --- enum TargetRule
+Rival Territory	أرض منافسة
+Own Territory	أرضنا
+Neutral Or Rival	محايدة أو منافسة
+Any Rival	أي منافس
+# --- CorePages.cs:109
+Tier	الفئة
+Tiers: {0}. Every 4 levels unlocks the next tier.	الفئات: {0}. كل 4 مستويات تفتح الفئة التالية.
+{0} (level {1})	{0} (المستوى {1})
+# --- CorePages.cs:110
+Difficulty is fixed per faction.	الصعوبة ثابتة لكل فصيل.
+# --- CorePages.cs:123
+{0} (you)	{0} (أنت)
+# --- CorePages.cs:128
+Statistics	الإحصاءات
+# --- CorePages.cs:129
+Founded	تاريخ التأسيس
+# --- CorePages.cs:130
+Members recruited	أعضاء تم تجنيدهم
+# --- CorePages.cs:131
+Territories captured / lost	مناطق تمت السيطرة عليها / خسارتها
+# --- CorePages.cs:132
+Missions completed / failed	مهام مكتملة / فاشلة
+# --- CorePages.cs:133
+Raids survived	مداهمات تم تجاوزها
+# --- CorePages.cs:134
+Total earned / spent	إجمالي المكسب / الإنفاق
+# --- CorePages.cs:136
+Danger zone	منطقة الخطر
+# --- CorePages.cs:21
+Quick actions	إجراءات سريعة
+# --- CorePages.cs:47
+Recent events	الأحداث الأخيرة
+# --- CreationWizardPage.cs:41
+1. Type	1. النوع
+# --- CreationWizardPage.cs:44
+2. Name & description	2. الاسم والوصف
+# --- CreationWizardPage.cs:53
+3. Identity	3. الهوية
+# --- CreationWizardPage.cs:64
+4. Personality & behavior	4. الشخصية والسلوك
+# --- CreationWizardPage.cs:76
+5. Start	5. البداية
+# --- CreationWizardPage.cs:85
+6. Create	6. الإنشاء
+# --- GovernmentPages.cs:136
+Funded by taxes on controlled territory; pays ministry budgets. Shortfalls are covered from faction cash.	تُموَّل من الضرائب على الأراضي المسيطر عليها؛ وتدفع ميزانيات الوزارات. يُغطّى العجز من نقد الفصيل.
+# --- GovernmentPages.cs:139
+Ruler	الحاكم
+# --- GovernmentPages.cs:145
+Ministries & officials	الوزارات والمسؤولون
+# --- GovernmentPages.cs:155
+Policies ({0}/4)	السياسات ({0}/4)
+# --- GovernmentPages.cs:162
+Forces	القوات
+# --- GovernmentPages.cs:163
+State forces (members)	قوات الدولة (الأعضاء)
+{0} active	{0} نشط
+# --- GovernmentPages.cs:167
+Archive	الأرشيف
+# --- GovernmentPages.cs:189
+Official	المسؤول
+# --- GovernmentPages.cs:190
+Effectiveness	الفعالية
+Skill, discipline and loyalty of the official, plus personality fit (intelligent for treasury/intel, disciplined for defense/interior).	مهارة المسؤول وانضباطه وولاؤه، إضافة إلى ملاءمة شخصيته (الذكي للخزانة والاستخبارات، والمنضبط للدفاع والداخلية).
+# --- GovernmentPages.cs:46
+- COMPLETE	- مكتملة
+- CURRENT	- الحالية
+# --- GovernmentPages.cs:66
+Failed attempts	محاولات فاشلة
+# --- GovernmentPages.cs:90
+The new state	الدولة الجديدة
+# --- IdentityPages.cs:130
+In-world flag	العلم في العالم
+# --- IdentityPages.cs:22
+Colors	الألوان
+# --- IdentityPages.cs:25
+Names	الأسماء
+# --- IdentityPages.cs:50
+Presets	الإعدادات المسبقة
+# --- MemberPages.cs:122
+Personal	شخصي
+# --- MemberPages.cs:205
+Recruited so far	تم تجنيدهم حتى الآن
+# --- MemberPages.cs:207
+Hire through your network	التوظيف عبر شبكتك
+# --- MemberPages.cs:221
+Policy	السياسة
+# --- MemberPages.cs:232
+Current target	الهدف الحالي
+# --- MemberPages.cs:239
+Candidate	المرشح
+# --- MemberPages.cs:240
+Personality	الشخصية
+# --- MemberPages.cs:241
+Status	الحالة
+# --- MemberPages.cs:249
+Recent recruits	مجنَّدون حديثًا
+# --- MemberPages.cs:50
+{0} shown	{0} معروض
+# --- MemberPages.cs:89
+Assignment	المهمة الموكلة
+# --- OpsPages.cs:168
+Actions	الإجراءات
+# --- OpsPages.cs:201
+Garrison	الحامية
+# --- OpsPages.cs:267
+Deploy	النشر
+# --- OpsPages.cs:271
+Configuration	الإعداد
+# --- OpsPages.cs:305
+Location	الموقع
+# --- OpsPages.cs:311
+Personnel	الأفراد
+# --- OpsPages.cs:328
+Upgrades	الترقيات
+# --- OpsPages.cs:33
+Conversation open	محادثة مفتوحة
+# --- OpsPages.cs:360
+Re-enable them in Settings > World & Factions.	أعد تفعيلها من الإعدادات > العالم والفصائل.
+Removed from simulation	أُزيلت من المحاكاة
+{0} faction(s)	{0} فصيل
+# --- OpsPages.cs:374
+Diplomacy	الدبلوماسية
+# --- OpsPages.cs:38
+Talk to a member	تحدّث مع عضو
+# --- OpsPages.cs:392
+Positive means you're winning.	القيمة الموجبة تعني أنك منتصر.
+War score	نقاط الحرب
+# --- OpsPages.cs:432
+Stockpiles	المخزون
+# --- OpsPages.cs:434
+Generic materials. Consumed by product making and aid missions. Rural/industrial territories produce them.	مواد عامة. تُستهلك في صنع البضاعة ومهام المساعدات. تنتجها المناطق الريفية والصناعية.
+# --- OpsPages.cs:435
+Weapons stock for loadouts and the arms trade.	مخزون الأسلحة للتجهيزات وتجارة السلاح.
+# --- OpsPages.cs:436
+Political/social leverage. Central to the mafia's path to power; used for alliances.	نفوذ سياسي واجتماعي. محوري في طريق المافيا إلى السلطة؛ ويُستخدم للتحالفات.
+# --- OpsPages.cs:437
+From scouts, comms upgrades and recon. Spent on covert operations.	من الكشافة وترقيات الاتصالات والاستطلاع. تُنفق على العمليات السرية.
+# --- OpsPages.cs:438
+Fictional product made from supplies by the 'Product' activity and sold through your corners.	بضاعة خيالية تُصنع من الإمدادات عبر نشاط 'البضاعة' وتُباع في زواياك.
+# --- OpsPages.cs:440
+Trade	التجارة
+# --- OpsPages.cs:457
+Hourly ledger (net {0})	سجل الساعة (الصافي {0})
+# --- OpsPages.cs:460
+Projected per day	المتوقع يوميًا
+# --- OpsPages.cs:48
+Memory	الذاكرة
+# --- OpsPages.cs:66
+Active mission	المهمة النشطة
+# --- OpsPages.cs:88
+History	السجل
+# --- OpsPages.cs:90
+Day {0} - {1}	اليوم {0} - {1}
+Failed	فشلت
+Success	نجحت
+# --- PopupPages.cs:122
+Profile	الملف الشخصي
+# --- PopupPages.cs:123
+. Rapport bonus +{0}%.	. مكافأة الألفة +{0}%.
+{0}\nFrom {1}. Willingness: {2}. Fighting skill: {3}	{0}\nمن {1}. الاستعداد: {2}. مهارة القتال: {3}
+# --- PopupPages.cs:169
+Assign	تعيين
+# --- PopupPages.cs:32
+Everyone near me	الجميع بالقرب مني
+# --- PopupPages.cs:74
+More	المزيد
+# --- StructurePages.cs:159
+Members ({0}/{1})	الأعضاء ({0}/{1})
+# --- StructurePages.cs:21
+Hierarchy (highest first)	التسلسل (الأعلى أولًا)
+# --- StructurePages.cs:28
+Manage	الإدارة
+# --- StructurePages.cs:54
+Permissions	الصلاحيات
+# --- StructurePages.cs:61
+Members ({0})	الأعضاء ({0})
+# --- SystemPages.cs:137
+Currently spawned by the mod	ما يظهره المود حاليًا
+# --- SystemPages.cs:149
+Display	العرض
+# --- SystemPages.cs:153
+Rival behavior	سلوك المنافسين
+# --- SystemPages.cs:160
+Factions in this world	الفصائل في هذا العالم
+# --- SystemPages.cs:202
+Provider	المزوّد
+# --- SystemPages.cs:244
+Generation	التوليد
+# --- SystemPages.cs:289
+Log file	ملف السجل
+# --- SystemPages.cs:290
+Data folder	مجلد البيانات
+# --- SystemPages.cs:291
+Entities spawned	الكيانات الظاهرة
+# --- SystemPages.cs:292
+Tick time	زمن الدورة
+{0} ms	{0} مللي ثانية
+# --- SystemPages.cs:293
+Recent log	السجل الأخير
+# --- SystemPages.cs:305
+Save	الحفظ
+# --- SystemPages.cs:319
+Slots	الخانات
+# --- SystemPages.cs:331
+Folder	المجلد
+# --- SystemPages.cs:346
+Day	اليوم
+# --- SystemPages.cs:347
+Saved	وقت الحفظ
+# --- SystemPages.cs:55
+Language	اللغة
+# --- SystemPages.cs:62
+Interface	الواجهة
+# --- composed at runtime
+{0} has recovered and is back on duty.	تعافى {0} وعاد إلى الخدمة.
+{0} was released and is back on duty.	أُطلق سراح {0} وعاد إلى الخدمة.
+{0} appointed as a deputy.	تم تعيين {0} نائبًا.
+{0} is no longer a deputy.	لم يعد {0} نائبًا.
+{0} promoted to {1}.	تمت ترقية {0} إلى {1}.
+{0} demoted to {1}.	تم تخفيض {0} إلى {1}.
+{0} moved up.	تم نقل {0} للأعلى.
+{0} moved down.	تم نقل {0} للأسفل.
+Headquarters moved to {0}.	تم نقل المقر إلى {0}.
+Headquarters established in {0}.	تم تأسيس المقر في {0}.
+Deliver aid to {0} locations.	أوصل المساعدات إلى {0} مواقع.
+Collect from {0} locations.	اجمع من {0} مواقع.
+Approach: {0}	الأسلوب: {0}
+blocked	محظور
+{0}  (contested)	{0}  (متنازع عليها)
+{0} - CONTESTED	{0} - متنازع عليها
+GTA zones: {0}  (map position approximate until visited)	مناطق GTA: {0}  (موقع الخريطة تقريبي حتى تزورها)
+{0} (eliminated)	{0} (تمت إزالته)
+{0} selected.	تم اختيار {0}.
+{0} (gov)	{0} (حكومة)
+damaged	تالف
+Stage {0}: {1} - COMPLETE	المرحلة {0}: {1} - مكتملة
+Stage {0}: {1} - CURRENT	المرحلة {0}: {1} - الحالية
+Stage {0}: {1}	المرحلة {0}: {1}
+{0}  (radio)	{0}  (لاسلكي)
+{0}  (current)	{0}  (الحالي)
+{0} (Deputy)	{0} (نائب)
+current	الحالي
+Members nearby talk face to face; others answer over the radio.	الأعضاء القريبون يتحدثون وجهًا لوجه؛ والآخرون يجيبون عبر اللاسلكي.
+Members nearby talk face to face; others answer over the radio (radio chat is disabled in Settings > AI).	الأعضاء القريبون يتحدثون وجهًا لوجه؛ والآخرون يجيبون عبر اللاسلكي (المحادثة اللاسلكية معطّلة في الإعدادات > الذكاء الاصطناعي).
+Uses your exact current position.	يستخدم موقعك الحالي بالضبط.
+{0} is typing	{0} يكتب
+Language set to English.	Language set to English.
 {0} members	{0} عضو
+{0} territories	{0} مناطق
+cash {0}	النقد {0}
+reputation {0}	السمعة {0}
+average morale {0}	متوسط المعنويات {0}
+at war with {0}	في حرب مع {0}
+not at war	لسنا في حرب
+allied with {0}	متحالفون مع {0}
+long-term campaign stage: {0}	مرحلة الحملة طويلة المدى: {0}
+the faction now governs the {0}	الفصيل يحكم الآن {0}
+following the boss	أتبع الزعيم
+holding position	أثبت في موقعي
+guarding a position	أحرس موقعًا
+moving to a location	أتحرك إلى موقع
+returning to headquarters	أعود إلى المقر
+getting in a vehicle	أركب مركبة
+engaging a target	أشتبك مع هدف
+protecting the boss	أحمي الزعيم
+defending a location	أدافع عن موقع
+off duty / on standby	خارج الخدمة / في الاحتياط
+no specific orders	بلا أوامر محددة
+close friend	صديق مقرّب
+likes	يحبه
+dislikes	لا يحبه
+hates	يكرهه
+very high	مرتفع جدًا
+high	مرتفع
+moderate	متوسط
+low	منخفض
+very low	منخفض جدًا
+Day {0}: {1}	اليوم {0}: {1}
+done	تم
+Territories held: {0}	المناطق المملوكة: {0}
+Opposition: {0}	المعارضة: {0}
+Ceasefire odds {0}	فرص وقف إطلاق النار {0}
+Peace odds {0}	فرص السلام {0}
+Pay them ({0})	ادفع لهم ({0})
+Make an offer ({0})	قدّم عرضًا ({0})
+D{0} {1}h  {2}	اليوم {0} {1}:00  {2}

@@ -65,6 +65,39 @@ File.WriteAllText(Path.Combine(dataDir, "flags", "README.txt"),
     "See docs/FLAG_ASSET_PIPELINE.md for how to replace a flag prop texture with OpenIV.\r\n");
 File.WriteAllText(Path.Combine(dataDir, "saves", "README.txt"), "Organization Empire save slots (JSON). Each slot keeps a .bak copy of the previous save.\r\n");
 Console.WriteLine("wrote sample flags");
+
+// Arabic text support: glyph textures + metrics (GTA V's fonts have no Arabic letters) and a reference
+// copy of the built-in Arabic strings that users can copy to text\ar.txt to override entries.
+string assets = args.Length > 1 ? args[1] : Path.Combine("assets", "text");
+string textDir = Path.Combine(dataDir, "text");
+if (!File.Exists(Path.Combine(assets, "glyphs.txt")) || !Directory.Exists(Path.Combine(assets, "glyphs")))
+{
+    Console.Error.WriteLine("Arabic glyph assets not found in " + Path.GetFullPath(assets) + " (run from the repository root).");
+    return 3;
+}
+Directory.CreateDirectory(Path.Combine(textDir, "glyphs"));
+File.Copy(Path.Combine(assets, "glyphs.txt"), Path.Combine(textDir, "glyphs.txt"), true);
+File.Copy(Path.Combine(assets, "OFL-Cairo.txt"), Path.Combine(textDir, "OFL-Cairo.txt"), true);
+int glyphCount = 0;
+foreach (string f in Directory.GetFiles(Path.Combine(assets, "glyphs"), "*.png"))
+{
+    File.Copy(f, Path.Combine(textDir, "glyphs", Path.GetFileName(f)), true);
+    glyphCount++;
+}
+string builtIn = OrganizationEmpire.Core.Localization.Loc.ReadBuiltIn();
+if (builtIn == null) { Console.Error.WriteLine("Embedded Arabic table missing."); return 3; }
+File.WriteAllText(Path.Combine(textDir, "ar.builtin.txt"), builtIn, new UTF8Encoding(false));
+File.WriteAllText(Path.Combine(textDir, "README.txt"),
+    "Arabic interface support\r\n" +
+    "========================\r\n" +
+    "glyphs\\ and glyphs.txt   Arabic/Latin letter textures drawn by the mod (GTA V's fonts have no Arabic).\r\n" +
+    "                          Do not delete them if you use the Arabic interface.\r\n" +
+    "ar.builtin.txt            The Arabic strings built into the mod (reference copy, not loaded).\r\n" +
+    "ar.txt (optional)         Create it to fix or add translations: one line per entry,\r\n" +
+    "                          English text, a TAB, then the Arabic text. Loaded after the built-in table.\r\n" +
+    "cache\\                   Created at runtime (extra copies of busy letters). Safe to delete.\r\n" +
+    "Font: Cairo, SIL Open Font License 1.1 (OFL-Cairo.txt).\r\n", new UTF8Encoding(false));
+Console.WriteLine("wrote Arabic text assets (" + glyphCount + " glyph textures)");
 return 0;
 
 static uint Rgb(int r, int g, int b) => (uint)((r << 24) | (g << 16) | (b << 8) | 0xFF);

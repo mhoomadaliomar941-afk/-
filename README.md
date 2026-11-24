@@ -22,6 +22,7 @@ AI-generated dialogue - and eventually take over the (fictional) state of San An
 | **Missions** | 28 missions across 10 objective types (assault, defend, delivery, collection, escort, recruitment, recon, sit-down meetings with choices, assassination, final campaign) with real objectives, failure conditions and rewards. |
 | **Identity & flags** | Colors, tag, motto, uniforms, identity presets, a flag designer with 12 patterns and emblems, custom PNG flags (shown in menus), and a physical flag pole at your HQ. |
 | **Government** | After the takeover: name the state and government, choose your title and flag, appoint ministers from your members, set taxes and policies, manage stability, legitimacy, insurgency and forces. A pre-takeover backup lets you revert. |
+| **English / العربية** | Full Arabic interface (2,000+ translated strings) with right-to-left layout, Arabic AI replies and Arabic chat commands. GTA's fonts have no Arabic, so the mod draws Arabic itself from bundled glyph textures. Switch any time in Settings. See [docs/ARABIC.md](docs/ARABIC.md). |
 | **Robust** | Zero third-party dependencies (one DLL), atomic saves with backup recovery, every subsystem error-isolated, entity caps, API keys redacted from logs (optional DPAPI encryption). |
 
 ## Quick start
@@ -43,6 +44,7 @@ All keys are configurable (Settings > Hotkeys or `scripts/OrganizationEmpire/Org
 ## Documentation
 
 - [Installation](docs/INSTALL.md)
+- [الواجهة العربية / Arabic interface](docs/ARABIC.md)
 - [Gameplay guide](docs/GAMEPLAY_GUIDE.md)
 - [AI dialogue setup & privacy](docs/AI_SETUP.md)
 - [Flags & asset pipeline](docs/FLAG_ASSET_PIPELINE.md)
@@ -73,7 +75,7 @@ docs/                         user and developer documentation
 
 ## Status
 
-The core simulation, persistence and AI layers are covered by 98 automated tests. The in-game layer compiles cleanly
+The core simulation, persistence and AI layers are covered by 148 automated tests. The in-game layer compiles cleanly
 against the ScriptHookVDotNet 3.6.0 API, but it could not be exercised inside a running GTA V session during
 development, so treat this release as a first version: please report anything that misbehaves (attach
 `scripts/OrganizationEmpire/logs/OrganizationEmpire.log`). See [docs/LIMITATIONS.md](docs/LIMITATIONS.md).

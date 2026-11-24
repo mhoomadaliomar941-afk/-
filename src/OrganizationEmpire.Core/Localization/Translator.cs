@@ -33,7 +33,8 @@ namespace OrganizationEmpire.Core.Localization
         }
 
         private static readonly Regex PlaceholderRx = new Regex(@"\{(\d+)\}", RegexOptions.CultureInvariant);
-        private static readonly string[] Separators = { "\n", "  |  ", " | ", " · ", " • ", " — ", " -- ", " - ", "   ", " / ", ", " };
+        private static readonly string[] StrongSeparators = { "\n", "  |  ", " | ", " · ", " • " };
+        private static readonly string[] WeakSeparators = { " — ", " -- ", " - ", "; ", "   ", " / ", ", " };
 
         private readonly Dictionary<string, string> _exact = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         private readonly List<Template> _templates = new List<Template>();
@@ -48,6 +49,16 @@ namespace OrganizationEmpire.Core.Localization
 
         /// <summary>Called for each target-language character class test; Arabic by default.</summary>
         public Func<string, bool> IsAlreadyTranslated = ArabicText.ContainsArabic;
+
+        /// <summary>Language-specific cleanup applied to every translated result (e.g. grammar around inserted names).</summary>
+        public Func<string, string> PostProcess = ArabicFixups;
+
+        /// <summary>The vocative particle drops the article: "يا الزعيم" (from "يا {0}" + "الزعيم") becomes "يا زعيم".</summary>
+        public static string ArabicFixups(string s)
+        {
+            if (s == null || s.IndexOf("يا ال", StringComparison.Ordinal) < 0) return s;
+            return Regex.Replace(s, "(^|\\s)يا ال(?=\\p{L})", "$1يا ");
+        }
 
         public bool Has(string english) => english != null && (_exact.ContainsKey(english) || _templateByKey.ContainsKey(english));
 
@@ -119,7 +130,7 @@ namespace OrganizationEmpire.Core.Localization
                 if (lit.Trim().Length > anchor.Length) anchor = lit.Trim();
                 holeCount++;
                 holeOrder.Add(int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture));
-                sb.Append("(?<h").Append(holeOrder[holeOrder.Count - 1]).Append(">.+?)");
+                sb.Append("(?<h").Append(holeOrder[holeOrder.Count - 1]).Append(">.*?)");
                 pos = m.Index + m.Length;
                 lastWasHole = true;
             }
@@ -164,7 +175,8 @@ namespace OrganizationEmpire.Core.Localization
                 _templates.Sort((a, b) => a.LiteralLength != b.LiteralLength ? b.LiteralLength.CompareTo(a.LiteralLength) : a.Order.CompareTo(b.Order));
                 _sorted = true;
             }
-            string result = TranslateCore(s, 0) ?? s;
+            string result = TranslateCore(s, 0);
+            result = result == null ? s : (PostProcess != null ? PostProcess(result) : result);
             if (_cache.Count >= MaxCache) _cache.Clear();
             _cache[s] = result;
             return result;
@@ -173,10 +185,62 @@ namespace OrganizationEmpire.Core.Localization
         /// <summary>Returns the translation, or null when nothing applied.</summary>
         private string TranslateCore(string s, int depth)
         {
-            if (s.Length == 0 || depth > 4) return null;
+            if (s.Length == 0 || depth > 5) return null;
             if (IsAlreadyTranslated != null && IsAlreadyTranslated(s)) return null;
             if (!HasLetter(s)) return null;
 
+            string direct = TranslateDirect(s, depth);
+            if (direct != null) return direct;
+
+            string split = TranslateSplit(s, StrongSeparators, depth);
+            if (split != null) return split;
+
+            // Several sentences (dialogue lines are often assembled from parts). Prefer the longest run of
+            // sentences that is a known phrase, so "Understood. Executing on your confirmation." stays whole.
+            var sentences = SplitSentences(s);
+            if (sentences != null)
+            {
+                var outp = new List<string>(sentences.Count);
+                bool changed = false;
+                for (int i = 0; i < sentences.Count;)
+                {
+                    string got = null;
+                    int took = 1;
+                    for (int j = sentences.Count; j > i + 1 && got == null; j--)
+                    {
+                        got = TranslateDirect(string.Join(" ", sentences.GetRange(i, j - i)), depth + 1);
+                        if (got != null) took = j - i;
+                    }
+                    if (got == null) got = TranslateCore(sentences[i], depth + 1);
+                    if (got != null) changed = true;
+                    outp.Add(got ?? sentences[i]);
+                    i += took;
+                }
+                if (changed) return string.Join(" ", outp);
+            }
+
+            split = TranslateSplit(s, WeakSeparators, depth);
+            if (split != null) return split;
+
+            // "Label: value" where only the label is a known phrase.
+            int colon = s.IndexOf(": ", StringComparison.Ordinal);
+            if (colon > 0)
+            {
+                string label = s.Substring(0, colon);
+                string rest = s.Substring(colon + 2);
+                string tl = TranslateCore(label.Trim(), depth + 1);
+                if (tl != null)
+                {
+                    string tr = TranslateCore(rest, depth + 1) ?? rest;
+                    return tl + ": " + tr;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>Exact entry, humanized enum name, peeled decoration or a template - no splitting.</summary>
+        private string TranslateDirect(string s, int depth)
+        {
             if (_exact.TryGetValue(s, out string exact)) return exact;
             // Raw enum names ("DefendPlayer") are looked up in their humanized form ("Defend Player").
             if (s.Length > 3 && s.IndexOf(' ') < 0 && char.IsUpper(s[0]))
@@ -184,6 +248,9 @@ namespace OrganizationEmpire.Core.Localization
                 string human = Core.Util.TextUtil.Humanize(s);
                 if (human.Length != s.Length && _exact.TryGetValue(human, out string viaHuman)) return viaHuman;
             }
+
+            string viaTemplate = TranslateTemplates(s, depth);
+            if (viaTemplate != null) return viaTemplate;
 
             // Peel whitespace and decoration, translate the core, put the decoration back.
             int a = 0, b = s.Length;
@@ -198,14 +265,14 @@ namespace OrganizationEmpire.Core.Localization
                     if (t != null) return s.Substring(0, a) + t + ConvertPunctuation(s.Substring(b));
                 }
             }
+            return null;
+        }
 
-            string viaTemplate = TranslateTemplates(s, depth);
-            if (viaTemplate != null) return viaTemplate;
-
-            foreach (string sep in Separators)
+        private string TranslateSplit(string s, string[] separators, int depth)
+        {
+            foreach (string sep in separators)
             {
-                int idx = s.IndexOf(sep, StringComparison.Ordinal);
-                if (idx < 0) continue;
+                if (s.IndexOf(sep, StringComparison.Ordinal) < 0) continue;
                 string[] parts = s.Split(new[] { sep }, StringSplitOptions.None);
                 bool changed = false;
                 for (int i = 0; i < parts.Length; i++)
@@ -213,34 +280,7 @@ namespace OrganizationEmpire.Core.Localization
                     string p = parts[i].Length == 0 ? null : TranslateCore(parts[i], depth + 1);
                     if (p != null) { parts[i] = p; changed = true; }
                 }
-                if (changed) return string.Join(sep == ", " ? "، " : sep, parts);
-            }
-
-            // Several sentences: translate each one (dialogue lines are often assembled from parts).
-            var sentences = SplitSentences(s);
-            if (sentences != null)
-            {
-                bool changed = false;
-                for (int i = 0; i < sentences.Count; i++)
-                {
-                    string p = TranslateCore(sentences[i], depth + 1);
-                    if (p != null) { sentences[i] = p; changed = true; }
-                }
-                if (changed) return string.Join(" ", sentences);
-            }
-
-            // "Label: value" where only the label is a known phrase.
-            int colon = s.IndexOf(": ", StringComparison.Ordinal);
-            if (colon > 0)
-            {
-                string label = s.Substring(0, colon);
-                string rest = s.Substring(colon + 2);
-                string tl = _exact.TryGetValue(label.Trim(), out string el) ? el : null;
-                if (tl != null)
-                {
-                    string tr = TranslateCore(rest, depth + 1) ?? rest;
-                    return tl + ": " + tr;
-                }
+                if (changed) return string.Join(sep == ", " ? "، " : sep == "; " ? "؛ " : sep, parts);
             }
             return null;
         }
@@ -251,7 +291,7 @@ namespace OrganizationEmpire.Core.Localization
             {
                 if (t.Anchor.Length > 0 && s.IndexOf(t.Anchor, StringComparison.OrdinalIgnoreCase) < 0) continue;
                 var m = t.Pattern.Match(s);
-                if (!m.Success) continue;
+                if (!m.Success || CapturedOnlyPunctuation(m)) continue;
                 return PlaceholderRx.Replace(t.Value, hole =>
                 {
                     var g = m.Groups["h" + hole.Groups[1].Value];
@@ -262,6 +302,20 @@ namespace OrganizationEmpire.Core.Localization
                 });
             }
             return null;
+        }
+
+        /// <summary>A placeholder stands for a name or a number; a hole that caught only "*" or "-" means the wrong template.</summary>
+        private static bool CapturedOnlyPunctuation(Match m)
+        {
+            for (int i = 1; i < m.Groups.Count; i++)
+            {
+                string v = m.Groups[i].Value;
+                if (v.Length == 0) continue;
+                bool any = false;
+                foreach (char c in v) if (char.IsLetterOrDigit(c)) { any = true; break; }
+                if (!any) return true;
+            }
+            return false;
         }
 
         private static List<string> SplitSentences(string s)
@@ -284,7 +338,7 @@ namespace OrganizationEmpire.Core.Localization
             return list.Count > 1 ? list : null;
         }
 
-        private static bool IsLeadDecoration(char c) => c == '*' || c == '>' || c == '-' || c == '•' || c == '·' || c == '+';
+        private static bool IsLeadDecoration(char c) => c == '<' || c == '*' || c == '>' || c == '-' || c == '•' || c == '·' || c == '+';
 
         private static bool IsTrailPunctuation(char c) => c == ':' || c == '.' || c == '!' || c == '?' || c == ',' || c == ';' || c == '…';
 

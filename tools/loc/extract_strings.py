@@ -16,11 +16,11 @@ INCLUDE_DIRS = ['src/OrganizationEmpire', 'src/OrganizationEmpire.Core']
 EXCLUDE_PARTS = ['/obj/', '/bin/', '/Json/', '/Localization/', 'AI/Providers.cs', 'AI/Prompting.cs',
                  'Config/IniFile.cs', 'Util/Log.cs', 'Native/KeyText.cs', 'Util/NameGenerator.cs']
 SKIP_CALLS = {'Call', 'GetHashKey', 'Combine', 'Exists', 'ReadAllText', 'WriteAllText', 'Equals', 'StartsWith', 'EndsWith',
-              'Contains', 'IndexOf', 'Replace', 'Split', 'Parse', 'TryParse', 'Info', 'Warn', 'Error', 'Debug', 'Trace',
+              'Contains', 'IndexOf', 'Replace', 'Split', 'Parse', 'TryParse', 'Trace',
               'ConfigComment', 'HasTexture', 'Sprite', 'RequestModel', 'Request', 'Model', 'GetFiles', 'Sound', 'PlaySound',
               'TryGetValue', 'ContainsKey', 'Remove', 'Trim', 'TrimEnd', 'TrimStart', 'ToString', 'Matches', 'Match', 'IsMatch',
               'Regex', 'GetManifestResourceStream', 'Join', 'Animation', 'PlayAnimation', 'TaskPlayAnim', 'Scenario',
-              'StartScenario', 'LoadAnimDict', 'WeaponHash', 'Hash', 'Value', 'Header', 'Has', 'Get', 'SetProperty', 'Prop',
+              'StartScenario', 'LoadAnimDict', 'WeaponHash', 'Hash', 'Value', 'Has', 'Get', 'SetProperty', 'Prop',
               'Write', 'WriteLine', 'Append', 'Section', 'ReadBool', 'ReadInt', 'ReadString', 'Key', 'Attr', 'Number', 'New',
               'Pct', 'F', 'Money', 'ParseKey', 'KeyName', 'Throw', 'ArgumentException', 'InvalidOperationException', 'Exception',
               'GetType', 'GetMethod', 'GetProperty', 'nameof', 'Assert', 'ApplyFlag', 'StableHash', 'Format_'}
@@ -139,6 +139,19 @@ def enclosing_calls(tokens, i, mt):
         k -= 1
     return names
 
+def is_log_call(tokens, i, mt):
+    """True when the literal is an argument of Log.Info/Warn/Error/Debug (UI items also have Info())."""
+    k = i - 1
+    while k >= 0:
+        t = tokens[k]
+        if t[0] == 'op' and t[1] in CLOSE: k = mt.get(k, k) - 1; continue
+        if t[0] == 'op' and t[1] == '(':
+            if k >= 3 and tokens[k - 1][1] in ('Info', 'Warn', 'Error', 'Debug') and tokens[k - 2][1] == '.' and tokens[k - 3][1] == 'Log':
+                return True
+        if t[0] == 'op' and t[1] == ';': return False
+        k -= 1
+    return False
+
 ident_rx = re.compile(r'^[a-z0-9_\.\-/]+$|^[A-Z0-9_]+_[A-Z0-9_]+$|^#[0-9A-Fa-f]{6}$|^[a-z]+[A-Z]\w*$')
 
 def wanted(text):
@@ -187,6 +200,7 @@ def process(path, keys):
         if calls and calls[0] == '[' : continue
         if any(c in SKIP_CALLS for c in calls[:2]): continue
         if 'Log' in [tokens[k][1] for k in range(max(0, i - 6), i)]: continue
+        if is_log_call(tokens, i, mt): continue
         # build chain
         start = i
         while start > 1 and tokens[start - 1][0] == 'op' and tokens[start - 1][1] == '+':
