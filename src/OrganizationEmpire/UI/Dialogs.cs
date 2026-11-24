@@ -38,12 +38,12 @@ namespace OrganizationEmpire.UI
             Log.Debug("Notify: " + text);
         }
 
-        public void Draw(Renderer r, float topY)
+        public void Draw(Renderer r, float topY, float rightEdge = -1f)
         {
             int now = Environment.TickCount;
             _toasts.RemoveAll(t => now > t.Until);
             float w = 430f;
-            float x = r.W - w - 30f;
+            float x = (rightEdge > 0 ? rightEdge : r.W - 30f) - w;
             float y = topY;
             foreach (var t in _toasts)
             {

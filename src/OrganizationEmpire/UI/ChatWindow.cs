@@ -176,7 +176,7 @@ namespace OrganizationEmpire.UI
             var t = r.Theme;
             float w = 600f, h = 660f;
             float x = r.W - w - 40f, y = (r.H - h) / 2f + 20f;
-            r.Rect(x, y, w, h, t.Panel);
+            r.Rect(x, y, w, h, System.Drawing.Color.FromArgb(252, 12, 16, 22));
             r.Rect(x, y, w, 4f, t.Accent);
             r.Corners(x - 4, y - 4, w + 8, h + 8, 16f, 2f, t.Accent);
 

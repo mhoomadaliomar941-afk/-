@@ -62,15 +62,18 @@ namespace OrganizationEmpire.Core.AI
 
         private static string Flavor(string line, NpcContext c, Rng rng)
         {
+            // Personality colors roughly one line in three, with a few variants, so it never becomes a verbal tic.
+            if (!rng.Chance(0.33f)) return line;
             switch (c.Personality)
             {
-                case Personality.Nervous: return rng.Chance(0.5f) ? "Uh... " + line : line + " I-I mean, if that's okay.";
-                case Personality.Sarcastic: return rng.Chance(0.5f) ? line + " Living the dream, right?" : "Oh, great question. " + line;
-                case Personality.Aggressive: return rng.Chance(0.4f) ? line + " Somebody's gonna bleed for it, watch." : line;
-                case Personality.Cowardly: return rng.Chance(0.4f) ? line + " Just... let's not do anything crazy." : line;
-                case Personality.Ambitious: return rng.Chance(0.4f) ? line + " And I'm ready for more responsibility." : line;
-                case Personality.Intelligent: return rng.Chance(0.4f) ? line + " I've been thinking about our angles." : line;
-                case Personality.Rebellious: return rng.Chance(0.4f) ? line + " Not that anyone asks my opinion." : line;
+                case Personality.Nervous: return rng.Pick(new[] { "Uh... " + line, line + " I-I mean, if that's okay.", "Okay, okay. " + line });
+                case Personality.Sarcastic: return rng.Pick(new[] { line + " Living the dream, right?", "Oh, great question. " + line, line + " Shocking, I know." });
+                case Personality.Aggressive: return rng.Pick(new[] { line + " Somebody's gonna bleed for it, watch.", line + " Just point me at 'em." });
+                case Personality.Cowardly: return rng.Pick(new[] { line + " Just... let's not do anything crazy.", line + " Maybe we lay low a bit?" });
+                case Personality.Ambitious: return rng.Pick(new[] { line + " And I'm ready for more responsibility.", line + " Give me more to handle and I'll prove it." });
+                case Personality.Intelligent: return rng.Pick(new[] { line + " I've been thinking about our angles.", line + " The numbers back that up, by the way." });
+                case Personality.Rebellious: return rng.Pick(new[] { line + " Not that anyone asks my opinion.", line + " For what it's worth." });
+                case Personality.Calm: return rng.Pick(new[] { line, "Easy. " + line });
                 default: return line;
             }
         }

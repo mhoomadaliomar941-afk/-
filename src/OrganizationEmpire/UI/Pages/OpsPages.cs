@@ -16,6 +16,13 @@ namespace OrganizationEmpire.UI.Pages
     internal sealed class DialoguePage : Page
     {
         public override string Title => "AI Dialogue";
+
+        public override void DrawDetail(Renderer r, float x, float y, float w, float h, Item focused)
+        {
+            // The chat window occupies the right side while a conversation is open.
+            if (Ui.Chat.IsOpen) return;
+            base.DrawDetail(r, x, y, w, h, focused);
+        }
         public override string Subtitle => "Provider: " + (Mod.Config.AI.Enabled ? Mod.Config.AI.Provider.ToString() : "Offline (AI disabled)") + (Mod.Config.AI.Provider != Core.Config.AiProviderKind.Offline ? " | model " + Mod.Config.AI.Model : "");
 
         public override void Build(ItemList l)

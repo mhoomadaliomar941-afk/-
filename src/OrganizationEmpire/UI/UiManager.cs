@@ -439,7 +439,11 @@ namespace OrganizationEmpire.UI
                 top.Draw(r, Input);
                 _dialogs.RemoveAll(x => x.Done);
             }
-            Notify.Draw(r, IsOpen ? 40f : 230f);
+            // Keep notifications clear of the side panels (popup / chat) that share the right edge.
+            float toastRight = -1f;
+            if (_popup != null) toastRight = r.W - 560f - 60f - 24f;
+            else if (Chat.IsOpen && (!IsOpen || Current is DialoguePage)) toastRight = r.W - 600f - 40f - 24f;
+            Notify.Draw(r, IsOpen ? 40f : 230f, toastRight);
             if (Mod.Config.Debug.ShowDebugOverlay) DrawDebug();
         }
 
@@ -742,10 +746,10 @@ namespace OrganizationEmpire.UI
             if (page.Subtitle != null) r.Text(r.Ellipsize(page.Subtitle, Theme.SmallSize, Theme.Body, w - 40), x + 20, y + 50, Theme.SmallSize, t.TextDim);
             _items.Items.Clear();
             page.Build(_items);
-            var focused = DrawList(page, _items.Items, x + 14, y + 84, w - 34, h - 84 - 96, _dialogs.Count == 0);
-            r.Rect(x + 14, y + h - 92, w - 28, 1, t.Line);
+            var focused = DrawList(page, _items.Items, x + 14, y + 84, w - 34, h - 84 - 122, _dialogs.Count == 0);
+            r.Rect(x + 14, y + h - 118, w - 28, 1, t.Line);
             string hint = focused == null ? "" : (!focused.Enabled && focused.DisabledReason != null ? focused.DisabledReason : focused.Hint ?? "");
-            r.Paragraph(hint, x + 20, y + h - 84, Theme.SmallSize, focused != null && !focused.Enabled ? t.Warn : t.TextDim, w - 40, Theme.Body, 2);
+            r.Paragraph(hint, x + 20, y + h - 110, Theme.SmallSize, focused != null && !focused.Enabled ? t.Warn : t.TextDim, w - 40, Theme.Body, 3);
             r.Text("Enter: select   Left/Right: change   Backspace: back   Esc: close", x + 20, y + h - 30, Theme.TinySize, t.TextFaint);
             if (Input.RightClick && _dialogs.Count == 0) Back();
         }
