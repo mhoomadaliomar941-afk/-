@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Engine-independent simulation, persistence and AI layer.
+    Multi-targeted so it can be unit-tested on .NET 8 while the very same
+    sources are compiled into the net48 ScriptHookVDotNet script DLL.
+  -->
+  <PropertyGroup>
+    <TargetFrameworks>net48;net8.0</TargetFrameworks>
+    <RootNamespace>OrganizationEmpire.Core</RootNamespace>
+    <AssemblyName>OrganizationEmpire.Core</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+</Project>
