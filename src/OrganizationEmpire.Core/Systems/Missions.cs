@@ -227,6 +227,12 @@ namespace OrganizationEmpire.Core.Systems
                 Seed = ctx.Rng.Next(1, int.MaxValue),
             };
             if (!SelectTarget(ctx, d, offer)) return null;
+            if (d.Template == MissionTemplate.FinalCampaign)
+            {
+                // The decisive battle is always against the state's own forces.
+                offer.RivalId = FactionIds.State;
+                offer.TerritoryId = null;
+            }
             int diff = 1 + f.Level / 4;
             var rival = w.GetRival(offer.RivalId);
             if (rival != null) diff += (int)(rival.Strength / 35);
