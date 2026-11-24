@@ -1,0 +1,4 @@
+# Arabic interface strings for Organization Empire.
+# Format: English text<TAB>Arabic text. "{0}" placeholders carry names/numbers. Lines starting with # are comments.
+Members	الأعضاء
+{0} members	{0} عضو

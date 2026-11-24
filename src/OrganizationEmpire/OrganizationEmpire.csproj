@@ -15,6 +15,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\OrganizationEmpire.Core\**\*.cs" Exclude="..\OrganizationEmpire.Core\obj\**;..\OrganizationEmpire.Core\bin\**" LinkBase="Core" />
+    <EmbeddedResource Include="..\OrganizationEmpire.Core\Localization\ar.txt" LogicalName="OrganizationEmpire.ar.txt" />
   </ItemGroup>
   <ItemGroup>
     <!-- Reference only: ScriptHookVDotNet3.dll is provided by the SHVDN install, never shipped by this mod. -->

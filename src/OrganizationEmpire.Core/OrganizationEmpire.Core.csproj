@@ -13,4 +13,7 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\ar.txt" LogicalName="OrganizationEmpire.ar.txt" />
+  </ItemGroup>
 </Project>

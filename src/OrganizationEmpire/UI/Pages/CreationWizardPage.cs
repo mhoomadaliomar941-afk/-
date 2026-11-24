@@ -37,6 +37,7 @@ namespace OrganizationEmpire.UI.Pages
 
         public override void Build(ItemList l)
         {
+            PageUtil.LanguageChoice(l, Mod);
             l.Header("1. Type");
             l.Choice("Faction type", FactionTypeInfo.TypeName(_o.Type), d => { _o.Type = PageUtil.Next(_o.Type, d); ApplyTypeDefaults(); }, FactionTypeInfo.TypeBlurb(_o.Type));
 

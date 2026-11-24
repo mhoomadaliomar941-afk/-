@@ -52,6 +52,14 @@ namespace OrganizationEmpire.UI.Pages
         public override void Build(ItemList l)
         {
             var g = C.General;
+            l.Header("Language");
+            PageUtil.LanguageChoice(l, Mod);
+            if (g.Language == UiLanguage.Arabic)
+            {
+                l.Toggle("Right-to-left layout", g.MirrorLayoutForArabic, v => { g.MirrorLayoutForArabic = v; Save(); }, "Mirror the menu so the sidebar is on the right.");
+                l.Slider("Arabic text size", g.ArabicTextScale, 0.8f, 1.4f, 0.05f, v => { g.ArabicTextScale = v; Ui.Renderer.ClearTextCaches(); Save(); }, "0.00");
+            }
+            l.Header("Interface");
             l.Choice("While the menu is open", PageUtil.Name(g.PauseMode), d => { g.PauseMode = PageUtil.Next(g.PauseMode, d); Save(); }, "None keeps the world running (default). Slow motion or a full pause are optional.");
             l.Toggle("Block movement while menu is open", g.BlockMovementWhileMenuOpen, v => { g.BlockMovementWhileMenuOpen = v; Save(); });
             l.Toggle("Mouse support", g.EnableMouse, v => { g.EnableMouse = v; Save(); });

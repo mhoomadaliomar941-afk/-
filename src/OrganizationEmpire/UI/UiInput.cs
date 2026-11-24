@@ -27,8 +27,7 @@ namespace OrganizationEmpire.UI
             Nat.ShowCursor();
             float nx = Nat.DisabledNormal(Control.CursorX);
             float ny = Nat.DisabledNormal(Control.CursorY);
-            r.MouseX = nx * r.W;
-            r.MouseY = ny * r.H;
+            r.SetMouse(nx, ny);
             if (System.Math.Abs(r.MouseX - _lastX) > 0.5f || System.Math.Abs(r.MouseY - _lastY) > 0.5f) MouseMoved = _lastX >= 0;
             _lastX = r.MouseX;
             _lastY = r.MouseY;

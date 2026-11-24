@@ -6,6 +6,7 @@ using OrganizationEmpire.Core.Config;
 using OrganizationEmpire.Core.Model;
 using OrganizationEmpire.Core.Persistence;
 using OrganizationEmpire.Core.Systems;
+using OrganizationEmpire.Core.Localization;
 using OrganizationEmpire.Core.Util;
 using OrganizationEmpire.Missions;
 using OrganizationEmpire.Native;
@@ -24,6 +25,7 @@ namespace OrganizationEmpire
         public string FlagsDir => Path.Combine(DataDir, "flags");
         public string ConfigPath => Path.Combine(DataDir, "OrganizationEmpire.ini");
         public string LogPath => Path.Combine(DataDir, "logs", "OrganizationEmpire.log");
+        public string TextDir => Path.Combine(DataDir, "text");
 
         public ModConfig Config;
         public GameState State;
@@ -79,6 +81,7 @@ namespace OrganizationEmpire
             Rivals = new RivalController(this);
             Missions = new MissionController(this);
             Ui = new UiManager(this);
+            ApplyLanguage(false);
             Dialogue = new DialogueService(() => Config.AI, () => ProviderFactory.Create(Config.AI, ResolvedApiKey));
 
             State = Simulation.NewGame(Environment.TickCount);
@@ -89,6 +92,40 @@ namespace OrganizationEmpire
                 var latest = Saves.MostRecent();
                 if (latest != null) Load(latest.Slot, false);
             }
+        }
+
+        private bool _arabicTableLoaded;
+
+        /// <summary>Applies Config.General.Language. Arabic needs the glyph textures; without them the interface stays English.</summary>
+        public void ApplyLanguage(bool notify)
+        {
+            var r = Ui.Renderer;
+            if (r.Sprites == null)
+            {
+                r.Sprites = new SpriteText();
+                if (r.Sprites.Load(TextDir)) Log.Info("Arabic glyph textures ready.");
+                else Log.Warn("Arabic glyph textures unavailable: " + r.Sprites.Problem);
+            }
+            var lang = Config.General.Language;
+            if (lang == UiLanguage.Arabic)
+            {
+                if (!_arabicTableLoaded)
+                {
+                    Loc.EnsureLoaded(Path.Combine(TextDir, "ar.txt"));
+                    _arabicTableLoaded = true;
+                    foreach (var p in Loc.LoadProblems) Log.Warn("Arabic strings: " + p);
+                    Log.Info("Arabic strings: " + Loc.Arabic.ExactCount + " phrases, " + Loc.Arabic.TemplateCount + " templates.");
+                }
+                if (!r.SpritesReady)
+                {
+                    lang = UiLanguage.English;
+                    Ui.Notify.Push("Arabic needs the scripts\\OrganizationEmpire\\text folder from the mod package (" + (r.Sprites.Problem ?? "missing") + "). Using English.", EventSeverity.Bad, 9000);
+                }
+            }
+            Loc.SetLanguage(lang);
+            Nat.ClearTextCaches();
+            r.ClearTextCaches();
+            if (notify) Ui.Notify.Push(Loc.IsArabic ? "تم تغيير اللغة إلى العربية." : "Language set to English.", EventSeverity.Good, 3000);
         }
 
         public void RefreshAiKey()

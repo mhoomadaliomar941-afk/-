@@ -10,6 +10,7 @@ using OrganizationEmpire.Core.Config;
 using OrganizationEmpire.Core.Data;
 using OrganizationEmpire.Core.Model;
 using OrganizationEmpire.Core.Systems;
+using OrganizationEmpire.Core.Localization;
 using OrganizationEmpire.Core.Util;
 using OrganizationEmpire.Native;
 using OrganizationEmpire.UI.Pages;
@@ -403,6 +404,8 @@ namespace OrganizationEmpire.UI
         {
             var r = Renderer;
             r.BeginFrame(Mod.Config.General.UiScale);
+            r.Mirror = Loc.IsArabic && r.SpritesReady && Mod.Config.General.MirrorLayoutForArabic;
+            r.ArabicScale = Mod.Config.General.ArabicTextScale;
             if (Mod.HasFaction)
             {
                 var identity = Mod.Faction.IsGovernment ? Mod.Faction.Government.StateIdentity : Mod.Faction.Identity;

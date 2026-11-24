@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Font = GTA.UI.Font;
 using GTA.UI;
+using OrganizationEmpire.Core.Localization;
 using OrganizationEmpire.Core.Util;
 using OrganizationEmpire.Native;
 
@@ -64,6 +65,11 @@ namespace OrganizationEmpire.UI
     /// <summary>
     /// Immediate-mode drawing in a virtual coordinate space 1080 units tall (width follows the aspect ratio),
     /// so layouts are resolution independent. Text metrics come from the game and are cached.
+    ///
+    /// Localization happens here: every string is translated right before it is measured or drawn,
+    /// strings containing Arabic are drawn by <see cref="SpriteText"/> (GTA's fonts have no Arabic), and
+    /// when <see cref="Mirror"/> is on the whole layout is flipped right-to-left. Callers keep laying out
+    /// in left-to-right coordinates; the mouse is reported in the same (unflipped) layout space.
     /// </summary>
     internal sealed class Renderer
     {
@@ -72,6 +78,18 @@ namespace OrganizationEmpire.UI
         public readonly Theme Theme = new Theme();
         public float MouseX = -1, MouseY = -1;
 
+        /// <summary>Glyph-texture text renderer for Arabic (null or unavailable means native text only).</summary>
+        public SpriteText Sprites;
+        /// <summary>Layout is mirrored horizontally (Arabic interface).</summary>
+        public bool Mirror;
+        public float ArabicScale = 1f;
+        private int _seq;
+        private float _pxPerUnit = 1f;
+        private bool _unmirror;
+        private float _umX, _umW;
+
+        public bool SpritesReady => Sprites != null && Sprites.Available;
+
         public void BeginFrame(float uiScale)
         {
             Scale = MathEx.Clamp(uiScale, 0.75f, 1.25f);
@@ -79,12 +97,69 @@ namespace OrganizationEmpire.UI
             if (aspect < 1f || float.IsNaN(aspect)) aspect = 16f / 9f;
             H = 1080f / Scale;
             W = H * aspect;
+            try
+            {
+                var res = Screen.Resolution;
+                _pxPerUnit = res.Height > 0 ? res.Height / H : 1f;
+            }
+            catch (Exception) { _pxPerUnit = 1f; }
+            _unmirror = false;
         }
+
+        /// <summary>Draws queued glyph text. Call once per tick after everything else.</summary>
+        public void FlushText()
+        {
+            if (Sprites != null) Sprites.Flush(W, H);
+            _seq = 0;
+        }
+
+        // ------------------------------------------------------------------ mirroring
+
+        /// <summary>Screen-space left edge of a layout box.</summary>
+        public float ScreenLeft(float x, float w)
+        {
+            if (!Mirror) return x;
+            if (_unmirror) return (W - _umX - _umW) + (x - _umX);
+            return W - x - w;
+        }
+
+        /// <summary>Converts a normalized screen x (e.g. a projected world position) into layout space.</summary>
+        public float LayoutX(float normalizedX) => Mirror ? W - normalizedX * W : normalizedX * W;
+
+        public void SetMouse(float nx, float ny)
+        {
+            MouseX = LayoutX(nx);
+            MouseY = ny * H;
+        }
+
+        /// <summary>Inside this box the content keeps its left-to-right orientation (flags, emblems); only the box moves.</summary>
+        public void BeginUnmirrored(float x, float w)
+        {
+            if (!Mirror) return;
+            _unmirror = true;
+            _umX = x;
+            _umW = w;
+        }
+
+        public void EndUnmirrored() => _unmirror = false;
+
+        public bool Unmirrored => _unmirror;
+
+        private Align FlipAlign(Align a)
+        {
+            if (!Mirror || _unmirror) return a;
+            return a == Align.Left ? Align.Right : a == Align.Right ? Align.Left : Align.Center;
+        }
+
+        // ------------------------------------------------------------------ shapes
 
         public void Rect(float x, float y, float w, float h, Color c)
         {
             if (w <= 0 || h <= 0 || c.A == 0) return;
-            Nat.Rect((x + w / 2f) / W, (y + h / 2f) / H, w / W, h / H, c);
+            float sx = ScreenLeft(x, w);
+            Nat.Rect((sx + w / 2f) / W, (y + h / 2f) / H, w / W, h / H, c);
+            // Opaque panels hide glyph text queued before them (glyph textures draw above native UI).
+            if (c.A >= 200 && w >= 6f && h >= 6f && Sprites != null) Sprites.Occlude(sx, y, w, h, ++_seq);
         }
 
         public void Border(float x, float y, float w, float h, float t, Color c)
@@ -112,11 +187,34 @@ namespace OrganizationEmpire.UI
 
         private float S(float size) => size * Scale;
 
+        // ------------------------------------------------------------------ text
+
+        /// <summary>Text as it will be shown: translated when the interface is Arabic.</summary>
+        public static string Display(string s) => Loc.T(s);
+
+        private bool UseSprites(string s) => SpritesReady && ArabicText.ContainsArabic(s);
+
+        private bool Rtl(string s) => Loc.IsArabic || ArabicText.FirstStrongIsRtl(s);
+
+        /// <summary>Em size (virtual units) of glyph text standing in for native text of this size.</summary>
+        public float ArabicEm(float size, Font font) => Nat.LineHeight(S(size), (int)font) * H * 0.9f * ArabicScale;
+
         public void Text(string s, float x, float y, float size, Color c, Font font = Font.ChaletLondon, Align align = Align.Left, bool shadow = false, bool outline = false)
         {
             if (string.IsNullOrEmpty(s)) return;
-            float nx = x / W, ny = y / H;
-            switch (align)
+            s = Display(s);
+            float sx = ScreenLeft(x, 0f);
+            Align a = FlipAlign(align);
+            if (UseSprites(s))
+            {
+                // Center the glyph line on the native line box so Arabic sits where the layout expects text.
+                float ch = Nat.LineHeight(S(size), (int)font) * H;
+                float em = ArabicEm(size, font);
+                Sprites.Queue(s, sx, y + ch * 0.5f + em * 0.32f, em, c, font, a, Rtl(s), shadow || outline, ++_seq, _pxPerUnit);
+                return;
+            }
+            float nx = sx / W, ny = y / H;
+            switch (a)
             {
                 case Align.Center: Nat.Text(s, nx, ny, S(size), c, (int)font, 0, 0, 0, shadow, outline); break;
                 case Align.Right: Nat.Text(s, nx, ny, S(size), c, (int)font, 2, 0, nx, shadow, outline); break;
@@ -124,15 +222,28 @@ namespace OrganizationEmpire.UI
             }
         }
 
-        public float TextWidth(string s, float size, Font font = Font.ChaletLondon) => Nat.TextWidth(s, S(size), (int)font) * W;
+        public float TextWidth(string s, float size, Font font = Font.ChaletLondon)
+        {
+            if (string.IsNullOrEmpty(s)) return 0f;
+            s = Display(s);
+            if (UseSprites(s)) return Sprites.Layout(s, font, Rtl(s)).Width * ArabicEm(size, font);
+            return Nat.TextWidth(s, S(size), (int)font) * W;
+        }
 
-        public float LineHeight(float size, Font font = Font.ChaletLondon) => Nat.LineHeight(S(size), (int)font) * H * 1.18f;
+        public float LineHeight(float size, Font font = Font.ChaletLondon)
+        {
+            float native = Nat.LineHeight(S(size), (int)font) * H * 1.18f;
+            if (!Loc.IsArabic || !SpritesReady) return native;
+            float em = ArabicEm(size, font);
+            return Math.Max(native, em * (Sprites.Ascent(font) + Sprites.Descent(font)) * 1.05f);
+        }
 
         /// <summary>Vertical offset so text appears centered in a row of the given height.</summary>
         public float TextTop(float rowY, float rowH, float size, Font font = Font.ChaletLondon) => rowY + (rowH - Nat.LineHeight(S(size), (int)font) * H) / 2f - 2f * Scale;
 
         public string Ellipsize(string s, float size, Font font, float maxWidth)
         {
+            s = Display(s);
             if (string.IsNullOrEmpty(s) || TextWidth(s, size, font) <= maxWidth) return s ?? "";
             int lo = 0, hi = s.Length;
             while (lo < hi)
@@ -145,9 +256,11 @@ namespace OrganizationEmpire.UI
 
         private readonly Dictionary<string, List<string>> _wrapCache = new Dictionary<string, List<string>>();
 
+        public void ClearTextCaches() => _wrapCache.Clear();
+
         public List<string> Wrap(string text, float size, Font font, float maxWidth)
         {
-            text = text ?? "";
+            text = Display(text ?? "") ?? "";
             string key = (int)font + "|" + size.ToString("0.000") + "|" + ((int)maxWidth) + "|" + text;
             if (_wrapCache.TryGetValue(key, out var cached)) return cached;
             if (_wrapCache.Count > 600) _wrapCache.Clear();
@@ -193,7 +306,7 @@ namespace OrganizationEmpire.UI
 
         public void Sprite(string dict, string name, float x, float y, float w, float h, Color c, float heading = 0)
         {
-            Nat.Sprite(dict, name, (x + w / 2f) / W, (y + h / 2f) / H, w / W, h / H, heading, c);
+            Nat.Sprite(dict, name, (ScreenLeft(x, w) + w / 2f) / W, (y + h / 2f) / H, w / W, h / H, heading, c);
         }
 
         public bool Hover(float x, float y, float w, float h) => MouseX >= x && MouseX <= x + w && MouseY >= y && MouseY <= y + h;
@@ -202,20 +315,21 @@ namespace OrganizationEmpire.UI
 
         public void WorldLabel(float nx, float ny, string name, string sub, string keys, bool isMember)
         {
-            float x = nx * W, y = ny * H;
+            float x = LayoutX(nx), y = ny * H;
             float w = Math.Max(TextWidth(name, 0.36f, Font.ChaletComprimeCologne), Math.Max(TextWidth(sub, 0.27f), TextWidth(keys, 0.25f))) + 24f;
-            float h = 74f;
+            float h = Loc.IsArabic ? 84f : 74f;
             x -= w / 2f; y -= h + 10f;
+            float step = Loc.IsArabic ? 4f : 0f;
             Rect(x, y, w, h, Color.FromArgb(200, 10, 13, 18));
             Rect(x, y, 3f, h, isMember ? Theme.Accent : Theme.Info);
             Text(name, x + 12, y + 4, 0.36f, Theme.Text, Font.ChaletComprimeCologne);
-            Text(sub, x + 12, y + 30, 0.27f, Theme.TextDim);
-            Text(keys, x + 12, y + 50, 0.25f, Theme.Accent);
+            Text(sub, x + 12, y + 30 + step, 0.27f, Theme.TextDim);
+            Text(keys, x + 12, y + 50 + step * 2, 0.25f, Theme.Accent);
         }
 
         public void WorldBanner(float nx, float ny, string title, string sub, Color accent)
         {
-            float x = nx * W, y = ny * H;
+            float x = LayoutX(nx), y = ny * H;
             Text(title, x, y, 0.55f, Color.FromArgb(235, accent.R, accent.G, accent.B), Font.ChaletComprimeCologne, Align.Center, true, true);
             Text(sub, x, y + 34, 0.3f, Color.FromArgb(220, 230, 230, 230), Font.ChaletLondon, Align.Center, true, false);
         }

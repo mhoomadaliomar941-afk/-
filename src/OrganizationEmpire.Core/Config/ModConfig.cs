@@ -8,9 +8,19 @@ namespace OrganizationEmpire.Core.Config
     public enum MenuPauseMode { None, SlowMotion, Pause }
     public enum TextInputMode { Inline, NativeKeyboard }
     public enum AiProviderKind { Offline, OpenAICompatible, Anthropic, Gemini }
+    public enum UiLanguage { English, Arabic }
 
     public sealed class GeneralSettings
     {
+        [ConfigComment("Interface language: English or Arabic. Arabic is drawn with the mod's own glyph textures (text\\glyphs) because GTA V's fonts have no Arabic letters.")]
+        public UiLanguage Language { get; set; } = UiLanguage.English;
+
+        [ConfigComment("Arabic only: mirror the menu layout right-to-left (sidebar on the right).")]
+        public bool MirrorLayoutForArabic { get; set; } = true;
+
+        [ConfigComment("Arabic only: size multiplier for Arabic text (0.8 - 1.4).")]
+        public float ArabicTextScale { get; set; } = 1.0f;
+
         [ConfigComment("What happens to the game world while the faction menu is open.")]
         public MenuPauseMode PauseMode { get; set; } = MenuPauseMode.None;
 
@@ -230,6 +240,7 @@ namespace OrganizationEmpire.Core.Config
         public void Sanitize()
         {
             General.UiScale = MathEx.Clamp(General.UiScale, 0.75f, 1.25f);
+            General.ArabicTextScale = MathEx.Clamp(General.ArabicTextScale, 0.8f, 1.4f);
             General.AutosaveMinutes = MathEx.Clamp(General.AutosaveMinutes, 0, 240);
             Gameplay.StrategicTickSeconds = MathEx.Clamp(Gameplay.StrategicTickSeconds, 10, 600);
             Gameplay.IncomeMultiplier = MathEx.Clamp(Gameplay.IncomeMultiplier, 0.1f, 10f);

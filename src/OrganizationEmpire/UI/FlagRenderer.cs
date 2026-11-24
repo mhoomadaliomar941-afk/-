@@ -49,6 +49,15 @@ namespace OrganizationEmpire.UI
         public void Draw(Renderer r, FlagDesign flag, float x, float y, float w, float h, bool allowCustom = true)
         {
             if (flag == null) return;
+            // A flag is an image: in the mirrored (Arabic) layout it moves but is never flipped.
+            bool own = r.Mirror && !r.Unmirrored;
+            if (own) r.BeginUnmirrored(x, w);
+            try { DrawFlag(r, flag, x, y, w, h, allowCustom); }
+            finally { if (own) r.EndUnmirrored(); }
+        }
+
+        private void DrawFlag(Renderer r, FlagDesign flag, float x, float y, float w, float h, bool allowCustom)
+        {
             r.Rect(x - 2, y - 2, w + 4, h + 4, Color.FromArgb(160, 0, 0, 0));
             if (allowCustom && !SuppressCustomImages && !string.IsNullOrEmpty(flag.CustomImage) && DrawCustom(r, flag.CustomImage, x, y, w, h)) return;
             Color c1 = Rgb.Parse(flag.Color1, new Rgb(30, 30, 30)).ToColor();
@@ -103,6 +112,14 @@ namespace OrganizationEmpire.UI
 
         public void DrawEmblem(Renderer r, FlagDesign flag, float cx, float cy, float size)
         {
+            bool own = r.Mirror && !r.Unmirrored;
+            if (own) r.BeginUnmirrored(cx - size / 2, size);
+            try { DrawEmblemCore(r, flag, cx, cy, size); }
+            finally { if (own) r.EndUnmirrored(); }
+        }
+
+        private void DrawEmblemCore(Renderer r, FlagDesign flag, float cx, float cy, float size)
+        {
             Color ec = Rgb.Parse(flag.EmblemColor, new Rgb(242, 201, 76)).ToColor();
             string tex = null;
             switch (flag.Emblem)
@@ -153,7 +170,7 @@ namespace OrganizationEmpire.UI
                     _custom[path] = sprite;
                 }
                 // CustomSprite uses SHVDN's 1280x720 reference space.
-                sprite.Position = new PointF(x / r.W * Screen.Width, y / r.H * Screen.Height);
+                sprite.Position = new PointF(r.ScreenLeft(x, w) / r.W * Screen.Width, y / r.H * Screen.Height);
                 sprite.Size = new SizeF(w / r.W * Screen.Width, h / r.H * Screen.Height);
                 sprite.Draw();
                 return true;

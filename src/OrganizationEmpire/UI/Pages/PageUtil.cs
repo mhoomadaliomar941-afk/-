@@ -1,3 +1,4 @@
+using OrganizationEmpire.Core.Config;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -72,6 +73,18 @@ namespace OrganizationEmpire.UI.Pages
             r.Text(label, x, y, Theme.TinySize, r.Theme.TextFaint);
             r.Text(text ?? ((int)value).ToString(), x + w, y - 2, Theme.SmallSize, r.Theme.Text, Theme.Numbers, Align.Right);
             r.Bar(x, y + 22, w, 4, value / 100f, color);
+        }
+
+        /// <summary>Language switch shown in Settings and at the top of the creation wizard (label readable in both languages).</summary>
+        public static void LanguageChoice(ItemList l, ModContext mod)
+        {
+            var g = mod.Config.General;
+            l.Choice("Language / اللغة", g.Language == UiLanguage.Arabic ? "العربية" : "English", d =>
+            {
+                g.Language = g.Language == UiLanguage.Arabic ? UiLanguage.English : UiLanguage.Arabic;
+                mod.SaveConfig();
+                mod.ApplyLanguage(true);
+            }, "Arabic is drawn with the mod's own letter textures (GTA V's fonts have no Arabic). Also in OrganizationEmpire.ini: Language.");
         }
     }
 }

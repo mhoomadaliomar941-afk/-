@@ -3,11 +3,18 @@ using System.Text;
 using OrganizationEmpire.Core.Config;
 
 // Usage: PackTool <output-data-dir>
-// Writes OrganizationEmpire.ini (defaults) and sample flag PNGs into <dir>/flags.
+//        PackTool --glyph-spec          (prints the glyph list tools/glyphgen renders)
+// Writes OrganizationEmpire.ini (defaults), sample flag PNGs, the Arabic glyph textures and ar.txt.
 if (args.Length < 1)
 {
-    Console.Error.WriteLine("usage: PackTool <data-dir>");
+    Console.Error.WriteLine("usage: PackTool <data-dir> | --glyph-spec");
     return 2;
+}
+if (args[0] == "--glyph-spec")
+{
+    Console.OutputEncoding = new UTF8Encoding(false);
+    Console.Write(GlyphSpec.Build());
+    return 0;
 }
 string dataDir = args[0];
 Directory.CreateDirectory(Path.Combine(dataDir, "flags"));
@@ -145,5 +152,33 @@ static class Flags
         uint crc = 0xFFFFFFFFu;
         foreach (byte b in data) crc = _table[(crc ^ b) & 0xFF] ^ (crc >> 8);
         return crc ^ 0xFFFFFFFFu;
+    }
+}
+
+
+/// <summary>Every character the in-game glyph renderer may need, with the text that renders its shape (ZWJ context for Arabic forms).</summary>
+static class GlyphSpec
+{
+    public static string Build()
+    {
+        var sb = new StringBuilder("[");
+        bool first = true;
+        void Add(char code, string text)
+        {
+            if (!first) sb.Append(',');
+            first = false;
+            sb.Append("{\"code\":").Append((int)code).Append(",\"text\":\"");
+            foreach (char c in text) sb.Append("\\u").Append(((int)c).ToString("x4"));
+            sb.Append("\"}");
+        }
+        // Presentation forms are rendered from their own code points: Cairo maps them directly, and
+        // their advances then match the joined word exactly (ZWJ contexts pick up extra spacing).
+        foreach (char c in OrganizationEmpire.Core.Localization.ArabicText.AllShapedForms()) Add(c, c.ToString());
+        foreach (char c in "\u060C\u061B\u061F\u0640\u066A\u066B\u066C") Add(c, c.ToString());
+        for (char c = '\u0660'; c <= '\u0669'; c++) Add(c, c.ToString());
+        for (char c = '!'; c <= '~'; c++) Add(c, c.ToString());
+        foreach (char c in "\u00A3\u00A9\u00AB\u00B0\u00B7\u00BB\u00D7\u2013\u2014\u2018\u2019\u201C\u201D\u2022\u2026\u20AC\u2190\u2192\u2191\u2193") Add(c, c.ToString());
+        for (char c = '\u00C0'; c <= '\u00FF'; c++) if (c != '\u00D7' && c != '\u00F7') Add(c, c.ToString());
+        return sb.Append(']').ToString();
     }
 }

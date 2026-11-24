@@ -189,6 +189,7 @@ namespace OrganizationEmpire
             }
 
             Guard("ui", () => mod.Ui.Update(cutscene));
+            Guard("text", () => mod.Ui.Renderer.FlushText());
             _tickWatch.Stop();
             LastTickMs = (float)_tickWatch.Elapsed.TotalMilliseconds;
         }
