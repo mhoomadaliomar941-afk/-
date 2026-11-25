@@ -28,6 +28,18 @@ Turn on **Settings > Debug > Log level: Debug** and the **debug overlay** (entit
 - **Menu too big/small**: *Interface scale* (0.75 - 1.25).
 - **Game keeps running while the menu is open**: by design. Choose *Slow motion* or *Pause* under *While the menu is open*.
 
+## Living world & other mods
+
+- **Stutter near street battles.** Lower *Max street battle fighters* (Settings > Spawning) or turn off *Street battles
+  happen for real*; battles still resolve off-screen.
+- **Too many gang NPCs with another gang mod.** Settings > Mods & integrations > *Coexistence mode* = On.
+- **A key does nothing / opens another mod.** Settings > Mods & integrations lists hotkey conflicts with a *Move X to Y*
+  fix (only this mod's key changes). Menyoo uses F8 like Quick Orders.
+- **An integration shows "Failed".** Its reason is shown in the menu and in the log (`[Integration:...]`). The rest of
+  the mod keeps working; *Enable* it again after fixing the other mod.
+- **Another mod's script can't use the API.** Check *Public API* is active; commands also need *Allow other scripts to
+  change the game*.
+
 ## Arabic interface
 
 - **"Arabic needs the scripts\OrganizationEmpire\text folder... Using English."** The `text` folder (glyph textures)

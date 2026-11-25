@@ -7,11 +7,24 @@ practical alternative, and what has not been verified.
 
 - The engine-independent core (simulation, economy, ranks, squads, recruitment math, territory, wars, suspicion,
   events, missions catalog and rewards, takeover, government, persistence, JSON/INI, AI providers, prompts, memory,
-  async dialogue pipeline) is covered by **148 automated tests** run on .NET 8.
+  async dialogue pipeline) is covered by **186 automated tests** run on .NET 8.
 - The in-game layer (spawning, tasks, UI drawing, missions) compiles with zero warnings against the real
   ScriptHookVDotNet **3.6.0** API, with every native name checked against that release. It was **not** run inside
   GTA V during development (no game available in the build environment). Behavior that depends on the game's AI and
   rendering - task details, text metrics, spawn spots, mission pacing - may need tuning after real play testing.
+
+## Living world and mod integration
+
+- The living-world simulation (decisions, battles, successions, relations, persistence) is unit-tested, including a
+  simulated year. The in-game side (spawned battles, crews, recruitment scenes, leaders) compiles against the real
+  ScriptHookVDotNet API but was not run inside GTA V here; ped pathing and combat pacing may need tuning.
+- Fighters in a street battle use GTA's combat AI; sometimes they will also turn on bystanders or police, like any
+  gang fight in the game.
+- Mod detection is read-only and can only recognize what leaves a trace (files, loaded modules, loaded .NET
+  assemblies). Renamed installs of catalog mods appear as "unknown scripts".
+- Mods running under RAGE Plugin Hook (LSPDFR, Los Santos RED) cannot be called from a ScriptHookVDotNet script;
+  Organization Empire only adapts its own behavior to them.
+- The iFruitAddon2 phone integration is experimental (reflection against its documented API, not verified in game).
 
 ## Arabic interface
 

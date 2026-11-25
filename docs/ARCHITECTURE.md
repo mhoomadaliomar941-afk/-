@@ -9,10 +9,13 @@ OrganizationEmpire.sln
 │  ├─ Model/         FactionState, Member, Rank, Squad, Territory, RivalFaction, Government...
 │  ├─ Data/          world factory (territories on GTA zone codes, rivals), catalogs (ranks, uniforms, loadouts...)
 │  ├─ Systems/       Factory, Rank, Squad, Member, Recruitment, Economy/Progression, Territory, War,
-│  │                 Suspicion, Events, Missions (catalog/board/rewards), Takeover, Government, Simulation
+│  │                 Suspicion, Events, Missions (catalog/board/rewards), Takeover, Government, LivingWorld, Simulation
 │  ├─ Persistence/   SaveManager (atomic writes, .bak recovery, migration hook)
 │  ├─ Localization/  Loc + Translator (English-keyed, templates), ArabicText (shaping + bidi),
 │  │                 GlyphFont (glyph metrics/layout), ar.txt (embedded Arabic table)
+│  ├─ Integration/   ModCatalog (researched mods), ModScanner + CompatibilityAnalyzer (read-only detection,
+│  │                 conflicts), IntegrationHost (isolated modules, circuit breaker), MapLocations
+│  ├─ Api/           EmpireApi (public API for other scripts) + ApiHub (events, queued commands)
 │  └─ AI/            providers (OpenAI-compatible, Anthropic, Gemini, Offline), prompting, parsing,
 │                    intent detection, memory store, DialogueService (async + main-thread pump)
 ├─ src/OrganizationEmpire           net48 ScriptHookVDotNet v3 script (Core sources compiled in -> one DLL)
@@ -20,7 +23,9 @@ OrganizationEmpire.sln
 │  ├─ ModContext.cs     service hub, load/save/reset
 │  ├─ Native/           native wrappers, keyboard text (ToUnicodeEx), DPAPI key protector
 │  ├─ World/            EntityTracker (caps), RelationshipManager, MemberManager, CommandSystem,
-│  │                    InteractionController, Headquarters, Vehicles, Territory, Rivals
+│  │                    InteractionController, Headquarters, Vehicles, Territory, Rivals,
+│  │                    LivingWorldController (street battles, crews, leaders, recruitment scenes, map markers)
+│  ├─ Integration/      RuntimeModEnvironment (game folder/process view), IntegrationManager + modules
 │  ├─ Missions/         MissionController, MissionRuntime base, templates
 │  └─ UI/               Renderer (translation at draw time, RTL mirroring), SpriteText (Arabic glyph textures), UiInput, items/pages, dialogs, notifier, flag renderer, chat window,
 │                       UiManager, Pages/*

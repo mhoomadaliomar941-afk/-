@@ -2196,6 +2196,279 @@ Saved	وقت الحفظ
 Language	اللغة
 # --- SystemPages.cs:62
 Interface	الواجهة
+# --- EmpireApi.cs
+Id and Name are required.	المعرّف والاسم مطلوبان.
+Id must contain letters or digits.	يجب أن يحتوي المعرّف على حروف أو أرقام.
+Organization Empire is not ready or its API is switched off.	إمبراطورية المنظمة غير جاهزة أو أن واجهتها البرمجية معطّلة.
+External commands are disabled (Settings > Mods & integrations).	الأوامر الخارجية معطّلة (الإعدادات > المودات والتكامل).
+Added by {0}.	أضافه {0}.
+# --- IntegrationHost.cs
+Needs {0}.	يحتاج {0}.
+{0} failed ({1}/{2}): {3}	فشل {0} ({1}/{2}): {3}
+Stopped after an error: {0}	توقف بعد خطأ: {0}
+All integrations are switched off.	كل التكاملات معطّلة.
+Switched off.	مُطفأ.
+stopped: {0}	توقف: {0}
+# --- ModCatalog.cs
+Freeware, redistribution not allowed	مجاني، إعادة التوزيع غير مسموحة
+Required runtime.	مطلوب للتشغيل.
+Required runtime (v3 API, 3.6.0 or newer recommended).	مطلوب للتشغيل (واجهة v3، يُنصح بالإصدار 3.6.0 أو أحدث).
+Freeware	مجاني
+Different hook from ScriptHookV: its plugins cannot be called from a ScriptHookVDotNet script. Both can run side by side.	أداة ربط مختلفة عن ScriptHookV: لا يمكن استدعاء إضافاتها من سكربت ScriptHookVDotNet. يمكن تشغيل الاثنين معًا.
+Not needed by Organization Empire (own interface). Detected so missing dependencies of other mods can be reported.	لا يحتاجه المود (له واجهته الخاصة). يُكتشف للإبلاغ عن الاعتماديات المفقودة لدى مودات أخرى.
+NativeUI (deprecated)	NativeUI (متوقف)
+MIT-style notice (archived project)	إشعار بأسلوب MIT (مشروع مؤرشف)
+Not needed by Organization Empire. Detected for dependency checks of older mods.	لا يحتاجه المود. يُكتشف لفحص اعتماديات المودات القديمة.
+Check the project's repository before redistributing; not bundled	راجع مستودع المشروع قبل إعادة التوزيع؛ غير مضمّن
+Optional: adds an 'Organization Empire' phone contact (open the menu / call your crew) through its public API, loaded by reflection.	اختياري: يضيف جهة اتصال 'إمبراطورية المنظمة' للهاتف (فتح القائمة / استدعاء طاقمك) عبر واجهته البرمجية، بالتحميل الانعكاسي.
+Open source on GitHub (license not verified here; no code used)	مفتوح المصدر على GitHub (لم يُتحقق من الترخيص هنا؛ لم يُستخدم أي كود)
+Overlaps with gang wars and territory. Coexistence mode trims Organization Empire's own street battles and crews so both don't flood the streets; vanilla gang-model suppression is paused.	يتداخل مع حروب العصابات والأراضي. وضع التعايش يقلّل معارك الشوارع والطواقم الخاصة بهذا المود حتى لا يزدحم الشارع؛ ويُوقف منع نماذج العصابات الأصلية.
+RAGE Plugin Hook plugin: no direct link. Coexistence mode applies because it runs its own gangs and police.	إضافة RAGE Plugin Hook: لا يوجد ربط مباشر. يُطبَّق وضع التعايش لأنه يشغّل عصاباته وشرطته الخاصة.
+Overlaps with member squads. Its bodyguards are script-owned entities, which Organization Empire never recruits or deletes.	يتداخل مع فرق الأعضاء. حراسه كيانات تابعة لسكربت آخر، لذلك لا يجنّدها هذا المود ولا يحذفها أبدًا.
+See the mod page	راجع صفحة المود
+Overlaps with member squads; same entity-ownership guard applies.	يتداخل مع فرق الأعضاء؛ ينطبق عليه حارس ملكية الكيانات نفسه.
+Hotkey check only (opens with F6 by default).	فحص اختصار المفاتيح فقط (يفتح بـ F6 افتراضيًا).
+Proprietary freeware	مجاني بملكية خاصة
+Runs under RAGE Plugin Hook (no API reachable from here). While detected, recruiting law enforcement is forced off so LSPDFR's officers are never pulled into a faction.	يعمل تحت RAGE Plugin Hook (لا توجد واجهة يمكن الوصول إليها من هنا). أثناء اكتشافه يُمنع تجنيد رجال الأمن حتى لا يُسحب ضباط LSPDFR إلى أي فصيل.
+Hotkey conflict check (F8 by default, the same as Quick Orders). Spooner XML maps are offered as headquarters locations (read-only).	فحص تعارض المفاتيح (F8 افتراضيًا، وهو نفس مفتاح الأوامر السريعة). خرائط Spooner بصيغة XML تُعرض كمواقع للمقر (قراءة فقط).
+See the project page	راجع صفحة المشروع
+Hotkey conflict check (F4, commonly reported).	فحص تعارض المفاتيح (F4، حسب ما هو شائع).
+Open source (see project page)	مفتوح المصدر (راجع صفحة المشروع)
+Maps saved as Map Editor XML are listed as possible headquarters sites (read-only).	الخرائط المحفوظة بصيغة Map Editor XML تُعرض كمواقع محتملة للمقر (قراءة فقط).
+Reads the Map Editor XML maps in scripts\\MapLoaderAuto as headquarters sites (read-only).	يقرأ خرائط Map Editor في scripts\MapLoaderAuto كمواقع للمقر (قراءة فقط).
+Informational: needed only if you replace flag textures (docs/FLAG_ASSET_PIPELINE.md).	معلومة: تحتاجه فقط إذا أردت استبدال صور الأعلام (docs/FLAG_ASSET_PIPELINE.md).
+Informational: recommended with many add-on models; nothing to configure here.	معلومة: يُنصح به مع كثرة النماذج المضافة؛ لا شيء لضبطه هنا.
+Informational: recommended with many add-on models.	معلومة: يُنصح به مع كثرة النماذج المضافة.
+# --- ModScanner.cs
+loaded module {0}	وحدة محمّلة {0}
+loaded assembly {0}	مكتبة محمّلة {0}
+{0} uses {1} ({2}), the same key as {3}.	{0} يستخدم {1} ({2})، وهو نفس مفتاح {3}.
+Move {0} to {1}	انقل {0} إلى {1}
+{0} also runs gang wars and territory. {1}	{0} يشغّل أيضًا حروب العصابات والأراضي. {1}
+Coexistence mode is on: Organization Empire spawns fewer battle fighters and no ambient crews.	وضع التعايش مفعّل: إمبراطورية المنظمة تُظهر عددًا أقل من المقاتلين في المعارك ولا طواقم في الشارع.
+Coexistence mode is off: both mods spawn fighters, which can overload the streets.	وضع التعايش متوقف: كلا المودين يُظهران مقاتلين، مما قد يُثقل الشوارع.
+Turn coexistence mode on	فعّل وضع التعايش
+A bodyguard/squad mod is installed. Its NPCs are script-owned, so Organization Empire never recruits, orders or deletes them.	مود حراسة/فرق مثبّت. شخصياته تابعة لسكربت آخر، لذلك لا يجنّدها هذا المود ولا يعطيها أوامر ولا يحذفها.
+A police mod is installed. Recruiting law enforcement stays off while it is present.	مود شرطة مثبّت. يبقى تجنيد رجال الأمن معطّلًا طالما هو موجود.
+{0} needs {1}, which was not found.	{0} يحتاج {1}، ولم يتم العثور عليه.
+The script {0} references {1}, which is not installed. That mod may not start.	السكربت {0} يعتمد على {1}، وهو غير مثبّت. قد لا يعمل ذلك المود.
+ScriptHookVDotNet {0} is older than 3.6.0; some features may fail.	ScriptHookVDotNet {0} أقدم من 3.6.0؛ قد تفشل بعض الميزات.
+RAGE Plugin Hook is installed. Its plugins (LSPDFR, Los Santos RED...) run in a separate hook; Organization Empire adapts to them but cannot call into them.	RAGE Plugin Hook مثبّت. إضافاته (LSPDFR، Los Santos RED...) تعمل في أداة ربط منفصلة؛ إمبراطورية المنظمة تتكيّف معها لكنها لا تستطيع استدعاءها.
+# --- LivingWorldSystem.cs
+The ceasefire between {0} and {1} collapsed.	انهار وقف إطلاق النار بين {0} و{1}.
+{0} and {1} turned their ceasefire into a lasting peace.	حوّل {0} و{1} وقف إطلاق النار إلى سلام دائم.
+The alliance between {0} and {1} broke apart.	انهار التحالف بين {0} و{1}.
+{0} recruited {1} new members in {2}.	جنّد {0} عدد {1} أعضاء جدد في {2}.
+{0} recruited {1} new members.	جنّد {0} عدد {1} أعضاء جدد.
+{0} and {1} formed an alliance.	شكّل {0} و{1} تحالفًا.
+{0} turned down an alliance with {1}.	رفض {0} التحالف مع {1}.
+{0} and {1} agreed to a ceasefire.	اتفق {0} و{1} على وقف إطلاق النار.
+{0} declared war on {1}.	أعلن {0} الحرب على {1}.
+{0} attacked {1} in {2}.	هاجم {0} {1} في {2}.
+{0} is moving into {1}.	{0} يتقدّم إلى {1}.
+{0} took control of {1}.	سيطر {0} على {1}.
+{0} took {1} from {2}.	انتزع {0} {1} من {2}.
+{0} won the fight in {1}.	انتصر {0} في القتال في {1}.
+{0} held {1} against {2}.	صمد {0} في {1} أمام {2}.
+{0} was driven out of {1}.	طُرد {0} من {1}.
+The fight for {0} between {1} and {2} ended in a stalemate.	انتهى القتال على {0} بين {1} و{2} بالتعادل.
+{0} {1} of {2} was killed in {3}.	قُتل {0} {1} من {2} في {3}.
+{0} noticed you fought on their side in {1}.	لاحظ {0} أنك قاتلت إلى جانبهم في {1}.
+{0} promoted {1} to {2}.	رقّى {0} {1} إلى {2}.
+{0} overthrew {1} and now leads {2}.	أطاح {0} بـ{1} وأصبح يقود {2}.
+You killed {0}, {1} of {2}.	لقد قتلت {0}، {1} {2}.
+{0}, {1} of {2}, was killed.	قُتل {0}، {1} {2}.
+A power struggle split {0} after its leader fell.	صراع على السلطة قسّم {0} بعد سقوط زعيمه.
+{0} is the new {1} of {2}.	{0} هو {1} الجديد لـ{2}.
+Sergeant-at-Arms	مسؤول السلاح
+{0} collapsed and its crews scattered.	انهار {0} وتشتتت طواقمه.
+Jefe	الجيفي
+Lieutenant	ملازم
+Captain	نقيب
+Shot-caller	صاحب القرار
+Recruiting	يجنّد
+Arming up	يتسلّح
+Expanding	يتوسّع
+Planning retaliation	يخطط للانتقام
+Seeking allies	يبحث عن حلفاء
+Seeking peace	يسعى للسلام
+Laying low	يختفي عن الأنظار
+Consolidating	يعزّز مواقعه
+# --- RecruitmentSystem.cs
+Law enforcement cannot be recruited while a police mod is installed.	لا يمكن تجنيد رجال الأمن أثناء تثبيت مود للشرطة.
+# --- IntegrationManager.cs
+{0} mod compatibility warning(s). See Settings > Mods & integrations.	{0} تحذير توافق مع مودات أخرى. راجع الإعدادات > المودات والتكامل.
+Public API for other scripts	واجهة برمجية عامة للسكربتات الأخرى
+Other ScriptHookVDotNet mods can read faction, territory, battle and news data, subscribe to events and (if allowed) add factions to the living world.	تستطيع مودات ScriptHookVDotNet الأخرى قراءة بيانات الفصيل والأراضي والمعارك والأخبار، والاشتراك في الأحداث، و(إن سُمح) إضافة فصائل إلى العالم الحي.
+Switched off in the ini (PublicApi).	مُطفأ في ملف ini ‏(PublicApi).
+Read + commands	قراءة + أوامر
+Read-only (commands off)	قراءة فقط (الأوامر متوقفة)
+Coexistence with gang/war mods	التعايش مع مودات العصابات/الحروب
+When Gang and Turf, Los Santos RED or a similar mod is installed: half as many battle fighters, no ambient crews or recruitment scenes, and no suppression of vanilla gang models.	عند تثبيت Gang and Turf أو Los Santos RED أو مود مشابه: نصف عدد مقاتلي المعارك، بلا طواقم في الشارع أو مشاهد تجنيد، وبلا منع لنماذج العصابات الأصلية.
+Police mod compatibility	التوافق مع مودات الشرطة
+LSPD First Response / Los Santos RED detected: recruiting law enforcement is forced off so their officers are never pulled into a faction.	تم اكتشاف LSPD First Response / Los Santos RED: يُمنع تجنيد رجال الأمن حتى لا يُسحب ضباطهم إلى أي فصيل.
+Law enforcement recruitment blocked	تجنيد رجال الأمن ممنوع
+Map mods as headquarters sites	خرائط المودات كمواقع للمقر
+Reads Map Editor and Menyoo Spooner XML maps (scripts\\MapEditor, scripts\\MapLoaderAuto, menyooStuff\\Spooner and extra folders) and lists them on the Headquarters page.	يقرأ خرائط Map Editor وخرائط Menyoo Spooner بصيغة XML (scripts\MapEditor وscripts\MapLoaderAuto وmenyooStuff\Spooner ومجلدات إضافية) ويعرضها في صفحة المقر.
+{0} map(s)	{0} خريطة
+Hotkey conflict check	فحص تعارض المفاتيح
+Compares this mod's keys with the defaults (or config files) of detected trainers and menus, e.g. Menyoo uses F8 like Quick Orders.	يقارن مفاتيح هذا المود بالمفاتيح الافتراضية (أو ملفات إعدادات) المدرّبات والقوائم المكتشفة، مثل Menyoo الذي يستخدم F8 مثل الأوامر السريعة.
+{0} conflict(s)	{0} تعارض
+Entity ownership guard	حارس ملكية الكيانات
+NPCs and vehicles created by other scripts (mission entities) are never recruited, ordered, re-tasked or deleted by Organization Empire; it only cleans up what it spawned itself.	الشخصيات والمركبات التي أنشأتها سكربتات أخرى (كيانات المهام) لا تُجنَّد ولا تُعطى أوامر ولا تُحذف أبدًا؛ المود ينظّف فقط ما أظهره بنفسه.
+Always on	مفعّل دائمًا
+# --- PhoneContactModule.cs
+Phone contacts (iFruitAddon2)	جهات اتصال الهاتف (iFruitAddon2)
+Adds 'Organization Empire' (opens the menu) and 'Call the crew' (summons members) to the in-game phone when iFruitAddon2 is installed.	يضيف 'إمبراطورية المنظمة' (يفتح القائمة) و'استدعِ الطاقم' (يستدعي الأعضاء) إلى هاتف اللعبة عند تثبيت iFruitAddon2.
+Experimental: uses iFruitAddon2's API through reflection and has not been verified in a running game. If it misbehaves it switches itself off; you can also turn it off here.	تجريبي: يستخدم واجهة iFruitAddon2 البرمجية عبر الانعكاس ولم يُختبر داخل اللعبة. إذا أخطأ يُطفئ نفسه تلقائيًا؛ ويمكنك أيضًا إطفاؤه من هنا.
+Switched off in the ini (PhoneContact).	مُطفأ في ملف ini ‏(PhoneContact).
+{0} contact(s)	{0} جهة اتصال
+Call the crew	استدعِ الطاقم
+# --- OpsPages.cs
+Locations from installed maps	مواقع من الخرائط المثبّتة
+Map Editor / Menyoo maps found in your game folder.	خرائط Map Editor / Menyoo الموجودة في مجلد لعبتك.
+# --- SystemPages.cs
+Both sides together. 0 = battles near you stay off-screen.	الطرفان معًا. 0 = المعارك القريبة تبقى خارج الشاشة.
+Max street battle fighters	الحد الأقصى لمقاتلي معارك الشوارع
+Max rival crew members around you	الحد الأقصى لأفراد الطواقم المنافسة حولك
+Rival factions recruit, arm, expand, fight each other, form alliances and change leaders on their own.	الفصائل المنافسة تجنّد وتتسلّح وتتوسّع وتتقاتل وتشكّل تحالفات وتغيّر قادتها بنفسها.
+World news notifications	إشعارات أخبار العالم
+Street battles happen for real	معارك الشوارع تحدث فعليًا
+Near you, rival-vs-rival battles are fought by spawned fighters; their losses decide the battle.	بالقرب منك، تخوض المعارك بين المنافسين شخصياتٌ حقيقية تظهر في اللعبة؛ وخسائرها تحسم المعركة.
+Battles on the map	المعارك على الخريطة
+Rival crews and recruitment scenes	طواقم المنافسين ومشاهد التجنيد
+Rival leaders appear in the world	قادة المنافسين يظهرون في العالم
+Mods & integrations	المودات والتكامل
+{0} detected	{0} مكتشف
+# --- WorldPages.cs
+Fallen in the street: {0} / {1}	سقطوا في الشارع: {0} / {1}
+You are fighting for the attackers.	أنت تقاتل مع المهاجمين.
+You are fighting for the defenders.	أنت تقاتل مع المدافعين.
+added by {0}	أضافه {0}
+Age {0}, in charge since day {1}.	العمر {0}، في القيادة منذ اليوم {1}.
+Loyalty to the leader: {0}	الولاء للزعيم: {0}
+The leader is sometimes seen with bodyguards at the faction's home turf.	يُرى الزعيم أحيانًا مع حراسه في منطقة الفصيل الأساسية.
+Current plan	الخطة الحالية
+Territories held	المناطق المملوكة
+Set waypoint to their turf	تعيين نقطة طريق إلى منطقتهم
+Relations with other factions	العلاقات مع الفصائل الأخرى
+Hostility {0}, since day {1}.	العداء {0}، منذ اليوم {1}.
+Hostility {0}	العداء {0}
+Toward you	تجاهك
+Diplomacy with this faction	الدبلوماسية مع هذا الفصيل
+Recent news	آخر الأخبار
+Age {0}	العمر {0}
+AMBITION	الطموح
+CAUTION	الحذر
+BRUTALITY	الوحشية
+CHARISMA	الكاريزما
+Ambitious leaders expand and start wars, cautious ones defend and make peace, brutal ones retaliate harder, charismatic ones recruit more and find allies.	القادة الطموحون يتوسّعون ويشعلون الحروب، والحذرون يدافعون ويصنعون السلام، والوحشيون ينتقمون بقسوة أكبر، وأصحاب الكاريزما يجنّدون أكثر ويجدون حلفاء.
+Scanning installed mods...	جارٍ فحص المودات المثبّتة...
+Not scanned yet.	لم يتم الفحص بعد.
+{0} mods detected | {1} issue(s)	{0} مود مكتشف | {1} مشكلة
+Detect other mods and run the optional integrations. Other mods' files are only read, never changed.	اكتشاف المودات الأخرى وتشغيل التكاملات الاختيارية. ملفات المودات الأخرى تُقرأ فقط ولا تُعدَّل أبدًا.
+Mod integration	تكامل المودات
+Rescan installed mods	إعادة فحص المودات المثبّتة
+{0} factions active, {1} battles under way	{0} فصيل نشط، {1} معركة جارية
+Compatibility ({0})	التوافق ({0})
+No conflicts found.	لا توجد تعارضات.
+{0}\n\nOnly Organization Empire's own settings are changed.	{0}\n\nتتغيّر إعدادات إمبراطورية المنظمة فقط.
+Could not apply.	تعذّر التطبيق.
+Done.	تم.
+Integrations	التكاملات
+Enable {0}?	تفعيل {0}؟
+Coexistence mode	وضع التعايش
+Auto: on when a gang/war mod is detected. Fewer battle fighters, no ambient crews.	تلقائي: يعمل عند اكتشاف مود عصابات/حروب. مقاتلون أقل في المعارك وبلا طواقم في الشارع.
+Allow other scripts to change the game (API)	السماح للسكربتات الأخرى بتغيير اللعبة (الواجهة البرمجية)
+Allow external commands?	السماح بالأوامر الخارجية؟
+Other installed scripts will be able to add factions, show notifications and report kills through Organization Empire's API. Only enable this for mods you trust.	ستتمكن السكربتات المثبّتة الأخرى من إضافة فصائل وعرض إشعارات والإبلاغ عن القتلى عبر واجهة إمبراطورية المنظمة البرمجية. فعّل هذا فقط للمودات التي تثق بها.
+Reading data and events is always allowed while the API is on.	قراءة البيانات والأحداث مسموحة دائمًا طالما الواجهة البرمجية مفعّلة.
+Detected mods ({0})	المودات المكتشفة ({0})
+License: {0}	الترخيص: {0}
+Not in the catalog: shown so you know it is running.	غير موجود في الدليل: يُعرض لتعرف أنه يعمل.
+Found: {0}	وُجد في: {0}
+Integration log	سجل التكامل
+Map Locations	مواقع الخرائط
+From installed Map Editor / Menyoo maps (files are only read).	من خرائط Map Editor / Menyoo المثبّتة (الملفات تُقرأ فقط).
+No map files found.	لم يتم العثور على ملفات خرائط.
+Pick a map to set a waypoint. Drive there, then use 'Establish / Move headquarters here'.	اختر خريطة لتعيين نقطة طريق. اذهب إليها ثم استخدم 'تأسيس / نقل المقر إلى هنا'.
+{0} map, {1} objects. {2}	خريطة {0}، {1} عنصر. {2}
+The living world is switched off (Settings > World & factions). Rival factions only react to you.	العالم الحي متوقف (الإعدادات > العالم والفصائل). الفصائل المنافسة تتفاعل معك فقط.
+Battles under way	معارك جارية
+No fighting right now.	لا يوجد قتال الآن.
+Locals	أهالي الحي
+{0} vs {1}	{0} ضد {1}
+Set a waypoint. Near you the fight happens for real: kill one side to help the other.	عيّن نقطة طريق. بالقرب منك يحدث القتال فعليًا: اقتل أحد الطرفين لتساعد الآخر.
+Factions	الفصائل
+Collapsed	انهارت
+World news	أخبار العالم
+Nothing has happened yet. The world moves every strategic hour.	لم يحدث شيء بعد. العالم يتحرك كل ساعة استراتيجية.
+Battles fought	معارك خيضت
+Leaders fallen	قادة سقطوا
+Hour {0} of up to {1}	الساعة {0} من {1} كحد أقصى
+# --- UiManager.cs
+World	العالم
+# --- LivingWorldController.cs
+Street war in {0}: {1} vs {2}!	حرب شوارع في {0}: {1} ضد {2}!
+{0}, {1} of {2}, is nearby with bodyguards.	{0}، {1} {2}، قريب مع حراسه.
+{0} just recruited someone off the street.	جنّد {0} شخصًا من الشارع للتو.
+# --- enum CoexistenceMode
+Auto	تلقائي
+# --- enum WorldNotifyLevel
+Major	المهمة فقط
+# --- enum IntegrationLevel
+Supported	مدعوم
+Experimental	تجريبي
+Detected Only	اكتشاف فقط
+Incompatible	غير متوافق
+Unavailable	غير متاح
+# --- enum IntegrationStatus
+Disabled	معطّل
+# --- enum IssueKind
+Hotkey Conflict	تعارض مفاتيح
+Overlap	تداخل
+Missing Dependency	اعتمادية مفقودة
+Duplicate	نسخة مكررة
+Notice	ملاحظة
+# --- enum ModCategory
+Framework	إطار تشغيل
+Gangs And Territory	العصابات والأراضي
+Npc Behavior	سلوك الشخصيات
+Police	الشرطة
+Military Combat	القتال العسكري
+Interiors And Maps	الأماكن الداخلية والخرائط
+Missions And Robbery	المهام والسرقات
+Animation	الحركات
+Ui And Menus	الواجهات والقوائم
+Trainer	مدرّب (Trainer)
+Library	مكتبة
+Performance	الأداء
+# --- enum ModKind
+Shvdn Script	سكربت ScriptHookVDotNet
+Asi Plugin	إضافة ASI
+Rph Plugin	إضافة RAGE
+Tool	أداة
+Data Mod	مود بيانات
+# --- enum BattleStatus
+Attacker Won	فاز المهاجم
+Defender Won	فاز المدافع
+Stalemate	تعادل
+# --- enum RivalGoal
+Consolidate	تعزيز المواقع
+Arm	التسلّح
+Expand	التوسّع
+Retaliate	الانتقام
+Seek Allies	البحث عن حلفاء
+Make Peace	صنع السلام
+Lay Low	الاختفاء عن الأنظار
+# --- enum RivalTemperament
+Opportunist	انتهازي
+Mercantile	تجاري
+Fanatic	متعصب
+# --- enum WorldNewsKind
+Battle	معركة
+Elimination	إقصاء
+Player	اللاعب
 # --- composed at runtime
 {0} has recovered and is back on duty.	تعافى {0} وعاد إلى الخدمة.
 {0} was released and is back on duty.	أُطلق سراح {0} وعاد إلى الخدمة.
@@ -2269,3 +2542,6 @@ Peace odds {0}	فرص السلام {0}
 Pay them ({0})	ادفع لهم ({0})
 Make an offer ({0})	قدّم عرضًا ({0})
 D{0} {1}h  {2}	اليوم {0} {1}:00  {2}
+Idle	خامل
+Error	خطأ
+Cancelled	أُلغيت

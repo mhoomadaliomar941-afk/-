@@ -287,7 +287,7 @@ namespace OrganizationEmpire.Core.Tests
         [Fact]
         public void EveryEnumDisplayNameHasATranslation()
         {
-            var skip = new HashSet<string> { "Bc", "Joining", "LogLevel", "ChatRole", "ConversationState", "AiErrorKind", "AiProviderKind" };
+            var skip = new HashSet<string> { "Bc", "Joining", "LogLevel", "ChatRole", "ConversationState", "AiErrorKind", "AiProviderKind", "SignatureKind" };
             var missing = new List<string>();
             foreach (var type in typeof(Translator).Assembly.GetTypes().Where(t => t.IsEnum && !skip.Contains(t.Name)))
             {

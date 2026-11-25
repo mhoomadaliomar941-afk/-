@@ -13,7 +13,7 @@ AI-generated dialogue - and eventually take over the (fictional) state of San An
 | Area | What you get |
 |---|---|
 | **Three faction types** | Different ranks, tiers, income models, missions, recruitment modifiers, events, dialogue voice and takeover paths. The militia has the strongest path to power, the mafia rises through influence, the gang path is slow and hard. |
-| **Command interface** (F7) | 18-tab command console: Dashboard, Faction, Members, Recruitment, Ranks, Squads/Units, AI Dialogue, Missions, Territory, Vehicles, Headquarters, Relations, Resources, Identity, Flag Designer, Government, Settings, Save/Load. Keyboard **and** mouse, confirmations, toasts, optional pause/slow-motion. |
+| **Command interface** (F7) | 19-tab command console: Dashboard, Faction, Members, Recruitment, Ranks, Squads/Units, AI Dialogue, Missions, Territory, Vehicles, Headquarters, Relations, World, Resources, Identity, Flag Designer, Government, Settings, Save/Load. Keyboard **and** mouse, confirmations, toasts, optional pause/slow-motion. |
 | **Recruit real NPCs** | Look at a pedestrian, press **E**: view their generated profile, see your odds with a factor breakdown, and persuade / pay / intimidate / appeal to the cause. Mission-critical and protected NPCs are never eligible. |
 | **Controllable members** | Follow (native group AI), stay, guard, defend you, defend a location, move to waypoint, return to HQ, enter/exit vehicles, attack your target, formations, loadouts, stuck recovery, deployment caps. Quick field orders on **F8**. |
 | **Ranks & squads** | Fully customizable ranks (create/rename/delete/reorder/permissions/salary) with per-type templates; squads with leaders, roles, formations, vehicles, garrisons and orders. |
@@ -22,6 +22,8 @@ AI-generated dialogue - and eventually take over the (fictional) state of San An
 | **Missions** | 28 missions across 10 objective types (assault, defend, delivery, collection, escort, recruitment, recon, sit-down meetings with choices, assassination, final campaign) with real objectives, failure conditions and rewards. |
 | **Identity & flags** | Colors, tag, motto, uniforms, identity presets, a flag designer with 12 patterns and emblems, custom PNG flags (shown in menus), and a physical flag pole at your HQ. |
 | **Government** | After the takeover: name the state and government, choose your title and flag, appoint ministers from your members, set taxes and policies, manage stability, legitimacy, insurgency and forces. A pre-takeover backup lets you revert. |
+| **Living world** | Rival factions have named leaders and lieutenants, money, members, arms and morale, and act on their own: recruit, arm, expand, ally, make peace, retaliate. Their wars are **fought for real** in the street when you're near (you can take a side), battles show on the map, crews recruit passers-by in front of you, and leaders can be found with bodyguards. See [docs/LIVING_WORLD.md](docs/LIVING_WORLD.md). |
+| **Mod integration** | Detects other installed mods (read-only), warns about hotkey clashes and overlapping gang mods with one-click fixes, runs optional isolated integrations (public API for other scripts, map-mod HQ sites, police-mod compatibility, phone contacts via iFruitAddon2) and documents every one in an integration registry. See [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md). |
 | **English / العربية** | Full Arabic interface (2,000+ translated strings) with right-to-left layout, Arabic AI replies and Arabic chat commands. GTA's fonts have no Arabic, so the mod draws Arabic itself from bundled glyph textures. Switch any time in Settings. See [docs/ARABIC.md](docs/ARABIC.md). |
 | **Robust** | Zero third-party dependencies (one DLL), atomic saves with backup recovery, every subsystem error-isolated, entity caps, API keys redacted from logs (optional DPAPI encryption). |
 
@@ -45,6 +47,8 @@ All keys are configurable (Settings > Hotkeys or `scripts/OrganizationEmpire/Org
 
 - [Installation](docs/INSTALL.md)
 - [الواجهة العربية / Arabic interface](docs/ARABIC.md)
+- [Living world](docs/LIVING_WORLD.md)
+- [Mod integration & compatibility](docs/INTEGRATIONS.md) · [Mod research notes](docs/MOD_RESEARCH.md)
 - [Gameplay guide](docs/GAMEPLAY_GUIDE.md)
 - [AI dialogue setup & privacy](docs/AI_SETUP.md)
 - [Flags & asset pipeline](docs/FLAG_ASSET_PIPELINE.md)
@@ -75,7 +79,7 @@ docs/                         user and developer documentation
 
 ## Status
 
-The core simulation, persistence and AI layers are covered by 148 automated tests. The in-game layer compiles cleanly
+The core simulation, persistence and AI layers are covered by 186 automated tests. The in-game layer compiles cleanly
 against the ScriptHookVDotNet 3.6.0 API, but it could not be exercised inside a running GTA V session during
 development, so treat this release as a first version: please report anything that misbehaves (attach
 `scripts/OrganizationEmpire/logs/OrganizationEmpire.log`). See [docs/LIMITATIONS.md](docs/LIMITATIONS.md).
