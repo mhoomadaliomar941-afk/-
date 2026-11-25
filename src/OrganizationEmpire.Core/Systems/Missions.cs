@@ -428,6 +428,7 @@ namespace OrganizationEmpire.Core.Systems
             }
 
             ctx.State.MissionHistory.Add(new MissionRecord { DefinitionId = d.Id, Title = d.Title, Day = w.Day, Success = outcome.Success, Notes = outcome.FailureReason });
+            Api.ApiHub.PublishMissionFinished(d.Id, d.Title, outcome.Success);
             if (ctx.State.MissionHistory.Count > 50) ctx.State.MissionHistory.RemoveAt(0);
             return lines;
         }

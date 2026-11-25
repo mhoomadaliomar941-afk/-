@@ -48,6 +48,8 @@ namespace OrganizationEmpire
         public RivalController Rivals;
         public MissionController Missions;
         public UiManager Ui;
+        public LivingWorldController LivingWorld;
+        public Integration.IntegrationManager Integrations;
 
         public ModContext(string dataDir)
         {
@@ -82,6 +84,8 @@ namespace OrganizationEmpire
             Missions = new MissionController(this);
             Ui = new UiManager(this);
             ApplyLanguage(false);
+            LivingWorld = new LivingWorldController(this);
+            Integrations = new Integration.IntegrationManager(this);
             Dialogue = new DialogueService(() => Config.AI, () => ProviderFactory.Create(Config.AI, ResolvedApiKey));
 
             State = Simulation.NewGame(Environment.TickCount);
@@ -92,6 +96,8 @@ namespace OrganizationEmpire
                 var latest = Saves.MostRecent();
                 if (latest != null) Load(latest.Slot, false);
             }
+            try { Integrations.Initialize(); }
+            catch (Exception ex) { Log.Error("Mod integration startup failed (the mod keeps running without it)", ex); }
         }
 
         private bool _arabicTableLoaded;
@@ -192,6 +198,7 @@ namespace OrganizationEmpire
             try { Members?.DespawnAll(); } catch (Exception ex) { Log.Error("Member despawn failed", ex); }
             try { Vehicles?.DespawnAll(); } catch (Exception ex) { Log.Error("Vehicle despawn failed", ex); }
             try { Rivals?.DespawnAll(); } catch (Exception ex) { Log.Error("Rival despawn failed", ex); }
+            try { LivingWorld?.DespawnAll(true); } catch (Exception ex) { Log.Error("Living world despawn failed", ex); }
             try { Hq?.Cleanup(); } catch (Exception ex) { Log.Error("HQ cleanup failed", ex); }
             try { Territories?.ClearBlips(); } catch (Exception ex) { Log.Error("Blip cleanup failed", ex); }
             try { Ui?.CloseChat(); } catch { /* ignore */ }
@@ -201,6 +208,7 @@ namespace OrganizationEmpire
         {
             Log.Info("Shutting down; cleaning up world entities.");
             ResetWorld();
+            try { Integrations?.Shutdown(); } catch { /* ignore */ }
             try { Rivals?.ReleaseSuppression(); } catch { /* ignore */ }
             try { Relations?.Reset(State?.World); } catch { /* ignore */ }
             try { Entities?.CleanupAll(true); } catch { /* ignore */ }
@@ -208,6 +216,15 @@ namespace OrganizationEmpire
         }
 
         public int MemberCountDeployed => Members?.DeployedCount ?? 0;
+
+        /// <summary>A kill reported by another mod through the public API (ped handles).</summary>
+        public void ReportExternalKill(int victimHandle, int killerHandle)
+        {
+            var victim = GTA.Entity.FromHandle(victimHandle) as GTA.Ped;
+            var killer = GTA.Entity.FromHandle(killerHandle) as GTA.Ped;
+            if (victim == null || killer == null || !victim.Exists()) return;
+            Rivals.CreditKill(victim, killer);
+        }
 
         public bool IsMenuBlocking => Ui != null && (Ui.IsOpen || Ui.IsCapturingInput);
     }

@@ -345,6 +345,7 @@ public class WarTests
     {
         var ctx = TestHelpers.NewGame(FactionType.Militia, 3);
         var r = ctx.World.GetRival("aztecas")!;
+        r.Relation = RelationStatus.War; // the player's war: elimination is credited to the player
         r.Strength = 0;
         WarSystem.CheckElimination(ctx, r);
         Assert.False(r.Eliminated); // still holds Vespucci

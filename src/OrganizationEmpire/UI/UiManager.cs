@@ -68,6 +68,7 @@ namespace OrganizationEmpire.UI
             if (!Mod.HasFaction)
             {
                 _tabs.Add(new TabDef("New Faction", () => new CreationWizardPage()));
+                _tabs.Add(new TabDef("World", () => new WorldPage()));
                 _tabs.Add(new TabDef("Save / Load", () => new SaveLoadPage()));
                 _tabs.Add(new TabDef("Settings", () => new SettingsPage()));
             }
@@ -85,6 +86,7 @@ namespace OrganizationEmpire.UI
                 _tabs.Add(new TabDef("Vehicles", () => new VehiclesPage()));
                 _tabs.Add(new TabDef("Headquarters", () => new HeadquartersPage()));
                 _tabs.Add(new TabDef("Relations", () => new RelationsPage()));
+                _tabs.Add(new TabDef("World", () => new WorldPage()));
                 _tabs.Add(new TabDef("Resources", () => new ResourcesPage()));
                 _tabs.Add(new TabDef("Identity", () => new IdentityPage()));
                 _tabs.Add(new TabDef("Flag Designer", () => new FlagDesignerPage()));

@@ -371,10 +371,13 @@ namespace OrganizationEmpire.Core.Systems
                 r.Strength = 0.5f;
                 return;
             }
+            // Only the player's own war earns the credit; collapses caused by other factions are world news.
+            bool playerCaused = r.Relation == RelationStatus.War || r.WarScore > 0;
             r.Eliminated = true;
             r.Relation = RelationStatus.Neutral;
             ctx.World.PendingAttacks.RemoveAll(a => a.AttackerId == r.Id);
             foreach (var t in ctx.World.Territories) t.Influence.Remove(r.Id);
+            if (!playerCaused) return;
             ctx.Faction.Stats.RivalsEliminated++;
             ctx.Faction.Reputation = MathEx.Pct(ctx.Faction.Reputation + 10);
             ctx.Report("Relations", r.Name + " has been ELIMINATED. Their remaining crews scatter.", EventSeverity.Good);

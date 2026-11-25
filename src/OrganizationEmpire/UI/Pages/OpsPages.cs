@@ -305,6 +305,8 @@ namespace OrganizationEmpire.UI.Pages
             l.Header("Location");
             l.Action(hq == null ? "Establish headquarters here" : "Move headquarters here", () => Ui.Confirm(hq == null ? "Establish HQ here?" : "Move HQ here?",
                 "Uses your exact current position. " + (hq != null ? "Moving costs a little morale; upgrades are kept." : ""), () => Report(Mod.Hq.EstablishHere(hq?.Name))));
+            if (Mod.Integrations != null && Mod.Integrations.Maps.Count > 0)
+                l.Link("Locations from installed maps", () => new MapLocationsPage(), value: Mod.Integrations.Maps.Count.ToString(), hint: "Map Editor / Menyoo maps found in your game folder.");
             if (hq == null) return;
             l.Action("Rename", () => Ui.AskText("HQ name", hq.Name, 32, s => { hq.Name = s; Mod.Hq.Refresh(true); }), value: hq.Name);
             l.Action("Set waypoint to HQ", () => { GTA.World.WaypointPosition = hq.Position.ToVector3OE(); Ui.Notify.Push("Waypoint set.", EventSeverity.Info); });

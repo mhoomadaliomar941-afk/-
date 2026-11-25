@@ -26,6 +26,7 @@ namespace OrganizationEmpire.UI.Pages
             l.Link("Spawning & performance", () => new SpawnSettingsPage());
             l.Link("World & factions", () => new WorldSettingsPage(), enabled: true);
             l.Link("AI dialogue", () => new AiSettingsPage(), value: Mod.Config.AI.Enabled ? Mod.Config.AI.Provider.ToString() : "disabled");
+            l.Link("Mods & integrations", () => new ModsPage(), value: Mod.Integrations?.Scan != null ? Core.Systems.LivingWorldSystem.Fmt("{0} detected", Mod.Integrations.Scan.Mods.Count) : null);
             l.Link("Debug", () => new DebugSettingsPage());
             l.Spacer();
             l.Action("Reload settings from file", () =>
@@ -133,6 +134,8 @@ namespace OrganizationEmpire.UI.Pages
             l.Slider("Max faction vehicles out", s.MaxActiveFactionVehicles, 0, 10, 1, v => { s.MaxActiveFactionVehicles = (int)v; Save(); }, "0");
             l.Slider("Max HQ guards", s.MaxHqGuards, 0, 10, 1, v => { s.MaxHqGuards = (int)v; Save(); }, "0");
             l.Slider("Max rival patrol NPCs", s.MaxRivalPatrolPeds, 0, 12, 1, v => { s.MaxRivalPatrolPeds = (int)v; Save(); }, "0");
+            l.Slider("Max street battle fighters", s.MaxBattlePeds, 0, 24, 1, v => { s.MaxBattlePeds = (int)v; Save(); }, "0", "Both sides together. 0 = battles near you stay off-screen.");
+            l.Slider("Max rival crew members around you", s.MaxAmbientCrewPeds, 0, 8, 1, v => { s.MaxAmbientCrewPeds = (int)v; Save(); }, "0");
             l.Slider("Global entity cap", s.GlobalEntityCap, 20, 120, 5, v => { s.GlobalEntityCap = (int)v; Save(); }, "0", "Safety net for everything this mod spawns.");
             l.Info("Currently spawned by the mod", Mod.Entities.Total.ToString());
         }
@@ -150,6 +153,15 @@ namespace OrganizationEmpire.UI.Pages
             l.Toggle("Territory map overlay", w.ShowTerritoryOverlay, v => { w.ShowTerritoryOverlay = v; Save(); Mod.Territories.ForceRefresh(); });
             l.Toggle("Member blips", w.ShowMemberBlips, v => { w.ShowMemberBlips = v; Save(); Mod.Members.RefreshBlips(); });
             l.Toggle("HQ flag pole", w.ShowHeadquartersFlag, v => { w.ShowHeadquartersFlag = v; Save(); Mod.Hq.Refresh(true); });
+            l.Header("Living world");
+            l.Toggle("Living world", w.LivingWorld, v => { w.LivingWorld = v; Save(); if (!v) Mod.LivingWorld.DespawnAll(true); },
+                "Rival factions recruit, arm, expand, fight each other, form alliances and change leaders on their own.");
+            l.Choice("World news notifications", PageUtil.Name(w.LivingWorldNotifications), d => { w.LivingWorldNotifications = PageUtil.Next(w.LivingWorldNotifications, d); Save(); });
+            l.Toggle("Street battles happen for real", w.PhysicalBattles, v => { w.PhysicalBattles = v; Save(); },
+                "Near you, rival-vs-rival battles are fought by spawned fighters; their losses decide the battle.");
+            l.Toggle("Battles on the map", w.ShowWorldEventsOnMap, v => { w.ShowWorldEventsOnMap = v; Save(); });
+            l.Toggle("Rival crews and recruitment scenes", w.AmbientFactionCrews, v => { w.AmbientFactionCrews = v; Save(); });
+            l.Toggle("Rival leaders appear in the world", w.RivalLeadersInWorld, v => { w.RivalLeadersInWorld = v; Save(); });
             l.Header("Rival behavior");
             l.Slider("Rival activity", w.RivalActivity, 0f, 2f, 0.1f, v => { w.RivalActivity = v; Save(); }, "0.0", "0 = passive rivals (no expansion or attacks).");
             l.Slider("Rival hostility growth", w.RivalHostility, 0f, 2f, 0.1f, v => { w.RivalHostility = v; Save(); }, "0.0");

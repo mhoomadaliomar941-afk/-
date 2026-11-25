@@ -66,6 +66,9 @@ namespace OrganizationEmpire.World
 
         public bool IsMemberPed(Entity e) => e is Ped p && FindByPed(p) != null;
 
+        /// <summary>For the public API: is this ped handle a deployed member?</summary>
+        public bool IsMemberHandle(int handle) => Entity.FromHandle(handle) is Ped p && FindByPed(p) != null;
+
         private static bool FollowsPlayer(OrderType o) => o == OrderType.Follow || o == OrderType.DefendPlayer || o == OrderType.EnterVehicle || o == OrderType.ExitVehicle || o == OrderType.Attack;
         private static bool PositionOrder(OrderType o) => o == OrderType.Stay || o == OrderType.Guard || o == OrderType.MoveTo || o == OrderType.DefendLocation;
 

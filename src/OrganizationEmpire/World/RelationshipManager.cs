@@ -64,6 +64,85 @@ namespace OrganizationEmpire.World
             return g;
         }
 
+        // ------------------------------------------------------------------ living world groups
+
+        private readonly Dictionary<string, RelationshipGroup> _worldGroups = new Dictionary<string, RelationshipGroup>();
+        private readonly Dictionary<string, Relationship> _appliedWorld = new Dictionary<string, Relationship>();
+        private RelationshipGroup? _locals;
+
+        /// <summary>
+        /// Group for a faction's people living in the world (crews, battle fighters, leaders). Unlike the war-patrol
+        /// group they only attack the player when that faction is actually at war with the player.
+        /// </summary>
+        public RelationshipGroup WorldGroup(string rivalId)
+        {
+            string key = rivalId ?? "unknown";
+            if (_worldGroups.TryGetValue(key, out var g)) return g;
+            g = GTA.World.AddRelationshipGroup("OE_WORLD_" + key.ToUpperInvariant());
+            g.SetRelationshipBetweenGroups(g, Relationship.Companion, false);
+            _worldGroups[key] = g;
+            return g;
+        }
+
+        /// <summary>Neighborhood people defending unclaimed turf against an invading faction.</summary>
+        public RelationshipGroup Locals
+        {
+            get
+            {
+                if (_locals == null)
+                {
+                    var g = GTA.World.AddRelationshipGroup("OE_LOCALS");
+                    g.SetRelationshipBetweenGroups(g, Relationship.Companion, false);
+                    _locals = g;
+                }
+                return _locals.Value;
+            }
+        }
+
+        public void MakeEnemies(RelationshipGroup a, RelationshipGroup b)
+        {
+            a.SetRelationshipBetweenGroups(b, Relationship.Hate, true);
+        }
+
+        /// <summary>Applies living-world diplomacy (faction vs faction, faction vs player) to the world groups.</summary>
+        public void SyncWorld(WorldState world, bool hasFaction)
+        {
+            var lw = world.Living;
+            foreach (var kv in _worldGroups)
+            {
+                var r = world.GetRival(kv.Key);
+                if (r == null) continue;
+                var toPlayer = hasFaction && r.Active ? ToWorldRelationship(r.Relation) : Relationship.Neutral;
+                ApplyWorld(kv.Key + ">player", kv.Value, PlayerGroup, toPlayer);
+                ApplyWorld(kv.Key + ">faction", kv.Value, Faction, toPlayer);
+                foreach (var other in _worldGroups)
+                {
+                    if (string.CompareOrdinal(other.Key, kv.Key) <= 0) continue;
+                    var rel = lw?.Get(kv.Key, other.Key);
+                    ApplyWorld(kv.Key + ">" + other.Key, kv.Value, other.Value, rel == null ? Relationship.Neutral : ToWorldRelationship(rel.Status));
+                }
+            }
+        }
+
+        private void ApplyWorld(string key, RelationshipGroup a, RelationshipGroup b, Relationship rel)
+        {
+            if (_appliedWorld.TryGetValue(key, out var applied) && applied == rel) return;
+            a.SetRelationshipBetweenGroups(b, rel, true);
+            _appliedWorld[key] = rel;
+        }
+
+        private static Relationship ToWorldRelationship(RelationStatus s)
+        {
+            switch (s)
+            {
+                case RelationStatus.War: return Relationship.Hate;
+                case RelationStatus.Rivalry: return Relationship.Dislike;
+                case RelationStatus.Alliance: return Relationship.Like;
+                case RelationStatus.Peace: return Relationship.Respect;
+                default: return Relationship.Neutral;
+            }
+        }
+
         /// <summary>Maps diplomacy onto GTA's ambient gang relationship groups.</summary>
         public void SyncVanilla(WorldState world, bool hasFaction)
         {

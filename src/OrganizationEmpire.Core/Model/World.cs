@@ -67,6 +67,26 @@ namespace OrganizationEmpire.Core.Model
         public string Weapon { get; set; } = "WEAPON_PISTOL";
         public string Description { get; set; }
 
+        // ---- living world (see LivingWorldSystem)
+        public RivalLeader Leader { get; set; }
+        public List<RivalLeader> Lieutenants { get; set; } = new List<RivalLeader>();
+        public RivalTemperament Temperament { get; set; } = RivalTemperament.Opportunist;
+        /// <summary>0..100 stockpile of weapons and ammunition.</summary>
+        public float Arms { get; set; } = 40;
+        /// <summary>0..100 political/social leverage.</summary>
+        public float Influence { get; set; } = 20;
+        public float Morale { get; set; } = 60;
+        public RivalGoal Goal { get; set; } = RivalGoal.Consolidate;
+        public string GoalTargetId { get; set; }
+        public int NextDecisionTick { get; set; }
+        /// <summary>Registered by another mod through the integration API (not part of the default world).</summary>
+        public bool External { get; set; }
+        public string ExternalSource { get; set; }
+
+        /// <summary>Approximate number of members (strength is the canonical military value).</summary>
+        [JsonIgnore]
+        public int Manpower => (int)System.Math.Round(Strength * 1.2f);
+
         [JsonIgnore]
         public bool Active => Enabled && !Eliminated;
 
@@ -104,6 +124,7 @@ namespace OrganizationEmpire.Core.Model
         public List<RivalFaction> Rivals { get; set; } = new List<RivalFaction>();
         public StateAuthority State { get; set; } = new StateAuthority();
         public List<AttackEvent> PendingAttacks { get; set; } = new List<AttackEvent>();
+        public LivingWorldState Living { get; set; } = new LivingWorldState();
 
         [JsonIgnore]
         public int Day => Tick / 24;

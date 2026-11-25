@@ -9,7 +9,7 @@ using OrganizationEmpire.Native;
 
 namespace OrganizationEmpire.World
 {
-    internal enum SpawnCategory { Member, Mission, Rival, Vehicle, Prop, Temp }
+    internal enum SpawnCategory { Member, Mission, Rival, Vehicle, Prop, Temp, World }
 
     /// <summary>
     /// Every entity this mod creates or adopts goes through here: per-category and global caps prevent runaway spawning,
@@ -39,6 +39,7 @@ namespace OrganizationEmpire.World
                 case SpawnCategory.Member: return 30 + s.MaxHqGuards;
                 case SpawnCategory.Mission: return s.MaxMissionHostiles + 8;
                 case SpawnCategory.Rival: return s.MaxRivalPatrolPeds;
+                case SpawnCategory.World: return s.MaxBattlePeds + s.MaxAmbientCrewPeds + 4;
                 case SpawnCategory.Vehicle: return s.MaxActiveFactionVehicles + 6;
                 case SpawnCategory.Prop: return 12;
                 default: return 10;

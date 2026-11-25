@@ -163,6 +163,11 @@ namespace OrganizationEmpire.Core.AI
                 else sb.Append("; the faction now governs the ").Append(f.Government.StateName);
                 c.FactionSnapshot = sb.ToString();
                 c.RecentEvents = f.Events.Skip(Math.Max(0, f.Events.Count - 5)).Select(e => "Day " + e.Day + ": " + e.Text).ToList();
+                // Street gossip from the living world (other factions' wars, leaders, territory).
+                var news = w.Living?.News;
+                if (news != null)
+                    foreach (var n in news.Where(n => n.Kind != WorldNewsKind.Recruitment).Skip(Math.Max(0, news.Count(n => n.Kind != WorldNewsKind.Recruitment) - 2)))
+                        c.RecentEvents.Add("Day " + n.Day + ": " + n.Text);
             }
             return c;
         }

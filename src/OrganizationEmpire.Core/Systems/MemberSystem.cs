@@ -112,6 +112,7 @@ namespace OrganizationEmpire.Core.Systems
                 if (m.Loyalty < 15 && ctx.Rng.Chance(0.02f))
                 {
                     m.Status = MemberStatus.Deserted;
+                    Api.ApiHub.PublishMemberLost(m, "deserted");
                     ctx.Report("Members", m.DisplayName + " has deserted the " + FactionTypeInfo.TierName(f).ToLowerInvariant() + ".", EventSeverity.Bad);
                     if (f.Type == FactionType.Mafia || f.Type == FactionType.Militia)
                     {
@@ -173,6 +174,7 @@ namespace OrganizationEmpire.Core.Systems
                 m.Status = MemberStatus.Dead;
                 f.Stats.MembersLost++;
                 ctx.Report("Members", m.DisplayName + " was killed in action.", EventSeverity.Bad);
+                Api.ApiHub.PublishMemberLost(m, "killed");
                 foreach (var other in f.Members.Where(o => o.Status == MemberStatus.Active))
                 {
                     other.Morale = MathEx.Pct(other.Morale - 3);
@@ -196,6 +198,7 @@ namespace OrganizationEmpire.Core.Systems
             var squad = f.GetSquad(m.SquadId);
             if (squad != null) SquadSystem.RemoveMember(f, squad, m);
             f.Members.Remove(m);
+            Api.ApiHub.PublishMemberLost(m, "expelled");
             foreach (var v in f.Vehicles.Where(v => v.DriverMemberId == m.Id)) v.DriverMemberId = null;
             if (f.Headquarters != null) f.Headquarters.GuardMemberIds.Remove(m.Id);
             if (f.Government != null)

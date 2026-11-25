@@ -86,6 +86,7 @@ namespace OrganizationEmpire.Core.Systems
             int capacity = MemberSystem.RosterCapacity(f, ctx.Config.Gameplay.MaxRosterSize);
             if (MemberSystem.LivingCount(f) >= capacity) { rc.Blocked = true; rc.BlockReason = "Roster full (" + capacity + "). Level up or upgrade the Barracks."; return rc; }
             if (p.IsLawEnforcement && !ctx.Config.Gameplay.AllowRecruitingLawEnforcement) { rc.Blocked = true; rc.BlockReason = "Law enforcement cannot be recruited (Settings)."; return rc; }
+            if (p.IsLawEnforcement && ctx.ForbidLawRecruitment) { rc.Blocked = true; rc.BlockReason = "Law enforcement cannot be recruited while a police mod is installed."; return rc; }
             if (p.Female && !f.Recruitment.AllowFemaleRecruits) { rc.Blocked = true; rc.BlockReason = "Your recruitment policy excludes this candidate."; return rc; }
             if (p.Willingness < f.Recruitment.MinimumWillingness) { rc.Blocked = true; rc.BlockReason = "Below your minimum willingness standard."; return rc; }
 
@@ -225,6 +226,7 @@ namespace OrganizationEmpire.Core.Systems
             ctx.State.KnownNpcs.Remove(p.Key);
             ProgressionSystem.AddXp(ctx, 60);
             ctx.Report("Recruitment", m.DisplayName + " joined " + f.Name + ".", EventSeverity.Good);
+            Api.ApiHub.PublishMemberRecruited(m);
             res.Member = m;
             res.Message = m.FirstName + " is in.";
             return res;
@@ -248,6 +250,7 @@ namespace OrganizationEmpire.Core.Systems
             f.Stats.MembersRecruited++;
             ProgressionSystem.AddXp(ctx, 40);
             ctx.Report("Recruitment", member.DisplayName + " was hired through your network.", EventSeverity.Good);
+            Api.ApiHub.PublishMemberRecruited(member);
             return OpResult.Success("Hired " + member.DisplayName + " for " + TextUtil.Money(cost) + ".");
         }
     }

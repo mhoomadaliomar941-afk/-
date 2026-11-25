@@ -161,11 +161,14 @@ namespace OrganizationEmpire
                 Guard("vehicles", () => mod.Vehicles.Update());
                 Guard("territory", () => mod.Territories.Update());
                 Guard("rivals", () => mod.Rivals.Update());
+                Guard("living world", () => mod.LivingWorld.Update());
                 Guard("missions", () => mod.Missions.Update());
             }
             Guard("dialogue", () => mod.Dialogue.Pump(mod.State, r => mod.Ui.OnDialogueResult(r)));
+            Guard("integrations", () => mod.Integrations.Tick());
 
-            if (mod.HasFaction && !Game.IsPaused && now >= _nextStrategicTickAt)
+            // The world keeps living before a faction exists (rivals recruit, fight and change leaders).
+            if ((mod.HasFaction || mod.Config.World.LivingWorld) && !Game.IsPaused && now >= _nextStrategicTickAt)
             {
                 _nextStrategicTickAt = now + mod.Config.Gameplay.StrategicTickSeconds * 1000;
                 Guard("simulation", () =>

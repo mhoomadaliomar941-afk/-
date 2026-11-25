@@ -9,6 +9,8 @@ namespace OrganizationEmpire.Core.Config
     public enum TextInputMode { Inline, NativeKeyboard }
     public enum AiProviderKind { Offline, OpenAICompatible, Anthropic, Gemini }
     public enum UiLanguage { English, Arabic }
+    public enum WorldNotifyLevel { None, Major, All }
+    public enum CoexistenceMode { Auto, On, Off }
 
     public sealed class GeneralSettings
     {
@@ -119,6 +121,12 @@ namespace OrganizationEmpire.Core.Config
 
         [ConfigComment("Absolute cap on all entities spawned by this mod (safety net).")]
         public int GlobalEntityCap { get; set; } = 70;
+
+        [ConfigComment("Fighters spawned for a rival-vs-rival street battle near you (both sides together).")]
+        public int MaxBattlePeds { get; set; } = 10;
+
+        [ConfigComment("Rival gang members hanging out in their own territory near you.")]
+        public int MaxAmbientCrewPeds { get; set; } = 4;
     }
 
     public sealed class WorldSettings
@@ -143,6 +151,24 @@ namespace OrganizationEmpire.Core.Config
 
         [ConfigComment("When a rival faction is disabled, also suppress GTA's ambient peds of that gang's models (runtime only, fully reversible, no game files touched).")]
         public bool SuppressVanillaPedsOfDisabledRivals { get; set; } = true;
+
+        [ConfigComment("Living world: rival factions recruit, arm, expand, fight each other, ally and change leaders on their own.")]
+        public bool LivingWorld { get; set; } = true;
+
+        [ConfigComment("Which living-world news become on-screen notifications: None, Major or All.")]
+        public WorldNotifyLevel LivingWorldNotifications { get; set; } = WorldNotifyLevel.Major;
+
+        [ConfigComment("Rival-vs-rival battles near you are fought for real by spawned fighters (their losses decide the battle).")]
+        public bool PhysicalBattles { get; set; } = true;
+
+        [ConfigComment("Show rival crews hanging out in their territory, and recruitment scenes when they recruit nearby.")]
+        public bool AmbientFactionCrews { get; set; } = true;
+
+        [ConfigComment("Mark rival-vs-rival battles on the map so you can find them.")]
+        public bool ShowWorldEventsOnMap { get; set; } = true;
+
+        [ConfigComment("Rival leaders can be found at their faction's home turf, guarded by bodyguards.")]
+        public bool RivalLeadersInWorld { get; set; } = true;
     }
 
     public sealed class AiSettings
@@ -221,6 +247,39 @@ namespace OrganizationEmpire.Core.Config
     }
 
     /// <summary>Root configuration persisted as OrganizationEmpire.ini.</summary>
+    public sealed class IntegrationSettings
+    {
+        [ConfigComment("Master switch for detecting other mods and running optional integrations.")]
+        public bool Enabled { get; set; } = true;
+
+        [ConfigComment("Scan installed mods when the game starts (read-only: other mods' files are never modified).")]
+        public bool ScanOnStartup { get; set; } = true;
+
+        [ConfigComment("Warn when another mod uses the same hotkey as this mod.")]
+        public bool CheckHotkeyConflicts { get; set; } = true;
+
+        [ConfigComment("Coexistence with other gang/war mods: Auto (reduce our extra spawns when one is detected), On or Off.")]
+        public CoexistenceMode Coexistence { get; set; } = CoexistenceMode.Auto;
+
+        [ConfigComment("Expose the public API (OrganizationEmpire.Api.EmpireApi) so other scripts can read faction data and events.")]
+        public bool PublicApi { get; set; } = true;
+
+        [ConfigComment("Allow other scripts to change game state through the API (add factions, notifications, report kills). Off = read-only.")]
+        public bool AllowExternalCommands { get; set; } = false;
+
+        [ConfigComment("If iFruitAddon2 is installed, add an 'Organization Empire' contact to the phone (experimental).")]
+        public bool PhoneContact { get; set; } = true;
+
+        [ConfigComment("Offer locations from installed Map Editor / Menyoo maps as headquarters sites (read-only).")]
+        public bool MapLocations { get; set; } = true;
+
+        [ConfigComment("Extra folders (relative to the GTA V folder, separated by ;) that contain map XML files.")]
+        public string ExtraMapFolders { get; set; } = "";
+
+        [ConfigComment("Integration ids switched off by the player, separated by commas (managed in-game).")]
+        public string DisabledIntegrations { get; set; } = "";
+    }
+
     public sealed class ModConfig
     {
         public GeneralSettings General { get; set; } = new GeneralSettings();
@@ -230,6 +289,7 @@ namespace OrganizationEmpire.Core.Config
         public WorldSettings World { get; set; } = new WorldSettings();
         public AiSettings AI { get; set; } = new AiSettings();
         public DebugSettings Debug { get; set; } = new DebugSettings();
+        public IntegrationSettings Integrations { get; set; } = new IntegrationSettings();
 
         public const string Header =
             "GTA V: Organization Empire - configuration\n" +
@@ -253,6 +313,10 @@ namespace OrganizationEmpire.Core.Config
             Spawning.MaxHqGuards = MathEx.Clamp(Spawning.MaxHqGuards, 0, 10);
             Spawning.MaxRivalPatrolPeds = MathEx.Clamp(Spawning.MaxRivalPatrolPeds, 0, 12);
             Spawning.GlobalEntityCap = MathEx.Clamp(Spawning.GlobalEntityCap, 20, 120);
+            Spawning.MaxBattlePeds = MathEx.Clamp(Spawning.MaxBattlePeds, 0, 24);
+            Spawning.MaxAmbientCrewPeds = MathEx.Clamp(Spawning.MaxAmbientCrewPeds, 0, 8);
+            if (Integrations.ExtraMapFolders == null) Integrations.ExtraMapFolders = "";
+            if (Integrations.DisabledIntegrations == null) Integrations.DisabledIntegrations = "";
             World.RivalActivity = MathEx.Clamp(World.RivalActivity, 0f, 2f);
             World.RivalHostility = MathEx.Clamp(World.RivalHostility, 0f, 2f);
             AI.MaxResponseTokens = MathEx.Clamp(AI.MaxResponseTokens, 32, 2048);

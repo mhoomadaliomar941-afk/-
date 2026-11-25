@@ -30,6 +30,8 @@ namespace OrganizationEmpire.Core.Systems
         public ModConfig Config;
         public Rng Rng;
         public readonly List<SimNotification> Notifications = new List<SimNotification>();
+        /// <summary>Runtime-only: a police mod is installed, so law enforcement is never recruitable (not saved to the ini).</summary>
+        public bool ForbidLawRecruitment;
 
         public SimContext(GameState state, ModConfig config, Rng rng)
         {

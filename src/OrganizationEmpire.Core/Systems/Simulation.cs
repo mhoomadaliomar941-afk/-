@@ -26,14 +26,22 @@ namespace OrganizationEmpire.Core.Systems
         public static void Tick(SimContext ctx, WorldSignals signals)
         {
             var f = ctx.Faction;
-            if (f == null) return;
             signals = signals ?? new WorldSignals();
+            if (f == null)
+            {
+                // No player faction yet: the rest of the world keeps living.
+                ctx.World.Tick++;
+                Guard("living world", () => LivingWorldSystem.Tick(ctx));
+                Guard("territory", () => { foreach (var t in ctx.World.Territories) TerritorySystem.UpdateOwnership(t); });
+                return;
+            }
             ctx.World.Tick++;
 
             Guard("economy", () => { LastLedger = EconomySystem.Compute(ctx, true); });
             Guard("members", () => MemberSystem.Tick(ctx, LastLedger == null || LastLedger.PaidInFull));
             Guard("territory", () => TerritorySystem.Tick(ctx));
             Guard("war", () => WarSystem.Tick(ctx));
+            Guard("living world", () => LivingWorldSystem.Tick(ctx));
             Guard("suspicion", () => SuspicionSystem.Tick(ctx, signals.PlayerWantedLevel));
             Guard("takeover", () => TakeoverSystem.Tick(ctx));
             Guard("government", () => GovernmentSystem.Tick(ctx));
@@ -81,6 +89,12 @@ namespace OrganizationEmpire.Core.Systems
             if (s.MissionBoard == null) s.MissionBoard = new List<MissionOffer>();
             if (s.MissionHistory == null) s.MissionHistory = new List<MissionRecord>();
             foreach (var t in s.World.Territories) if (t.Influence == null) t.Influence = new Dictionary<string, float>();
+            if (s.World.Living == null) s.World.Living = new LivingWorldState();
+            if (s.World.Living.Relations == null) s.World.Living.Relations = new List<FactionRelation>();
+            if (s.World.Living.Battles == null) s.World.Living.Battles = new List<WorldBattle>();
+            if (s.World.Living.News == null) s.World.Living.News = new List<WorldNews>();
+            if (s.World.Living.Recruitments == null) s.World.Living.Recruitments = new List<RecruitmentNotice>();
+            foreach (var r in s.World.Rivals) if (r.Lieutenants == null) r.Lieutenants = new List<RivalLeader>();
 
             var f = s.Faction;
             if (f == null) return fixes;

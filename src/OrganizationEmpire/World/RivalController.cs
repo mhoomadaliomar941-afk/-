@@ -131,27 +131,36 @@ namespace OrganizationEmpire.World
         private void ScanKills()
         {
             var player = GtaUtil.Player;
-            var world = _mod.State.World;
             if (_countedDead.Count > 500) _countedDead.Clear();
             foreach (var ped in GTA.World.GetNearbyPeds(player, 80f))
             {
                 if (!ped.IsDead || _countedDead.Contains(ped.Handle) || ped.IsPlayer) continue;
-                var killer = ped.Killer as Ped;
-                if (killer == null) continue;
-                bool byPlayer = killer.IsPlayer;
-                var memberRt = byPlayer ? null : _mod.Members.FindByPed(killer);
-                if (!byPlayer && memberRt == null) continue;
-                _countedDead.Add(ped.Handle);
-                if (_mod.Members.IsMemberPed(ped)) continue;
-                var rival = RivalOf(ped);
-                if (memberRt != null) memberRt.Member.Kills++;
-                if (rival == null) continue;
-                var t = world.FindByZone(GtaUtil.ZoneCode(ped.Position));
-                WarSystem.OnEnemiesKilled(_mod.Sim, rival, 1);
-                if (t != null) TerritorySystem.OnCombatInTerritory(_mod.Sim, t, rival.Id, 1);
-                SuspicionSystem.OnPublicIncident(_mod.Sim, 0.4f);
-                _mod.FlushNotifications();
+                if (CreditKill(ped, ped.Killer as Ped)) _countedDead.Add(ped.Handle);
             }
+        }
+
+        /// <summary>
+        /// Applies one kill by the player or a member to wars, territory and the living world. Also used for kills
+        /// reported by other mods through the public API. Returns true when the kill was counted.
+        /// </summary>
+        public bool CreditKill(Ped ped, Ped killer)
+        {
+            if (ped == null || killer == null || !_mod.HasFaction || _countedDead.Contains(ped.Handle)) return false;
+            bool byPlayer = killer.IsPlayer;
+            var memberRt = byPlayer ? null : _mod.Members.FindByPed(killer);
+            if (!byPlayer && memberRt == null) return false;
+            _countedDead.Add(ped.Handle);
+            if (_mod.Members.IsMemberPed(ped)) return true;
+            var rival = RivalOf(ped);
+            if (memberRt != null) memberRt.Member.Kills++;
+            if (rival == null) return true;
+            var t = _mod.State.World.FindByZone(GtaUtil.ZoneCode(ped.Position));
+            WarSystem.OnEnemiesKilled(_mod.Sim, rival, 1);
+            LivingWorldSystem.OnPlayerHitFaction(_mod.Sim, rival, 1);
+            if (t != null) TerritorySystem.OnCombatInTerritory(_mod.Sim, t, rival.Id, 1);
+            SuspicionSystem.OnPublicIncident(_mod.Sim, 0.4f);
+            _mod.FlushNotifications();
+            return true;
         }
 
         public RivalFaction RivalOf(Ped ped)
@@ -162,6 +171,7 @@ namespace OrganizationEmpire.World
             {
                 if (!r.Active) continue;
                 if (_mod.Relations.RivalGroup(r.Id).Hash == rel) return r;
+                if (_mod.Relations.WorldGroup(r.Id).Hash == rel) return r;
                 if (!string.IsNullOrEmpty(r.VanillaRelationshipGroup) && Game.GenerateHash(r.VanillaRelationshipGroup) == rel) return r;
                 foreach (var mn in r.PedModels) if (Nat.ParseModel(mn).Hash == model) return r;
             }
@@ -172,7 +182,8 @@ namespace OrganizationEmpire.World
         public void ApplySuppression()
         {
             var want = new HashSet<int>();
-            if (_mod.Config.World.SuppressVanillaPedsOfDisabledRivals)
+            // Another gang mod may rely on these models: never suppress them in coexistence mode.
+            if (_mod.Config.World.SuppressVanillaPedsOfDisabledRivals && !_mod.LivingWorld.Coexistence)
             {
                 foreach (var r in _mod.State.World.Rivals.Where(r => !r.Enabled || r.Eliminated))
                 {

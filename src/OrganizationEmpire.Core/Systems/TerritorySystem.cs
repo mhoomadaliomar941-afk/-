@@ -141,6 +141,7 @@ namespace OrganizationEmpire.Core.Systems
 
         public static void OnOwnershipChanged(SimContext ctx, Territory t, string previousOwner)
         {
+            Api.ApiHub.PublishTerritoryChanged(t);
             var f = ctx.Faction;
             var w = ctx.World;
             if (t.OwnerId == FactionIds.Player)
