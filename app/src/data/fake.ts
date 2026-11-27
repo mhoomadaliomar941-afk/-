@@ -5,7 +5,7 @@ import { sha256 } from 'js-sha256';
 import { seedHash, winningSpot } from './fairness';
 import {
   Address, Api, ApiError, Assignment, Notification, Order, Participation, PaymentMethod, Product,
-  Profile, Redemption, ShowcaseItem, Store, Wallet, WalletTxn, StoreProduct, StoreOrder, AdminOrder,
+  Profile, Redemption, ShowcaseItem, Store, Wallet, WalletTxn, StoreProduct, StoreOrder, AdminOrder, AppSettings, CliqTopup,
 } from './types';
 
 const DEV_OTP = '123456';
@@ -32,6 +32,9 @@ const db = {
   session: null as Profile | null,
   profiles: new Map<string, Profile>([[ME, { id: ME, phone: '', fullName: null, isAdmin: false }]]),
   storeProducts: [] as StoreProduct[],
+  // demo settings: a fake CliQ alias so the flow can be tried; card methods use the fake gateway
+  settings: { cliqAlias: 'NAZIH-DEMO', cliqHolder: 'نزيه (حساب تجريبي)', cliqHours: 'من 9 الصبح لـ 11 بالليل', cardEnabled: true } as AppSettings,
+  cliq: [] as (CliqTopup & { userId: string; txnId: string; claimedAt: string | null })[],
   storeOrders: [] as (StoreOrder & { userId: string; addressId: string; idempotencyKey: string })[],
   products: [
     product({ id: 'p-phone', titleAr: 'هاتف ذكي برو ٢٥٦ جيجا', brand: null, category: 'phone',
@@ -508,6 +511,67 @@ export const fakeApi: Api = {
     emit();
   },
   async uploadProductImage(uri) { requireAdmin(); return uri; }, // the fake keeps the local photo
+
+  // ---------------------------------------------------------------- CliQ (same rules as the SQL functions)
+  async getSettings() { requireMe(); return wait({ ...db.settings }); },
+  async startCliqTopup(amountFils) {
+    const uid = requireMe();
+    await wait(null);
+    if (!db.settings.cliqAlias) throw new ApiError('cliq_unavailable');
+    if (!Number.isInteger(amountFils) || amountFils < 1000 || amountFils > 500_000 || amountFils % 1000) throw new ApiError('invalid');
+    if (db.cliq.filter((x) => x.userId === uid && (x.status === 'awaiting_transfer' || x.status === 'awaiting_review')).length >= 3) throw new ApiError('too_many_pending');
+    let reference = '';
+    do { reference = `NZ-${String(Math.floor(Math.random() * 1_000_000)).padStart(6, '0')}`; } while (db.cliq.some((x) => x.reference === reference));
+    const txn: WalletTxn = { id: id('t'), bucket: 'cash', type: 'topup', amountFils, status: 'pending', label: 'CliQ', createdAt: now() };
+    const r = { id: id('cq'), userId: uid, txnId: txn.id, amountFils, reference, status: 'awaiting_transfer' as const, createdAt: now(), rejectReason: null, claimedAt: null };
+    db.cliq.unshift(r); db.txns.unshift(txn);
+    emit();
+    return { ...r };
+  },
+  async getCliqTopup(cid) {
+    const r = db.cliq.find((x) => x.id === cid && (x.userId === requireMe() || db.session?.isAdmin));
+    if (!r) throw new ApiError('not_found');
+    return wait({ ...r });
+  },
+  async markCliqSent(cid) {
+    const r = db.cliq.find((x) => x.id === cid && x.userId === requireMe());
+    if (!r || (r.status !== 'awaiting_transfer' && r.status !== 'awaiting_review')) throw new ApiError('not_found');
+    r.claimedAt ??= now(); r.status = 'awaiting_review';
+    emit();
+    return wait({ ...r });
+  },
+  async adminSaveSettings(s) {
+    requireAdmin();
+    await wait(null);
+    for (const v of [s.cliqAlias, s.cliqHolder, s.cliqHours]) if (v !== undefined && v.length > 120) throw new ApiError('invalid');
+    db.settings = { ...db.settings, ...Object.fromEntries(Object.entries(s).filter(([, v]) => v !== undefined).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v])) };
+    emit();
+  },
+  async adminListCliqTopups() {
+    requireAdmin();
+    const order = { awaiting_review: 0, awaiting_transfer: 1, rejected: 2, approved: 3 };
+    return wait(db.cliq.map((x) => ({ ...x, member: { phone: x.userId === ME ? db.profiles.get(ME)!.phone : '+962 7X XXX XXXX' } }))
+      .sort((a, b) => order[a.status] - order[b.status] || a.createdAt.localeCompare(b.createdAt)));
+  },
+  // admin_review_cliq(): decided once; approve credits once
+  async adminReviewCliq(cid, approve, reason) {
+    requireAdmin();
+    await wait(null);
+    const r = db.cliq.find((x) => x.id === cid);
+    if (!r) throw new ApiError('not_found');
+    if (r.status === 'approved' || r.status === 'rejected') return;
+    const txn = db.txns.find((x) => x.id === r.txnId);
+    if (approve) {
+      r.status = 'approved'; wallet(r.userId).cashFils += r.amountFils;
+      if (txn) txn.status = 'done';
+      if (r.userId === ME) db.notifications.unshift({ id: id('n'), type: 'topup_ok', title: 'انشحنت محفظتك', body: `وصل تحويل CliQ (${r.reference}) وانضاف الرصيد.`, readAt: null, createdAt: now() });
+    } else {
+      r.status = 'rejected'; r.rejectReason = reason?.trim() || null;
+      if (txn) txn.status = 'failed';
+      if (r.userId === ME) db.notifications.unshift({ id: id('n'), type: 'topup_rejected', title: 'ما وصلنا تحويلك', body: r.rejectReason ?? r.reference, readAt: null, createdAt: now() });
+    }
+    emit();
+  },
 
   subscribe(l) { listeners.add(l); return () => listeners.delete(l); },
 };

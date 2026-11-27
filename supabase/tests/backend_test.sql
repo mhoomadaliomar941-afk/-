@@ -163,4 +163,46 @@ select status from admin_set_store_order_status((select id from store_orders lim
 reset role;
 select pg_temp.check((select stock from store_products where id = :'sp_id') = 3, 'cancel: stock returned');
 select pg_temp.check((select shopping_fils = 3000 and cash_fils = :c_cash0 from wallets where user_id = '00000000-0000-0000-0000-00000000000c'), 'cancel: money returned to the same balances');
+-- ---------------------------------------------------------------- CliQ top-ups (owner confirms by hand)
+set role authenticated;
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000c';
+select pg_temp.expect_error($$select cliq_start_topup(5000)$$, 'cliq not available');               -- no alias set yet
+select pg_temp.expect_error($$select admin_save_settings('{"cliq_alias":"X"}')$$, 'admins only');
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000a';
+select admin_save_settings('{"cliq_alias":"NAZIH","cliq_holder":"Test Owner"}');
+select pg_temp.expect_error($$select admin_save_settings('{"secret":"x"}')$$, 'unknown setting');
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000c';
+select pg_temp.expect_error($$select cliq_start_topup(1500)$$, 'whole dinars');
+select id as q1, external_ref as q1ref from cliq_start_topup(10000) \gset
+select pg_temp.check(:'q1ref' ~ '^NZ-[0-9]{6}$', 'cliq: reference like NZ-123456');
+select pg_temp.check((select claimed_at is not null from cliq_mark_sent(:'q1')), 'cliq: member marks it sent');
+select pg_temp.expect_error(format($$select admin_review_cliq('%s', true)$$, :'q1'), 'admins only');
+reset role;
+select cash_fils as c_before from wallets where user_id = '00000000-0000-0000-0000-00000000000c' \gset
+set role authenticated;
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000a';
+select pg_temp.check((select count(*) from payments where gateway = 'cliq' and claimed_at is not null) = 1, 'cliq: admin sees the claimed request');
+select status from admin_review_cliq(:'q1', true);
+select status from admin_review_cliq(:'q1', true);   -- double tap
+reset role;
+select pg_temp.check((select cash_fils from wallets where user_id = '00000000-0000-0000-0000-00000000000c') = :c_before + 10000, 'cliq: approve credits once, even on a double tap');
+select pg_temp.check((select count(*) from notifications where user_id = '00000000-0000-0000-0000-00000000000c' and type = 'topup_ok') = 1, 'cliq: member notified once');
+-- reject path
+set role authenticated;
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000c';
+select id as q2 from cliq_start_topup(2000) \gset
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000a';
+select status from admin_review_cliq(:'q2', false, 'ما وصل تحويل بهالرقم');
+reset role;
+select pg_temp.check((select status = 'failed' and reject_reason is not null from payments where id = :'q2'), 'cliq: reject keeps the reason');
+select pg_temp.check((select cash_fils from wallets where user_id = '00000000-0000-0000-0000-00000000000c') = :c_before + 10000, 'cliq: reject credits nothing');
+-- unclaimed requests expire after a day
+set role authenticated;
+set request.jwt.uid = '00000000-0000-0000-0000-00000000000c';
+select id as q3 from cliq_start_topup(3000) \gset
+reset role;
+update payments set created_at = now() - interval '25 hours' where id = :'q3';
+set role service_role;
+select pg_temp.check((select expire_cliq_requests()) = 1, 'cliq: unclaimed request expires after 24h');
+reset role;
 \echo ALL PASSED

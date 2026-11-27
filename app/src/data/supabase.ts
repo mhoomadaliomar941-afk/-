@@ -7,7 +7,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { Platform } from 'react-native';
 import { createClient, PostgrestError } from '@supabase/supabase-js';
 import {
-  addressLine, errorCode, fromAddress, fromDrawProduct, fromStoreProduct, toStoreOrder, toStoreProduct, pendingPaymentToTxn, toAddress, toAssignment, toNotification, toOrder, toParticipation, toProduct,
+  addressLine, errorCode, toCliqTopup, toSettings, fromAddress, fromDrawProduct, fromStoreProduct, toStoreOrder, toStoreProduct, pendingPaymentToTxn, toAddress, toAssignment, toNotification, toOrder, toParticipation, toProduct,
   toRedemption, toShowcase, toStore, toTxn,
 } from './supabase-map';
 import { Api, ApiError, Profile } from './types';
@@ -255,6 +255,27 @@ export function createSupabaseApi(url: string, anonKey: string): Api {
       if (error) throw new ApiError(errorCode(error.message), error.message);
       return sb.storage.from('product-images').getPublicUrl(path).data.publicUrl;
     },
+
+    // ---------------------------------------------------------------- CliQ (owner confirms by hand)
+    async getSettings() { await uid(); return toSettings(list(await sb.from('app_settings').select('key, value'))); },
+    async startCliqTopup(amountFils) { const r = one(await sb.rpc('cliq_start_topup', { p_amount: amountFils }).single()); emit(); return toCliqTopup(r); },
+    async getCliqTopup(id) { return toCliqTopup(one(await sb.from('payments').select('*').eq('id', id).maybeSingle())); },
+    async markCliqSent(id) { const r = one(await sb.rpc('cliq_mark_sent', { p_payment: id }).single()); emit(); return toCliqTopup(r); },
+    async adminSaveSettings(s) {
+      const p: Record<string, string> = {};
+      if (s.cliqAlias !== undefined) p.cliq_alias = s.cliqAlias;
+      if (s.cliqHolder !== undefined) p.cliq_holder = s.cliqHolder;
+      if (s.cliqHours !== undefined) p.cliq_hours = s.cliqHours;
+      if (s.cardEnabled !== undefined) p.card_enabled = String(s.cardEnabled);
+      check(await sb.rpc('admin_save_settings', { p })); emit();
+    },
+    async adminListCliqTopups() {
+      await uid();
+      const rows = list(await sb.from('payments').select('*, profiles(phone)').eq('gateway', 'cliq').order('created_at', { ascending: true }).limit(200));
+      const order = { awaiting_review: 0, awaiting_transfer: 1, rejected: 2, approved: 3 };
+      return rows.map(toCliqTopup).sort((a, b) => order[a.status] - order[b.status]);
+    },
+    async adminReviewCliq(id, approve, reason) { check(await sb.rpc('admin_review_cliq', { p_payment: id, p_approve: approve, p_reason: reason ?? null })); emit(); },
 
     subscribe(l) { listeners.add(l); return () => listeners.delete(l); },
   };

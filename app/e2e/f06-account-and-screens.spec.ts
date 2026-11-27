@@ -25,6 +25,7 @@ test.describe('X-3 another time zone', () => {
     await login(page);
     await tab(page, 'المحفظة').click();
     await btn(page, 'اشحن').click();
+    await page.getByRole('radio', { name: /بطاقة بنكية/ }).click();
     await page.getByRole('button', { name: /^ادفع/ }).click();
     await expect(page.getByText(/^اليوم · الرصيد/).first()).toBeVisible();
   });

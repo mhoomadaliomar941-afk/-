@@ -37,17 +37,19 @@ Deno.serve(async (req) => {
         if (error) throw error;
         return { expired: data };
       },
-      // missed webhooks: ask the gateway about top-ups pending for more than 30 minutes
+      // missed webhooks: ask the gateway about card/wallet top-ups pending for more than 30 minutes
       'reconcile-payments': async () => {
         const cutoff = new Date(Date.now() - 30 * 60_000).toISOString();
-        const { data } = await db.from('payments').select('id, external_ref, gateway, created_at').eq('status', 'pending').lt('created_at', cutoff).limit(50);
+        const { data } = await db.from('payments').select('id, external_ref, gateway, created_at').eq('status', 'pending').like('gateway', 'hyperpay%').lt('created_at', cutoff).limit(50);
         for (const p of data ?? []) {
           if (!p.external_ref) { await settle(db, p.id, 'failed', 'reconcile'); continue; }
           const { outcome } = await getCheckoutStatus(hyperpay(methodFromGateway(p.gateway)), p.external_ref);
           const stale = Date.now() - new Date(p.created_at).getTime() > 24 * 3600_000;
           await settle(db, p.id, outcome === 'pending' && stale ? 'failed' : outcome, 'reconcile'); // abandoned after a day
         }
-        return { checked: data?.length ?? 0 };
+        // CliQ is confirmed by the owner, never by the gateway: only drop requests nobody marked as sent
+        const { data: expired } = await db.rpc('expire_cliq_requests');
+        return { checked: data?.length ?? 0, cliqExpired: Number(expired ?? 0) };
       },
       push: async () => {
         const { data: notes } = await db.from('notifications').select('id, user_id, type, payload').is('pushed_at', null).order('created_at').limit(500);

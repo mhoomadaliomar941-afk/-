@@ -2,7 +2,7 @@
 // No imports beyond types, so it can be unit-tested with plain Node.
 import type {
   Address, ApiError as ApiErrorT, Assignment, Category, DrawProductInput, Notification, Order, Participation, Product, Redemption,
-  ShowcaseItem, Store, StoreOrder, StoreProduct, StoreProductInput, WalletTxn,
+  AppSettings, CliqTopup, ShowcaseItem, Store, StoreOrder, StoreProduct, StoreProductInput, WalletTxn,
 } from './types';
 
 type Row = Record<string, any>;
@@ -64,6 +64,16 @@ export const toStoreOrder = (r: Row): StoreOrder => ({
   status: r.status, createdAt: r.created_at,
   items: (r.store_order_items ?? []).map((i: Row) => ({ productId: i.product_id, titleAr: i.title_ar, qty: i.qty, unitPriceFils: Number(i.unit_price_fils) })),
 });
+export const toCliqTopup = (r: Row): CliqTopup => ({
+  id: r.id, amountFils: Number(r.amount_fils), reference: r.external_ref, createdAt: r.created_at, rejectReason: r.reject_reason ?? null,
+  status: r.status === 'paid' ? 'approved' : r.status === 'failed' ? 'rejected' : r.claimed_at ? 'awaiting_review' : 'awaiting_transfer',
+  ...(r.profiles ? { member: { phone: r.profiles.phone } } : {}),
+});
+export const toSettings = (rows: Row[]): AppSettings => {
+  const v = Object.fromEntries(rows.map((r) => [r.key, r.value ?? '']));
+  return { cliqAlias: v.cliq_alias ?? '', cliqHolder: v.cliq_holder ?? '', cliqHours: v.cliq_hours ?? '', cardEnabled: v.card_enabled === 'true' };
+};
+
 export const addressLine = (a: Row | null | undefined) => (a ? [a.governorate, a.city, a.street].filter(Boolean).join('، ') : null);
 
 export const toStore = (r: Row): Store => ({ id: r.id, nameAr: r.name_ar, governorate: r.governorate, city: r.city, category: r.category ?? '' });
@@ -78,6 +88,8 @@ export const toShowcase = (r: Row): ShowcaseItem => ({
 
 const NOTE_TEXT: Record<Notification['type'], { title: string; body: string }> = {
   owner: { title: 'مبروك! ربحت المنتج', body: 'أدخل عنوان التوصيل.' },
+  topup_ok: { title: 'انشحنت محفظتك', body: 'وصل تحويل CliQ وانضاف الرصيد.' },
+  topup_rejected: { title: 'ما وصلنا تحويلك', body: 'تواصل معنا إذا حوّلت فعلاً.' },
   credited: { title: 'رجعلك رصيد تسوق', body: 'استخدمه بأي متجر شريك.' },
   product_open: { title: 'منتج جديد', body: 'نزل منتج جديد، الأماكن محدودة.' },
   order_shipped: { title: 'طلبك بالطريق', body: 'المنتج انشحن لعنوانك.' },
@@ -94,6 +106,8 @@ export function errorCode(message: string | undefined | null): ApiErrorT['code']
   if (/only \d+ spots left/.test(m)) return 'sold_out';
   if (/only \d+ left|product not available/.test(m)) return 'out_of_stock';
   if (/admins only/.test(m)) return 'forbidden';
+  if (/cliq not available/.test(m)) return 'cliq_unavailable';
+  if (/too many pending/.test(m)) return 'too_many_pending';
   if (/product is not open|product closed/.test(m)) return 'not_open';
   if (/limit is \d+ spots/.test(m)) return 'limit';
   if (/insufficient (shopping )?balance/.test(m)) return 'insufficient';

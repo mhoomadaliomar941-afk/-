@@ -6,6 +6,8 @@ export const pushText: Record<string, (p: Record<string, unknown>) => { title: s
   credited: () => ({ title: 'رجعلك رصيد تسوق', body: 'استخدمه بأي متجر شريك.' }),
   product_open: () => ({ title: 'منتج جديد', body: 'نزل منتج جديد، الأماكن محدودة.' }),
   order_shipped: () => ({ title: 'طلبك بالطريق', body: 'المنتج انشحن لعنوانك.' }),
+  topup_ok: () => ({ title: 'انشحنت محفظتك', body: 'وصل تحويل CliQ وانضاف الرصيد.' }),
+  topup_rejected: () => ({ title: 'ما وصلنا تحويلك', body: 'افتح التطبيق لتعرف السبب.' }),
 };
 
 export function chunk<T>(xs: T[], n = 100): T[][] {

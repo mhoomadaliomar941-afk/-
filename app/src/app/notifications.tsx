@@ -1,21 +1,24 @@
 import { useEffect } from 'react';
 import { View } from 'react-native';
 import { router } from 'expo-router';
-import { Bell, Gift, PartyPopper, Truck } from 'lucide-react-native';
+import { Bell, CircleX, Gift, PartyPopper, Truck, Wallet } from 'lucide-react-native';
 import { Card, EmptyState, ErrorState, Row, Screen, Skeleton, Text } from '../components/ui';
 import { api, Notification } from '../data';
 import { useQuery } from '../data/useQuery';
 import { radius, useColors } from '../theme';
 import { t } from '../i18n';
 
-const ICON = { owner: PartyPopper, credited: Gift, product_open: Bell, order_shipped: Truck };
+const ICON = { owner: PartyPopper, credited: Gift, product_open: Bell, order_shipped: Truck, topup_ok: Wallet, topup_rejected: CircleX };
 
 // S14: inbox. Marked read when opened.
 export default function Notifications() {
   const c = useColors();
   const q = useQuery(() => api.listNotifications());
   useEffect(() => { const i = setTimeout(() => api.markNotificationsRead(), 1500); return () => clearTimeout(i); }, []);
-  const open = (n: Notification) => n.productId && router.push(n.type === 'product_open' ? `/product/${n.productId}` : `/result/${n.productId}`);
+  const open = (n: Notification) => {
+    if (n.type === 'topup_ok' || n.type === 'topup_rejected') return router.push('/(tabs)/wallet');
+    if (n.productId) router.push(n.type === 'product_open' ? `/product/${n.productId}` : `/result/${n.productId}`);
+  };
   return (
     <Screen edges={['bottom']}>
       {q.error ? <ErrorState onRetry={q.reload} />

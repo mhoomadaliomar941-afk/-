@@ -28,7 +28,7 @@ export type OrderStatus = 'awaiting_address' | 'pending' | 'shipped' | 'delivere
 export interface Order { id: string; assignmentId: string; productId: string; addressId: string | null; status: OrderStatus }
 export interface Store { id: string; nameAr: string; governorate: string; city: string; category: string }
 export interface Redemption { id: string; storeId: string; amountFils: number; code: string; status: 'pending' | 'confirmed' | 'expired' | 'cancelled'; expiresAt: string }
-export interface Notification { id: string; type: 'owner' | 'credited' | 'product_open' | 'order_shipped'; title: string; body: string; productId?: string; readAt: string | null; createdAt: string }
+export interface Notification { id: string; type: 'owner' | 'credited' | 'product_open' | 'order_shipped' | 'topup_ok' | 'topup_rejected'; title: string; body: string; productId?: string; readAt: string | null; createdAt: string }
 export interface ShowcaseItem { id: string; displayName: string; productTitle: string; category: Category; date: string }
 export interface Profile { id: string; phone: string; fullName: string | null; isAdmin: boolean }
 
@@ -55,11 +55,20 @@ export interface AdminOrder {
   kind: 'draw' | 'store'; id: string; title: string; status: string; createdAt: string; totalFils?: number;
   customer: { phone: string; address: string | null };
 }
-export type PaymentMethod = 'card' | 'apple_pay';
+export type PaymentMethod = 'card' | 'apple_pay' | 'google_pay';
+
+/** Owner-edited settings. CliQ shows only when cliqAlias is set; card methods only when cardEnabled. */
+export interface AppSettings { cliqAlias: string; cliqHolder: string; cliqHours: string; cardEnabled: boolean }
+export type CliqStatus = 'awaiting_transfer' | 'awaiting_review' | 'approved' | 'rejected';
+export interface CliqTopup {
+  id: string; amountFils: number; reference: string; status: CliqStatus; createdAt: string; rejectReason: string | null;
+  /** admin view only */
+  member?: { phone: string };
+}
 
 export class ApiError extends Error {
   constructor(public code: 'not_signed_in' | 'not_open' | 'sold_out' | 'limit' | 'insufficient' | 'not_found' | 'invalid' | 'wrong_otp'
-    | 'balance_not_zero' | 'active_participation' | 'open_order' | 'rate_limited' | 'network' | 'unknown' | 'forbidden' | 'out_of_stock', message?: string) {
+    | 'balance_not_zero' | 'active_participation' | 'open_order' | 'rate_limited' | 'network' | 'unknown' | 'forbidden' | 'out_of_stock' | 'cliq_unavailable' | 'too_many_pending', message?: string) {
     super(message ?? code);
   }
 }
@@ -112,5 +121,15 @@ export interface Api {
   adminSetOrderStatus(kind: 'draw' | 'store', id: string, status: string): Promise<void>;
   /** Uploads a picked photo; returns the URL to store on the product. */
   uploadProductImage(localUri: string): Promise<string>;
+
+  // CliQ top-ups, confirmed by the owner
+  getSettings(): Promise<AppSettings>;
+  startCliqTopup(amountFils: number): Promise<CliqTopup>;
+  getCliqTopup(id: string): Promise<CliqTopup>;
+  markCliqSent(id: string): Promise<CliqTopup>;
+  adminSaveSettings(s: Partial<AppSettings>): Promise<void>;
+  /** Requests the member marked as sent, oldest first, then the rest. */
+  adminListCliqTopups(): Promise<CliqTopup[]>;
+  adminReviewCliq(id: string, approve: boolean, reason?: string): Promise<void>;
   subscribe(listener: () => void): () => void;
 }

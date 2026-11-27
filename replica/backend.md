@@ -131,3 +131,12 @@ Tested in `supabase/tests/run.sh`: a non-admin is refused every admin
 action; checkout splits shopping/cash correctly, never oversells, and a retry
 doesn't charge twice; other members can't see your orders; the admin sees all;
 cancelling returns the money to the same balances and the stock.
+
+## CliQ top-ups, confirmed by the owner (added 2026-11-27)
+
+No gateway needed. Migration `…06_cliq.sql`:
+- `app_settings` (admin-only edits via `admin_save_settings`): `cliq_alias`, `cliq_holder`, `cliq_hours`, `card_enabled`. The app shows CliQ only when an alias is set, and card / Google Pay / Apple Pay only when `card_enabled` is true (turn it on after a gateway is connected).
+- `cliq_start_topup(amount)` makes a request with a unique reference (`NZ-123456`), max 3 open per member; `cliq_mark_sent()` is the member's "I've transferred"; `admin_review_cliq(id, approve, reason)` credits through `confirm_topup()` (once, even on a double tap) or rejects with a reason. Both notify the member.
+- `expire_cliq_requests()` (run by the hourly job) drops requests nobody marked as sent within 24 h. The gateway reconcile job now only looks at `hyperpay:*` payments, never CliQ.
+
+**Owner's routine:** Admin panel → طلبات شحن CliQ → for each request, open your bank app, find a transfer with the **same amount and reference**, then تم الاستلام (or رفض with a reason). Never approve from a screenshot.
